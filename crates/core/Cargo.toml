@@ -9,6 +9,7 @@ rust-version.workspace = true
 
 [dependencies]
 chrono = { version = "0.4.45", default-features = false, features = ["clock", "std"] }
+dirs = "7.0.0"
 fancy-regex = "0.20.2"
 fs4.workspace = true
 indexmap = "2.14.2"

@@ -17,11 +17,11 @@ States: `open` · `claimed by <session> <date>` · `done (gate, replay)`.
 ## Wave 1 — pure logic (recorded, must match; ADR-010)
 | Unit | Original | State |
 | --- | --- | --- |
-| Config + preferences + paths | preferences.py, live_config.py, model_settings.py | open |
+| Config + preferences + paths | preferences.py, live_config.py, model_settings.py | done (2026-11-26): `core::config`, `core::paths` (Linux = original paths, platform dirs elsewhere). /settings still mentions Laya, as the original does: reword with ADR-006 provider settings |
 | Sessions store + reports | sessions.py, reports.py | done (2026-11-26): `core::sessions`, `core::reports`; 540 recorded cases replay (tests/recorded.rs), mutation-checked. HTML dashboard waits for tasks/runs/abilities |
 | Memory (facts, aliases, plans, corrections) | memory.py | done (2026-11-26): `core::memory`; 190 recorded cases with tasks, template regex keys byte-identical to Python's (shared DB), aliases via fancy-regex; 3 mutation checks |
 | Tasks | tasks.py | done (2026-11-26): `core::tasks` (validate incl. all six ISO date forms Python 3.13 accepts, create/update/list, `link_session`). `focus()` moves to wave 3 (needs the island) |
-| Router: regex routes + skill MATCH table | brain.py, skills/__init__.py (static registry replaces importlib) | open |
+| Router: regex routes + skill MATCH table | brain.py, skills/__init__.py (static registry replaces importlib) | done (2026-11-26): `core::router`; registry extracted to router/skills.json in the original's order; skills + planner are traits; 349 cases with config, 3 mutation checks. `handle()` waits for commands.py; desktop follow-ups for wave 4 |
 | App index + fuzzy open_app (replaces Laya) | apps_index.py | open |
 | Workflow selection | workflows.py, paper.py | open |
 | Commands / annotations / identity | commands.py, annotations.py, identity.py | open |

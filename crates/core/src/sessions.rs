@@ -33,15 +33,9 @@ CREATE INDEX IF NOT EXISTS segments_start ON segments(start);
 CREATE INDEX IF NOT EXISTS sessions_started ON sessions(started);
 ";
 
-/// `$ULTRON_DATA/ultron.db`, else the original's `~/.local/share/ultron/ultron.db`.
+/// The shared database (see `paths`): the original's file on Linux.
 pub fn default_db() -> PathBuf {
-    if let Some(dir) = std::env::var_os("ULTRON_DATA").filter(|v| !v.is_empty()) {
-        return PathBuf::from(dir).join("ultron.db");
-    }
-    let home = std::env::var_os("HOME")
-        .or_else(|| std::env::var_os("USERPROFILE"))
-        .unwrap_or_default();
-    PathBuf::from(home).join(".local/share/ultron").join("ultron.db")
+    crate::paths::db()
 }
 
 pub fn connect(path: Option<&Path>) -> rusqlite::Result<Connection> {

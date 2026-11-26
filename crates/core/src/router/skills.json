@@ -1,0 +1,186 @@
+[
+ {
+  "name": "ability_builder",
+  "only_match": true,
+  "pattern": null,
+  "ignore_case": false,
+  "description": "Build anything as a new /command and manage its versions",
+  "usage": "/build <what you want>; /abilities"
+ },
+ {
+  "name": "agents",
+  "only_match": true,
+  "pattern": null,
+  "ignore_case": false,
+  "description": "Parallel specialists with a reviewed text deliverable",
+  "usage": "/agents [--count 2–4] <task>"
+ },
+ {
+  "name": "open_app",
+  "only_match": false,
+  "pattern": "^\\s*(please\\s+)?(open|launch|go to|visit|take me to|browse to)\\b",
+  "ignore_case": true,
+  "description": "open, launch, run or start an application, program or website such as the terminal, file manager, firefox, discord, vscode or youtube",
+  "usage": "open <app name or website>, e.g. \"open firefox\", \"open youtube.com\""
+ },
+ {
+  "name": "time",
+  "only_match": true,
+  "pattern": "^\\s*(what|tell me)\\b.*\\b(time|date|day)\\b(\\s+is\\s+it)?(\\s+today)?\\s*\\??\\s*$",
+  "ignore_case": true,
+  "description": "tell the current time or date, what day it is",
+  "usage": "\"what time is it\" or \"what is the date\""
+ },
+ {
+  "name": "companion_settings",
+  "only_match": true,
+  "pattern": "^\\s*(show companion|hide companion|keep companion visible|use (sonnet|opus))\\s*[.!]?$",
+  "ignore_case": true,
+  "description": "change cursor visibility or the vision model",
+  "usage": "show companion; hide companion; keep companion visible; use sonnet; use opus"
+ },
+ {
+  "name": "control",
+  "only_match": true,
+  "pattern": "^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:copy( (that|this|it|the selection))?)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:paste( (it|that|here))?)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:cut( (that|this|it))?)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:undo( (that|it))?)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:redo( (that|it))?)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:select (all|everything))[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:save as)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:save( (this|it|the file|file|my work))?)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(open )?(a )?new tab)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:close (this |the |that )?tab)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(reopen|restore|bring back) (the )?(closed |last )?tab)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(next|switch) tab)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(previous|prev|last) tab)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(open )?(a )?new window)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(reload|refresh)( (the |this )?page)?)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:go back|back)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:go forward|forward)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:zoom in|(make it|make (the )?text) (bigger|larger))[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:zoom out|(make it|make (the )?text) smaller)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(reset|normal) zoom|zoom (reset|normal|100%?))[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(toggle |enter |go )?full ?screen|exit full ?screen)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:scroll (all the way )?(to the )?(top|up to the top)|go to (the )?top)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:scroll (all the way )?(to the )?(bottom|down to the bottom)|go to (the )?bottom)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:scroll down|page down)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:scroll up|page up)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(?!.*\\b(timer|stopwatch|countdown)\\b)(play|pause|resume|unpause)( the)?( music| song| track| video| media| it)?|play ?/ ?pause|toggle (the )?(music|playback))[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(next|skip)( the)? (song|track|one)|skip( this)?( song| track)?)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(previous|prev|last)( the)? (song|track))[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(?!.*\\b(timer|stopwatch|countdown)\\b)stop( the)? (music|song|track|playback|video))[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:show (the )?desktop|hide (all )?windows)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(press|hit|push|tap)\\s+(the\\s+)?(?:.+?)(\\s+key)?[\\s.!]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(type|write|enter|input)\\s+(?:.+?)(?:\\s+(and|then)\\s+(press|hit)\\s+enter)?\\s*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(click|press|tap|hit|select|choose|activate)\\s+(on\\s+)?(the\\s+)?[\\\"“']?(?:.+?)[\\\"”']?(\\s+(button|link|tab|menu|item|option|icon|box))?[\\s.!]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:minimi[sz]e|maximi[sz]e|close|quit|exit)(\\s+(?:(this|the|that|current|my)(\\s+(window|app|application))?|window|app|all|.+?)(\\s+(window|app))?)?[\\s.!]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:move\\s+(this\\s+|the\\s+)?(window\\s+)?to|go\\s+to|switch\\s+to)\\s+(workspace|desktop)\\s+(?:\\d+)[\\s.!]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:move|position) (?:the )?(?:mouse|cursor|pointer)(?: to)?\\s+(-?\\d{1,6})(?:\\s*,\\s*|\\s+)(-?\\d{1,6})[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?move (?:the )?(?:mouse|cursor|pointer) (up|down|left|right)(?:\\s+(\\d{1,6})(?:\\s*(?:pixels?|px))?)?[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:(left|right|middle|double)[ -])?click(?:\\s+(?:(?:at|on)\\s+)?(?:(-?\\d{1,6})(?:\\s*,\\s*|\\s+)(-?\\d{1,6})|(here|there)))?[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?drag(?: (?:the )?(?:mouse|cursor|pointer))?(?: from\\s+(-?\\d{1,6})(?:\\s*,\\s*|\\s+)(-?\\d{1,6}))? to\\s+(-?\\d{1,6})(?:\\s*,\\s*|\\s+)(-?\\d{1,6})[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?scroll (up|down|left|right)(?:\\s+(\\d{1,6})(?:\\s+(?:clicks?|notches?|steps?))?)?[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:where is (?:the )?(?:mouse|cursor|pointer)|(?:mouse|cursor|pointer) position)[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:move|wiggle) (?:the |your )?(?:mouse|cursor|pointer)(?: (?:around|randomly|randomy|a little))?[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?move (?:the |your )?(?:mouse|cursor|pointer) (?:in |around )?(?:a )?circle[\\s.!?]*$|^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:please\\s+|can you\\s+|could you\\s+)?(switch|jump|bring)\\s+(to|back to|up)\\s+(the\\s+)?(?:.+?)(\\s+window)?[\\s.!]*$",
+  "ignore_case": true,
+  "description": "control the mouse, press keys, type text, click a button, or manage windows",
+  "usage": "\"press ctrl+t\", \"type <text>\", \"click <button name>\", \"copy\", \"paste\", \"undo\", \"new tab\", \"go back\", \"reload\", \"zoom in\", \"scroll down\", \"switch to <app>\", \"minimize\", \"maximize\", \"play/pause music\", \"next song\", \"go to workspace 2\"; mouse uses screen coordinates and stays at its destination: \"move mouse to 500, 300\", \"move mouse left 100\", \"mouse position\", \"click\", \"right click\", \"double click at 500, 300\", \"middle click\", \"scroll down 5\", \"scroll left 3\", \"drag from 100, 200 to 800, 600\", \"drag to 800, 600\". Mouse clicks and drags must be requested directly by the user."
+ },
+ {
+  "name": "deen",
+  "only_match": true,
+  "pattern": null,
+  "ignore_case": false,
+  "description": "A supplication (adhkar) or a Qur'an verse",
+  "usage": "/dua [morning|evening] · /ayah"
+ },
+ {
+  "name": "deploy",
+  "only_match": true,
+  "pattern": null,
+  "ignore_case": false,
+  "description": "Deploy a web app to Vercel",
+  "usage": "/deploy <ability name | folder> · /deploy list"
+ },
+ {
+  "name": "desktop",
+  "only_match": true,
+  "pattern": "^\\s*(?:(?:hey\\s+)?ultron[\\s,]+)?(?:(?:yo|hey|please)\\s+|can you\\s+|could you\\s+)?(?:(?:use|using) (?:the |your )?(?:mouse|screen|desktop|computer) to\\s+.+|(?:control|operate|automate|use) (?:the |my )?(?:app|browser|chatgpt|firefox|chrome)\\b.*|(?:find|search|fill|create|download|compare|organize|update|change) .+?\\s+(?:and then|and|then)\\s+(?:click|select|choose|find|open|save|download|create|type|change|set|search|fill)\\b.+|(?:enable|disable|turn on|turn off|switch to) (?:the )?(?:dark|light) (?:mode|theme).*|(?:open|launch|switch to|go to) .+?\\s+(?:and then|and|then)\\s+.+)\\s*$",
+  "ignore_case": true,
+  "description": "complete a task in apps by looking at the screen and using the mouse and keyboard",
+  "usage": "The original user task, e.g. \"enable dark mode in this app\", \"open Firefox and find the downloads\", \"use the mouse to open settings\". Use for multi-step app tasks, visible controls, or when one shortcut is insufficient. The agent inspects screenshots and acts until the requested result is verified."
+ },
+ {
+  "name": "generated",
+  "only_match": true,
+  "pattern": null,
+  "ignore_case": false,
+  "description": "Run an ability you built with /build",
+  "usage": "/<your ability command> [arguments]"
+ },
+ {
+  "name": "hacker",
+  "only_match": true,
+  "pattern": null,
+  "ignore_case": false,
+  "description": "Authorized read-only local project security checks",
+  "usage": "/hacker --authorized <local-project-path>; /hacker tools"
+ },
+ {
+  "name": "memory",
+  "only_match": true,
+  "pattern": "^\\s*(remember\\s+(that\\s+)?)?(when|whenever|if)\\s+i\\s+say\\s+(?:.+?)\\s*,?\\s+i\\s+mean\\s+(?:.+)$|^\\s*remember\\s+(that\\s+)?(?:.+?)\\s+(means|is short for|refers to|stands for)\\s+(?:.+)$|^\\s*(please\\s+)?(remember|note|keep in mind|don'?t forget|do not forget)\\b(\\s+that)?[\\s,:]+(?:.+)$|^\\s*yes,?\\s+forget\\s+everything\\b|^\\s*(please\\s+)?forget\\s+(about\\s+)?(?:.+)$|^\\s*what\\s+(do|did)\\s+you\\s+(remember|know)(\\s+about\\s+(?:.+?))?\\s*\\??$|^\\s*(show|list)\\s+(me\\s+)?(my\\s+|your\\s+)?memor(y|ies)\\b|^\\s*what\\s+(have|did)\\s+you\\s+learn(ed|t)?\\b|\\blearning\\s+stats\\b|^\\s*how\\s+much\\s+have\\s+you\\s+learn",
+  "ignore_case": true,
+  "description": "remember a fact, forget something, or say what you remember",
+  "usage": "\"remember that <fact>\", \"when I say <phrase> I mean <thing>\", \"forget <thing>\", \"what do you remember [about <topic>]\""
+ },
+ {
+  "name": "time_report",
+  "only_match": true,
+  "pattern": "\\bhow (much|long|many hours)\\b.*\\b(work|worked|study|studied|focus|focused|spent|spend|track|tracked|logged|did i|have i)\\b|^\\s*(show|open|give|get|display|see)?\\s*(me\\s+)?(my\\s+|the\\s+)?(today'?s\\s+|yesterday'?s\\s+|daily\\s+|weekly\\s+|monthly\\s+|yearly\\s+|((this|last)\\s+)?(day|week|month|year)'?s?\\s+)?(time\\s+|focus\\s+|work\\s+|study\\s+|timer\\s+)?(report|stats|statistics|dashboard|charts?)\\b|^\\s*(label|tag|call|name|mark|rename)\\s+(that|it|this|the\\s+last(\\s+one|\\s+session|\\s+timer)?|last(\\s+one|\\s+session|\\s+timer)?)\\s+(as\\s+|to\\s+)?(?P<label>.+?)\\s*$|\\b(show|open)\\b.*\\b(charts?|dashboard|graphs?)\\b",
+  "ignore_case": true,
+  "description": "report how much time I worked, studied or focused, show my stats or charts",
+  "usage": "\"how much did I work today|this week|this month\", \"show my week report\", \"label that as <label>\""
+ },
+ {
+  "name": "screen",
+  "only_match": true,
+  "pattern": "^\\s*(?:please\\s+)?(?:explain (?:this|that|my|the)|what (?:is|does|am I|are) (?:this|that|on|these)|what(?:\\'s| is) on my screen|point (?:at|to|out)|highlight\\b|circle\\b|draw (?:an? )?(?:arrow|circle|box)|tell me more|explain more|why (?:is|does) (?:it|that|this))",
+  "ignore_case": true,
+  "description": "explain the current screen, answer follow-up questions, point or highlight a control",
+  "usage": "explain this screen; point to <visible control>; highlight <visible area>; tell me more"
+ },
+ {
+  "name": "screenshot",
+  "only_match": true,
+  "pattern": "\\bscreen\\s?(shot|cap(ture)?)\\b|\\b(capture|snap)\\b.*\\bscreen\\b",
+  "ignore_case": true,
+  "description": "take a screenshot, capture or snap the screen",
+  "usage": "\"screenshot\" (whole screen) or \"screenshot region\""
+ },
+ {
+  "name": "web_search",
+  "only_match": false,
+  "pattern": "^\\s*(search|google|look\\s+up|find)\\b",
+  "ignore_case": true,
+  "description": "search the web or google, look up or find information online about a topic",
+  "usage": "search [youtube|github|wikipedia|reddit] for <query>, e.g. \"search youtube for lofi\""
+ },
+ {
+  "name": "system",
+  "only_match": true,
+  "pattern": null,
+  "ignore_case": false,
+  "description": "Today's quests, planning and logging in THE SYSTEM",
+  "usage": "/today · /quest <objective> · /plan <objective> · /did <quest> · /log <kind> <values>"
+ },
+ {
+  "name": "tasks",
+  "only_match": true,
+  "pattern": "^\\s*(?:(?:please|can you|could you)\\s+)?(?:add|create|new|set\\s*up)\\s+(?:(?:a|new)\\s+)*task(?:\\s+for me)?(?:\\s+(?:twin|bro))?\\s*[, :]*\\s*(?:name it\\s*:?\\s*)?(?P<title>.+)$|^\\s*(?:(?:please|can you|could you)\\s+)?(?:(?:show|open|list)\\s+(?:my\\s+)?tasks\\b|(?:complete|finish|reopen|focus)\\s+(?:on\\s+)?task\\s+#?\\d+)",
+  "ignore_case": true,
+  "description": "add tasks, show tasks, complete tasks or focus on a task",
+  "usage": "add task <title>; show tasks; complete task <id>; reopen task <id>; focus task <id>"
+ },
+ {
+  "name": "timer",
+  "only_match": true,
+  "pattern": "\\b(timer|stopwatch|countdown|count down|remind me in|pomodoro)\\b",
+  "ignore_case": true,
+  "description": "set a timer or countdown for some minutes, or start a stopwatch",
+  "usage": "\"timer <n> min|s|h [for <label>]\", \"start stopwatch [for <label>]\", \"pause timer\", \"resume timer\", \"stop timer\", \"how much time is left on the timer\""
+ },
+ {
+  "name": "volume",
+  "only_match": true,
+  "pattern": "\\b(volume|louder|quieter|mute|unmute)\\b",
+  "ignore_case": true,
+  "description": "change the sound volume: turn it up or down, louder, quieter, mute or unmute",
+  "usage": "\"volume up 10\", \"volume down 10\", \"volume to 40%\", \"mute\", \"unmute\""
+ },
+ {
+  "name": "workflow",
+  "only_match": true,
+  "pattern": "(?:^\\s*(?:(?:hey|yo)[, ]+)?(?:ultron[, ]+)?(?:(?:good|okay|ok|great|thanks)[,.!]?\\s+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:research|do\\s+(?:a\\s+)?(?:search|research)|search|google|look\\s+up|compare|find\\s+(?:out|information|sources|reviews))\\b)|(?:^\\s*(?:(?:hey|yo)[, ]+)?(?:ultron[, ]+)?(?:(?:good|okay|ok|great|thanks)[,.!]?\\s+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:teach|teatch|walk me through|guide me|show me how|help me (?:learn|understand)|explain (?:to me )?how)\\b)|(?:^\\s*(?:(?:hey|yo)[, ]+)?(?:ultron[, ]+)?(?:(?:good|okay|ok|great|thanks)[,.!]?\\s+)?(?:please\\s+|can you\\s+|could you\\s+)?(?:analy[sz]e|review (?:this|the)|study (?:this|the)|trade (?:for|with) me|paper[- ]trade)\\b)|(?:\\b(?:simora|trade\\.padre\\.gg|paper[- ]trad(?:e|es|ing))\\b|^\\s*(?:(?:please|go|start|can you|could you)\\s+)*(?:trade|trading)\\s+memecoins?\\b)",
+  "ignore_case": true,
+  "description": "research with sources, teach step by step, or analyze what is on screen",
+  "usage": "research <question>; teach me how to <goal>; analyze this chart with me"
+ },
+ {
+  "name": "workspace",
+  "only_match": true,
+  "pattern": "^\\s*/?workspace\\b|^\\s*(?:please\\s+)?(?:open|show|launch|start|go to|bring up)\\s+(?:the\\s+|my\\s+)?(?:ultron\\s+)?workspace\\b|^\\s*(?:please\\s+)?(?:open|show|go to)\\s+(?:the\\s+|my\\s+)?workspace\\s+(?:documents|calendar|memories|cookbook|gallery|library|agenda|memory|images|models|notes|email|inbox|tasks|todos|note|mail|docs|chat)\\b",
+  "ignore_case": true,
+  "description": "Open the Ultron Workspace (chat, research, docs, email, notes, calendar)",
+  "usage": "/workspace [notes|calendar|email|tasks|memory|gallery|cookbook|library] · /workspace status|restart|stop"
+ },
+ {
+  "name": "none",
+  "only_match": false,
+  "pattern": "^\\s*(hi|hello|hey|yo|sup|thanks|thank you|thx|good (morning|afternoon|evening|night))(\\s+(there|ultron|man|bro))?\\s*[.!]*\\s*$|\\b(who|what) are you\\b|^\\s*(what can you do|help)\\s*\\??\\s*$",
+  "ignore_case": true,
+  "description": "small talk or anything else",
+  "usage": null
+ }
+]

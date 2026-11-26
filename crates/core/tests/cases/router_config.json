@@ -1,0 +1,3072 @@
+{
+ "router": {
+  "rule": [
+   {
+    "args": [
+     "open firefox"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "launch discord"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "open the terminal"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "start vs code"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "open my files"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "search for how to center a div"
+    ],
+    "out": "workflow"
+   },
+   {
+    "args": [
+     "google the weather in paris"
+    ],
+    "out": "workflow"
+   },
+   {
+    "args": [
+     "look up the population of morocco"
+    ],
+    "out": "workflow"
+   },
+   {
+    "args": [
+     "go to youtube"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "visit github.com"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "take me to reddit"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "open spotify"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "open wireshark"
+    ],
+    "out": "open_app"
+   },
+   {
+    "args": [
+     "find cheap flights to tokyo"
+    ],
+    "out": "web_search"
+   },
+   {
+    "args": [
+     "screenshot"
+    ],
+    "out": "screenshot"
+   },
+   {
+    "args": [
+     "snap a picture of my screen"
+    ],
+    "out": "screenshot"
+   },
+   {
+    "args": [
+     "louder"
+    ],
+    "out": "volume"
+   },
+   {
+    "args": [
+     "what day is it"
+    ],
+    "out": "time"
+   },
+   {
+    "args": [
+     "who are you"
+    ],
+    "out": "none"
+   },
+   {
+    "args": [
+     "fire up spotify"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "i need a terminal"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "good morning"
+    ],
+    "out": "none"
+   },
+   {
+    "args": [
+     "take a screenshot"
+    ],
+    "out": "screenshot"
+   },
+   {
+    "args": [
+     "capture the screen"
+    ],
+    "out": "screenshot"
+   },
+   {
+    "args": [
+     "turn the volume up"
+    ],
+    "out": "volume"
+   },
+   {
+    "args": [
+     "make it quieter"
+    ],
+    "out": "volume"
+   },
+   {
+    "args": [
+     "mute the sound"
+    ],
+    "out": "volume"
+   },
+   {
+    "args": [
+     "what time is it"
+    ],
+    "out": "time"
+   },
+   {
+    "args": [
+     "what's the date today"
+    ],
+    "out": "time"
+   },
+   {
+    "args": [
+     "set a timer for 5 minutes"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "start a stopwatch"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "how much did i work today"
+    ],
+    "out": "time_report"
+   },
+   {
+    "args": [
+     "show my week report"
+    ],
+    "out": "time_report"
+   },
+   {
+    "args": [
+     "label that as study"
+    ],
+    "out": "time_report"
+   },
+   {
+    "args": [
+     "timer 25 min for reports"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "pause the timer"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "how much time is left on the timer"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "stop the stopwatch"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "remember that my gym is at 6pm"
+    ],
+    "out": "memory"
+   },
+   {
+    "args": [
+     "forget my gym"
+    ],
+    "out": "memory"
+   },
+   {
+    "args": [
+     "what do you remember"
+    ],
+    "out": "memory"
+   },
+   {
+    "args": [
+     "when i say my notes i mean obsidian"
+    ],
+    "out": "memory"
+   },
+   {
+    "args": [
+     "open workspace"
+    ],
+    "out": "workspace"
+   },
+   {
+    "args": [
+     "/workspace notes"
+    ],
+    "out": "workspace"
+   },
+   {
+    "args": [
+     "show my workspace calendar"
+    ],
+    "out": "workspace"
+   },
+   {
+    "args": [
+     "workspace status"
+    ],
+    "out": "workspace"
+   },
+   {
+    "args": [
+     "hello there"
+    ],
+    "out": "none"
+   },
+   {
+    "args": [
+     "thanks"
+    ],
+    "out": "none"
+   },
+   {
+    "args": [
+     ""
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "   "
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "START A STOPWATCH"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "start a stopwatch for reading"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "open spotify and play lofi"
+    ],
+    "out": "desktop"
+   },
+   {
+    "args": [
+     "no, i meant spotify"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "nope it's firefox"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "not that, use vlc"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "wrong!"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "no"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "nah try chrome please"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "what time is it in tokyo"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "how much did i work this week"
+    ],
+    "out": "time_report"
+   },
+   {
+    "args": [
+     "is it raining?"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "remember my locker is 42"
+    ],
+    "out": "memory"
+   },
+   {
+    "args": [
+     "who are you"
+    ],
+    "out": "none"
+   },
+   {
+    "args": [
+     "set a timer for 10 minutes"
+    ],
+    "out": "timer"
+   },
+   {
+    "args": [
+     "volume up"
+    ],
+    "out": "volume"
+   },
+   {
+    "args": [
+     "take a screenshot"
+    ],
+    "out": "screenshot"
+   },
+   {
+    "args": [
+     "search rust lifetimes"
+    ],
+    "out": "workflow"
+   },
+   {
+    "args": [
+     "add a task: write the report"
+    ],
+    "out": "tasks"
+   },
+   {
+    "args": [
+     "research quantum batteries"
+    ],
+    "out": "workflow"
+   },
+   {
+    "args": [
+     "click the blue button"
+    ],
+    "out": "control"
+   },
+   {
+    "args": [
+     "what's on my screen"
+    ],
+    "out": "screen"
+   },
+   {
+    "args": [
+     "open the workspace"
+    ],
+    "out": "workspace"
+   },
+   {
+    "args": [
+     "Ultron, open firefox"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "café time?"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "日本語で検索"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "hey"
+    ],
+    "out": "none"
+   },
+   {
+    "args": [
+     "close this window"
+    ],
+    "out": "control"
+   },
+   {
+    "args": [
+     "move the window to the left"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "type hello world"
+    ],
+    "out": "control"
+   },
+   {
+    "args": [
+     "press ctrl+s"
+    ],
+    "out": "control"
+   },
+   {
+    "args": [
+     "scroll down"
+    ],
+    "out": "control"
+   },
+   {
+    "args": [
+     "teach me rust"
+    ],
+    "out": "workflow"
+   },
+   {
+    "args": [
+     "research how to take a screenshot"
+    ],
+    "out": "workflow"
+   },
+   {
+    "args": [
+     "add a task: take a screenshot of the bug"
+    ],
+    "out": "tasks"
+   }
+  ],
+  "correction": [
+   {
+    "args": [
+     "open firefox"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "launch discord"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "open the terminal"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "start vs code"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "open my files"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "search for how to center a div"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "google the weather in paris"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "look up the population of morocco"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "go to youtube"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "visit github.com"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "take me to reddit"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "open spotify"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "open wireshark"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "find cheap flights to tokyo"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "screenshot"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "snap a picture of my screen"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "louder"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "what day is it"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "who are you"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "fire up spotify"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "i need a terminal"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "good morning"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "take a screenshot"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "capture the screen"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "turn the volume up"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "make it quieter"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "mute the sound"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "what time is it"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "what's the date today"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "set a timer for 5 minutes"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "start a stopwatch"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "how much did i work today"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "show my week report"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "label that as study"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "timer 25 min for reports"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "pause the timer"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "how much time is left on the timer"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "stop the stopwatch"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "remember that my gym is at 6pm"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "forget my gym"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "what do you remember"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "when i say my notes i mean obsidian"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "open workspace"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "/workspace notes"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "show my workspace calendar"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "workspace status"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "hello there"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "thanks"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     ""
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "   "
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "START A STOPWATCH"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "start a stopwatch for reading"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "open spotify and play lofi"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "no, i meant spotify"
+    ],
+    "out": "spotify"
+   },
+   {
+    "args": [
+     "nope it's firefox"
+    ],
+    "out": "firefox"
+   },
+   {
+    "args": [
+     "not that, use vlc"
+    ],
+    "out": "vlc"
+   },
+   {
+    "args": [
+     "wrong!"
+    ],
+    "out": "!"
+   },
+   {
+    "args": [
+     "no"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "nah try chrome please"
+    ],
+    "out": "chrome please"
+   },
+   {
+    "args": [
+     "what time is it in tokyo"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "how much did i work this week"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "is it raining?"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "remember my locker is 42"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "who are you"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "set a timer for 10 minutes"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "volume up"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "take a screenshot"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "search rust lifetimes"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "add a task: write the report"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "research quantum batteries"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "click the blue button"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "what's on my screen"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "open the workspace"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "Ultron, open firefox"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "café time?"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "日本語で検索"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "hey"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "close this window"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "move the window to the left"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "type hello world"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "press ctrl+s"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "scroll down"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "teach me rust"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "research how to take a screenshot"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "add a task: take a screenshot of the bug"
+    ],
+    "out": null
+   }
+  ],
+  "question": [
+   {
+    "args": [
+     "open firefox"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "launch discord"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "open the terminal"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "start vs code"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "open my files"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "search for how to center a div"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "google the weather in paris"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "look up the population of morocco"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "go to youtube"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "visit github.com"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "take me to reddit"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "open spotify"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "open wireshark"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "find cheap flights to tokyo"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "screenshot"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "snap a picture of my screen"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "louder"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "what day is it"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "who are you"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "fire up spotify"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "i need a terminal"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "good morning"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "take a screenshot"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "capture the screen"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "turn the volume up"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "make it quieter"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "mute the sound"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "what time is it"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "what's the date today"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "set a timer for 5 minutes"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "start a stopwatch"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "how much did i work today"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "show my week report"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "label that as study"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "timer 25 min for reports"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "pause the timer"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "how much time is left on the timer"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "stop the stopwatch"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "remember that my gym is at 6pm"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "forget my gym"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "what do you remember"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "when i say my notes i mean obsidian"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "open workspace"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "/workspace notes"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "show my workspace calendar"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "workspace status"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "hello there"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "thanks"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     ""
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "   "
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "START A STOPWATCH"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "start a stopwatch for reading"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "open spotify and play lofi"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "no, i meant spotify"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "nope it's firefox"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "not that, use vlc"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "wrong!"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "no"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "nah try chrome please"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "what time is it in tokyo"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "how much did i work this week"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "is it raining?"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "remember my locker is 42"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "who are you"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "set a timer for 10 minutes"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "volume up"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "take a screenshot"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "search rust lifetimes"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "add a task: write the report"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "research quantum batteries"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "click the blue button"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "what's on my screen"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "open the workspace"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "Ultron, open firefox"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "café time?"
+    ],
+    "out": true
+   },
+   {
+    "args": [
+     "日本語で検索"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "hey"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "close this window"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "move the window to the left"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "type hello world"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "press ctrl+s"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "scroll down"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "teach me rust"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "research how to take a screenshot"
+    ],
+    "out": false
+   },
+   {
+    "args": [
+     "add a task: take a screenshot of the bug"
+    ],
+    "out": false
+   }
+  ],
+  "route": [
+   {
+    "op": [
+     "route",
+     "open firefox"
+    ],
+    "out": {
+     "reply": "open_app ran: open firefox",
+     "skill": "open_app",
+     "conf": 1.0,
+     "via": "rule",
+     "command": "open firefox",
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "open my music"
+    ],
+    "out": {
+     "reply": "open_app ran: open spotify",
+     "skill": "open_app",
+     "conf": 1.0,
+     "via": "rule",
+     "command": "open spotify",
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "show me some cat videos"
+    ],
+    "out": {
+     "reply": "web_search ran: search youtube for cat videos",
+     "skill": "web_search",
+     "conf": 1.0,
+     "via": "haiku",
+     "command": "search youtube for cat videos",
+     "ok": true,
+     "origin": "haiku"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "show me some dog videos"
+    ],
+    "out": {
+     "reply": "web_search ran: search youtube for dog videos",
+     "skill": "web_search",
+     "conf": 1.0,
+     "via": "learned",
+     "command": "search youtube for dog videos",
+     "ok": true,
+     "origin": "learned"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "what's the capital of peru"
+    ],
+    "out": {
+     "reply": "Lima.",
+     "skill": "llm",
+     "conf": 1.0,
+     "via": "haiku",
+     "command": null,
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "what's the capital of peru"
+    ],
+    "out": {
+     "reply": "Lima.",
+     "skill": "llm",
+     "conf": 1.0,
+     "via": "learned",
+     "command": null,
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "where is my locker"
+    ],
+    "out": {
+     "reply": "You told me: my locker is number 42 at the gym",
+     "skill": "memory",
+     "conf": 1.0,
+     "via": "memory",
+     "command": null,
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "tell me about my locker"
+    ],
+    "out": {
+     "reply": "Your locker is 42.",
+     "skill": "llm",
+     "conf": 1.0,
+     "via": "haiku",
+     "command": null,
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "put on something relaxing"
+    ],
+    "out": {
+     "reply": "open_app ran: open spotify",
+     "skill": "open_app",
+     "conf": 1.0,
+     "via": "haiku",
+     "command": "open spotify",
+     "ok": true,
+     "origin": "haiku"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "put on something relaxing"
+    ],
+    "out": {
+     "reply": "open_app ran: open spotify",
+     "skill": "open_app",
+     "conf": 1.0,
+     "via": "learned",
+     "command": "open spotify",
+     "ok": true,
+     "origin": "learned"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "make it UNCLEAR please"
+    ],
+    "out": {
+     "reply": "open_app could not make sense of it",
+     "skill": "open_app",
+     "conf": 1.0,
+     "via": "haiku",
+     "command": "open UNCLEAR thing",
+     "ok": false,
+     "origin": "haiku"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "open UNCLEAR"
+    ],
+    "out": {
+     "reply": "open_app could not make sense of it",
+     "skill": "open_app",
+     "conf": 1.0,
+     "via": "rule",
+     "command": null,
+     "ok": false,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "volume CRASH"
+    ],
+    "out": {
+     "reply": "That failed: boom",
+     "skill": "volume",
+     "conf": 1.0,
+     "via": "rule",
+     "command": "volume CRASH",
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "something nobody planned"
+    ],
+    "out": {
+     "reply": "none ran: something nobody planned",
+     "skill": "none",
+     "conf": 0.0,
+     "via": "laya",
+     "command": "something nobody planned",
+     "ok": true,
+     "origin": "laya"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "new conversation"
+    ],
+    "out": {
+     "reply": "Conversation cleared. What would you like to explore?",
+     "skill": "screen",
+     "conf": 1.0,
+     "via": "rule",
+     "command": null,
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "track my focus"
+    ],
+    "out": {
+     "reply": "time_report ran: time report today",
+     "skill": "time_report",
+     "conf": 1.0,
+     "via": "haiku",
+     "command": "time report today",
+     "ok": true,
+     "origin": "haiku"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "route",
+     "start a stopwatch"
+    ],
+    "out": {
+     "reply": "timer ran: start a stopwatch",
+     "skill": "timer",
+     "conf": 1.0,
+     "via": "rule",
+     "command": "start a stopwatch",
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "last",
+     "open firfox",
+     10
+    ],
+    "out": null
+   },
+   {
+    "op": [
+     "correct",
+     "no, i meant open firefox"
+    ],
+    "out": {
+     "reply": "open_app ran: open firefox Got it, I'll do that next time.",
+     "skill": "open_app",
+     "conf": 1.0,
+     "via": "correction",
+     "command": "open firefox",
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "last",
+     "play sad songs",
+     10
+    ],
+    "out": null
+   },
+   {
+    "op": [
+     "correct",
+     "no i meant what's the capital of peru"
+    ],
+    "out": {
+     "reply": "Lima. Got it, I'll do that next time.",
+     "skill": "llm",
+     "conf": 1.0,
+     "via": "correction",
+     "command": null,
+     "ok": true,
+     "origin": "user"
+    },
+    "last": null
+   },
+   {
+    "op": [
+     "last",
+     "old thing",
+     400
+    ],
+    "out": null
+   },
+   {
+    "op": [
+     "correct",
+     "no, i meant open vlc"
+    ],
+    "out": null,
+    "last": [
+     "old thing",
+     4600.0
+    ]
+   },
+   {
+    "op": [
+     "correct",
+     "open vlc"
+    ],
+    "out": null,
+    "last": [
+     "old thing",
+     4600.0
+    ]
+   },
+   {
+    "op": [
+     "route",
+     "open firfox"
+    ],
+    "out": {
+     "reply": "open_app ran: open firfox",
+     "skill": "open_app",
+     "conf": 1.0,
+     "via": "rule",
+     "command": "open firfox",
+     "ok": true,
+     "origin": "user"
+    },
+    "last": [
+     "old thing",
+     4600.0
+    ]
+   },
+   {
+    "op": [
+     "route",
+     "play sad songs"
+    ],
+    "out": {
+     "reply": "Lima.",
+     "skill": "llm",
+     "conf": 1.0,
+     "via": "learned",
+     "command": null,
+     "ok": true,
+     "origin": "user"
+    },
+    "last": [
+     "old thing",
+     4600.0
+    ]
+   }
+  ],
+  "planner_calls": [
+   [
+    "show me some cat videos",
+    []
+   ],
+   [
+    "what's the capital of peru",
+    []
+   ],
+   [
+    "tell me about my locker",
+    [
+     "my locker is number 42 at the gym"
+    ]
+   ],
+   [
+    "put on something relaxing",
+    []
+   ],
+   [
+    "make it UNCLEAR please",
+    []
+   ],
+   [
+    "open UNCLEAR",
+    []
+   ],
+   [
+    "something nobody planned",
+    []
+   ],
+   [
+    "track my focus",
+    []
+   ]
+  ],
+  "tables": {
+   "learned": [
+    [
+     1,
+     "exact",
+     "show me some cat videos",
+     "web_search",
+     "search youtube for cat videos",
+     null,
+     "haiku",
+     "show me some cat videos",
+     0,
+     0,
+     1790000003.0,
+     null
+    ],
+    [
+     2,
+     "template",
+     "^show\\s+me\\s+some\\s+(.+?)$",
+     "web_search",
+     "search youtube for {0}",
+     null,
+     "haiku",
+     "show me some cat videos",
+     1,
+     0,
+     1790000003.0,
+     1790000004.0
+    ],
+    [
+     3,
+     "exact",
+     "what's the capital of peru",
+     "llm",
+     null,
+     "Lima.",
+     "haiku",
+     "what's the capital of peru",
+     2,
+     0,
+     1790000005.0,
+     1790000012.0
+    ],
+    [
+     4,
+     "exact",
+     "put on something relaxing",
+     "open_app",
+     "open spotify",
+     null,
+     "haiku",
+     "put on something relaxing",
+     1,
+     0,
+     1790000008.0,
+     1790000009.0
+    ],
+    [
+     5,
+     "exact",
+     "open firfox",
+     "open_app",
+     "open firefox",
+     null,
+     "correction",
+     "open firfox",
+     0,
+     0,
+     1790000010.0,
+     null
+    ],
+    [
+     6,
+     "exact",
+     "play sad songs",
+     "llm",
+     null,
+     "Lima.",
+     "correction",
+     "play sad songs",
+     1,
+     0,
+     1790000013.0,
+     1790000015.0
+    ]
+   ],
+   "facts": [
+    [
+     1,
+     "my locker is number 42 at the gym",
+     "my locker is number 42 at the gym",
+     1790000001.0
+    ]
+   ],
+   "aliases": [
+    [
+     1,
+     "my music",
+     "spotify",
+     1790000002.0
+    ]
+   ]
+  }
+ },
+ "config": {
+  "preferences": [
+   {
+    "op": [
+     "read",
+     {}
+    ],
+    "out": {
+     "ok": {
+      "model": "sonnet",
+      "persistent_cursor": false,
+      "voice_language": "auto",
+      "voice_auto_send": true,
+      "voice_provider": "gemini",
+      "effort": "low",
+      "routing_model": "haiku"
+     }
+    },
+    "file": null
+   },
+   {
+    "op": [
+     "read",
+     {}
+    ],
+    "out": {
+     "ok": {
+      "model": "sonnet",
+      "persistent_cursor": false,
+      "voice_language": "auto",
+      "voice_auto_send": true,
+      "voice_provider": "gemini",
+      "effort": "low",
+      "routing_model": "haiku"
+     }
+    },
+    "file": {
+     "raw": "not json"
+    }
+   },
+   {
+    "op": [
+     "read",
+     {}
+    ],
+    "out": {
+     "ok": {
+      "model": "opus",
+      "persistent_cursor": false,
+      "voice_language": "auto",
+      "voice_auto_send": true,
+      "voice_provider": "gemini",
+      "effort": "high",
+      "routing_model": "haiku"
+     }
+    },
+    "file": {
+     "model": "opus",
+     "junk": 1,
+     "effort": "high"
+    }
+   },
+   {
+    "op": [
+     "read",
+     {}
+    ],
+    "out": {
+     "ok": {
+      "model": "sonnet",
+      "persistent_cursor": false,
+      "voice_language": "auto",
+      "voice_auto_send": true,
+      "voice_provider": "gemini",
+      "effort": "low",
+      "routing_model": "haiku"
+     }
+    },
+    "file": [
+     "a",
+     "list"
+    ]
+   },
+   {
+    "op": [
+     "save",
+     {
+      "model": "haiku"
+     }
+    ],
+    "out": {
+     "ok": {
+      "model": "haiku",
+      "persistent_cursor": false,
+      "voice_language": "auto",
+      "voice_auto_send": true,
+      "voice_provider": "gemini",
+      "effort": "low",
+      "routing_model": "haiku"
+     }
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": false,
+     "voice_language": "auto",
+     "voice_auto_send": true,
+     "voice_provider": "gemini",
+     "effort": "low",
+     "routing_model": "haiku"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "model": "gpt"
+     }
+    ],
+    "out": {
+     "err": "Choose Haiku, Sonnet, or Opus."
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": false,
+     "voice_language": "auto",
+     "voice_auto_send": true,
+     "voice_provider": "gemini",
+     "effort": "low",
+     "routing_model": "haiku"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "effort": "max"
+     }
+    ],
+    "out": {
+     "err": "Choose low, medium, or high effort."
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": false,
+     "voice_language": "auto",
+     "voice_auto_send": true,
+     "voice_provider": "gemini",
+     "effort": "low",
+     "routing_model": "haiku"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "routing_model": "opus"
+     }
+    ],
+    "out": {
+     "ok": {
+      "model": "haiku",
+      "persistent_cursor": false,
+      "voice_language": "auto",
+      "voice_auto_send": true,
+      "voice_provider": "gemini",
+      "effort": "low",
+      "routing_model": "opus"
+     }
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": false,
+     "voice_language": "auto",
+     "voice_auto_send": true,
+     "voice_provider": "gemini",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "persistent_cursor": 1
+     }
+    ],
+    "out": {
+     "err": "Invalid cursor preference."
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": false,
+     "voice_language": "auto",
+     "voice_auto_send": true,
+     "voice_provider": "gemini",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "persistent_cursor": true
+     }
+    ],
+    "out": {
+     "ok": {
+      "model": "haiku",
+      "persistent_cursor": true,
+      "voice_language": "auto",
+      "voice_auto_send": true,
+      "voice_provider": "gemini",
+      "effort": "low",
+      "routing_model": "opus"
+     }
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": true,
+     "voice_language": "auto",
+     "voice_auto_send": true,
+     "voice_provider": "gemini",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "voice_provider": "local"
+     }
+    ],
+    "out": {
+     "ok": {
+      "model": "haiku",
+      "persistent_cursor": true,
+      "voice_language": "auto",
+      "voice_auto_send": true,
+      "voice_provider": "local",
+      "effort": "low",
+      "routing_model": "opus"
+     }
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": true,
+     "voice_language": "auto",
+     "voice_auto_send": true,
+     "voice_provider": "local",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "voice_provider": "x"
+     }
+    ],
+    "out": {
+     "err": "Choose Gemini Live or local dictation."
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": true,
+     "voice_language": "auto",
+     "voice_auto_send": true,
+     "voice_provider": "local",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "voice_language": "ar"
+     }
+    ],
+    "out": {
+     "ok": {
+      "model": "haiku",
+      "persistent_cursor": true,
+      "voice_language": "ar",
+      "voice_auto_send": true,
+      "voice_provider": "local",
+      "effort": "low",
+      "routing_model": "opus"
+     }
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": true,
+     "voice_language": "ar",
+     "voice_auto_send": true,
+     "voice_provider": "local",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "voice_language": "fr"
+     }
+    ],
+    "out": {
+     "err": "Choose automatic, English, or Arabic recognition."
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": true,
+     "voice_language": "ar",
+     "voice_auto_send": true,
+     "voice_provider": "local",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "voice_auto_send": "yes"
+     }
+    ],
+    "out": {
+     "err": "Invalid voice submission preference."
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": true,
+     "voice_language": "ar",
+     "voice_auto_send": true,
+     "voice_provider": "local",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "voice_auto_send": false
+     }
+    ],
+    "out": {
+     "ok": {
+      "model": "haiku",
+      "persistent_cursor": true,
+      "voice_language": "ar",
+      "voice_auto_send": false,
+      "voice_provider": "local",
+      "effort": "low",
+      "routing_model": "opus"
+     }
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": true,
+     "voice_language": "ar",
+     "voice_auto_send": false,
+     "voice_provider": "local",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "unknown": 1
+     }
+    ],
+    "out": {
+     "err": "Unknown preference."
+    },
+    "file": {
+     "model": "haiku",
+     "persistent_cursor": true,
+     "voice_language": "ar",
+     "voice_auto_send": false,
+     "voice_provider": "local",
+     "effort": "low",
+     "routing_model": "opus"
+    }
+   },
+   {
+    "op": [
+     "save",
+     {
+      "effort": "medium",
+      "model": "opus"
+     }
+    ],
+    "out": {
+     "ok": {
+      "model": "opus",
+      "persistent_cursor": true,
+      "voice_language": "ar",
+      "voice_auto_send": false,
+      "voice_provider": "local",
+      "effort": "medium",
+      "routing_model": "opus"
+     }
+    },
+    "file": {
+     "model": "opus",
+     "persistent_cursor": true,
+     "voice_language": "ar",
+     "voice_auto_send": false,
+     "voice_provider": "local",
+     "effort": "medium",
+     "routing_model": "opus"
+    }
+   }
+  ],
+  "live_config": [
+   {
+    "op": [
+     "read",
+     [],
+     {},
+     null
+    ],
+    "out": {
+     "ok": {
+      "api_key": "",
+      "model": "gemini-3.8-live",
+      "voice": "Charon"
+     }
+    },
+    "file": null
+   },
+   {
+    "op": [
+     "save",
+     [
+      "  key-123  "
+     ],
+     {},
+     null
+    ],
+    "out": {
+     "ok": null
+    },
+    "file": {
+     "api_key": "key-123",
+     "model": "gemini-3.8-live",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "read",
+     [],
+     {},
+     null
+    ],
+    "out": {
+     "ok": {
+      "api_key": "key-123",
+      "model": "gemini-3.8-live",
+      "voice": "Charon"
+     }
+    },
+    "file": {
+     "api_key": "key-123",
+     "model": "gemini-3.8-live",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "read",
+     [],
+     {},
+     {
+      "GOOGLE_API_KEY": "g-key"
+     }
+    ],
+    "out": {
+     "ok": {
+      "api_key": "g-key",
+      "model": "gemini-3.8-live",
+      "voice": "Charon"
+     }
+    },
+    "file": {
+     "api_key": "key-123",
+     "model": "gemini-3.8-live",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "read",
+     [],
+     {},
+     {
+      "GEMINI_API_KEY": "gem",
+      "GOOGLE_API_KEY": "g-key"
+     }
+    ],
+    "out": {
+     "ok": {
+      "api_key": "gem",
+      "model": "gemini-3.8-live",
+      "voice": "Charon"
+     }
+    },
+    "file": {
+     "api_key": "key-123",
+     "model": "gemini-3.8-live",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "save",
+     [
+      "bad key"
+     ],
+     {},
+     null
+    ],
+    "out": {
+     "err": "Enter a valid Gemini API key."
+    },
+    "file": {
+     "api_key": "key-123",
+     "model": "gemini-3.8-live",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "save",
+     [
+      ""
+     ],
+     {},
+     null
+    ],
+    "out": {
+     "err": "Enter a valid Gemini API key."
+    },
+    "file": {
+     "api_key": "key-123",
+     "model": "gemini-3.8-live",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "save",
+     [
+      "k"
+     ],
+     {
+      "model": "gemini-3.8-live/v2.preview_x"
+     },
+     null
+    ],
+    "out": {
+     "ok": null
+    },
+    "file": {
+     "api_key": "k",
+     "model": "gemini-3.8-live/v2.preview_x",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "save",
+     [
+      "k"
+     ],
+     {
+      "model": "bad model!"
+     },
+     null
+    ],
+    "out": {
+     "err": "Enter a Gemini Live model ID."
+    },
+    "file": {
+     "api_key": "k",
+     "model": "gemini-3.8-live/v2.preview_x",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "save",
+     [
+      "k"
+     ],
+     {
+      "model": "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm"
+     },
+     null
+    ],
+    "out": {
+     "err": "Enter a Gemini Live model ID."
+    },
+    "file": {
+     "api_key": "k",
+     "model": "gemini-3.8-live/v2.preview_x",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "save",
+     [
+      "k"
+     ],
+     {
+      "voice": "Bob"
+     },
+     null
+    ],
+    "out": {
+     "err": "Choose a supported voice."
+    },
+    "file": {
+     "api_key": "k",
+     "model": "gemini-3.8-live/v2.preview_x",
+     "voice": "Charon"
+    }
+   },
+   {
+    "op": [
+     "save",
+     [
+      "k2"
+     ],
+     {
+      "model": "  gemini-x  ",
+      "voice": "Puck"
+     },
+     null
+    ],
+    "out": {
+     "ok": null
+    },
+    "file": {
+     "api_key": "k2",
+     "model": "gemini-x",
+     "voice": "Puck"
+    }
+   },
+   {
+    "op": [
+     "read",
+     [],
+     {},
+     null
+    ],
+    "out": {
+     "ok": {
+      "api_key": "k2",
+      "model": "gemini-x",
+      "voice": "Puck"
+     }
+    },
+    "file": {
+     "api_key": "k2",
+     "model": "gemini-x",
+     "voice": "Puck"
+    }
+   },
+   {
+    "op": [
+     "read",
+     [],
+     {},
+     null
+    ],
+    "out": {
+     "ok": {
+      "api_key": "",
+      "model": "gemini-3.8-live",
+      "voice": "Charon"
+     }
+    },
+    "file": [
+     1,
+     2
+    ]
+   },
+   {
+    "op": [
+     "save",
+     [
+      "k3"
+     ],
+     {},
+     null
+    ],
+    "out": {
+     "ok": null
+    },
+    "file": {
+     "api_key": "k3",
+     "model": "gemini-3.8-live",
+     "voice": "Charon"
+    }
+   }
+  ],
+  "model_settings": [
+   {
+    "fn": "is_command",
+    "args": [
+     "/model"
+    ],
+    "out": true
+   },
+   {
+    "fn": "is_command",
+    "args": [
+     " /MODEL sonnet"
+    ],
+    "out": true
+   },
+   {
+    "fn": "is_command",
+    "args": [
+     "/settings"
+    ],
+    "out": true
+   },
+   {
+    "fn": "is_command",
+    "args": [
+     "hello"
+    ],
+    "out": false
+   },
+   {
+    "fn": "is_command",
+    "args": [
+     ""
+    ],
+    "out": false
+   },
+   {
+    "fn": "is_command",
+    "args": [
+     "/models"
+    ],
+    "out": false
+   },
+   {
+    "fn": "is_command",
+    "args": [
+     "/speed thorough please"
+    ],
+    "out": true
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/settings",
+     true
+    ],
+    "out": "Desktop: sonnet\nEffort: low\nRouting fallback: haiku\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/settings now",
+     true
+    ],
+    "out": "Usage: /settings"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model",
+     true
+    ],
+    "out": "Desktop: sonnet\nEffort: low\nRouting fallback: haiku\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task.\nModels: haiku, sonnet, opus. Example: /model sonnet or /model router haiku."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model opus",
+     true
+    ],
+    "out": "Would update: model=opus"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model router haiku",
+     true
+    ],
+    "out": "Would update: routing_model=haiku"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model desktop sonnet",
+     true
+    ],
+    "out": "Would update: model=sonnet"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model router",
+     true
+    ],
+    "out": "Desktop: sonnet\nEffort: low\nRouting fallback: haiku\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task.\nModels: haiku, sonnet, opus. Example: /model sonnet or /model router haiku."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model gpt",
+     true
+    ],
+    "out": "Usage: /model [desktop|router] haiku|sonnet|opus"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model opus haiku",
+     true
+    ],
+    "out": "Usage: /model [desktop|router] haiku|sonnet|opus"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/effort",
+     true
+    ],
+    "out": "Saved desktop effort: low. Choose /effort low|medium|high. Haiku ignores effort."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/effort high",
+     true
+    ],
+    "out": "Would update: effort=high"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/effort max",
+     true
+    ],
+    "out": "Usage: /effort low|medium|high"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/speed",
+     true
+    ],
+    "out": "Presets: /speed fast (Haiku/low), balanced (Sonnet/medium), thorough (Opus/high).\nDesktop: sonnet\nEffort: low\nRouting fallback: haiku\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/speed fast",
+     true
+    ],
+    "out": "Would update: model=haiku, effort=low"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/speed thorough",
+     true
+    ],
+    "out": "Would update: model=opus, effort=high"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/speed warp",
+     true
+    ],
+    "out": "Usage: /speed fast|balanced|thorough"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/MODEL  Haiku",
+     true
+    ],
+    "out": "Would update: model=haiku"
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/unknown",
+     true
+    ],
+    "out": null
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model opus",
+     false
+    ],
+    "out": "Saved for the next task.\nDesktop: opus\nEffort: low\nRouting fallback: haiku\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/effort medium",
+     false
+    ],
+    "out": "Saved for the next task.\nDesktop: opus\nEffort: medium\nRouting fallback: haiku\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/speed balanced",
+     false
+    ],
+    "out": "Saved for the next task.\nDesktop: sonnet\nEffort: medium\nRouting fallback: haiku\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/model router sonnet",
+     false
+    ],
+    "out": "Saved for the next task.\nDesktop: sonnet\nEffort: medium\nRouting fallback: sonnet\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "handle",
+    "args": [
+     "/speed fast",
+     false
+    ],
+    "out": "Saved for the next task.\nDesktop: haiku\nEffort: not applied on Haiku\nRouting fallback: sonnet\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "status",
+    "args": [],
+    "out": "Desktop: haiku\nEffort: not applied on Haiku\nRouting fallback: sonnet\nVoice: Whisper small (local dictation)\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "status",
+    "args": [],
+    "env": {
+     "ULTRON_DESKTOP_MODEL": "opus"
+    },
+    "out": "Desktop: opus (ULTRON_DESKTOP_MODEL override)\nEffort: low\nRouting fallback: sonnet\nVoice: Whisper small (local dictation)\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task."
+   },
+   {
+    "fn": "claude_options",
+    "args": [
+     "haiku",
+     "high"
+    ],
+    "out": [
+     "--model",
+     "haiku"
+    ]
+   },
+   {
+    "fn": "claude_options",
+    "args": [
+     "sonnet",
+     "low"
+    ],
+    "out": [
+     "--model",
+     "sonnet",
+     "--effort",
+     "low"
+    ]
+   },
+   {
+    "fn": "claude_options",
+    "args": [
+     "opus",
+     "medium"
+    ],
+    "out": [
+     "--model",
+     "opus",
+     "--effort",
+     "medium"
+    ]
+   }
+  ]
+ }
+}
