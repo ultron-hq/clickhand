@@ -4,7 +4,7 @@
 
 <h1 align="center">Ultron</h1>
 
-<p align="center"><b>A desktop agent that lives on your screen.</b><br>
+<p align="center"><b>A desktop agent that lives on your screen, and hands for any AI agent that needs to use your PC like a human.</b><br>
 Press <kbd>Ctrl</kbd>+<kbd>Space</kbd>, say what you want, and it opens the app, runs the timer,<br>
 remembers what you taught it, or takes the mouse and does the task while you watch.</p>
 
@@ -48,6 +48,21 @@ can drive the desktop. It is Python + Qt and tied to X11. The rewrite keeps all 
 | **Hands**: an MCP server so your coding agent can see and use your desktop | wave 4 |
 | Voice: local Whisper transcription, Gemini Live conversations | wave 5 |
 | Abilities Ultron writes for itself, sandboxed in WebAssembly | wave 6 |
+
+## Hands: let your AI agent use the PC
+
+Claude Code, Codex and other agents can edit files but can't click. **Ultron Hands** gives them a
+mouse and keyboard: an [MCP](https://modelcontextprotocol.io) server that lets any agent see the
+screen, click, scroll and type, so you can ask it for anything that needs a person at the computer.
+
+```sh
+claude mcp add ultron-hands -- ultron-hands     # Claude Code
+codex mcp add ultron-hands -- ultron-hands      # Codex
+```
+
+It works in a loop (screenshot, act, look again to verify), with the safety rules below: a kill
+switch, actions only on your requests, no typed passwords, and a local log of every action.
+Status: running in the original app, being ported in [wave 4](ROADMAP.md).
 
 ## Quick start
 
