@@ -1,5 +1,6 @@
 import { Keyboard, Timer, BookMarked, Cpu, Mic, Puzzle, Scale, Monitor, Plug } from "lucide-react";
 import { MaskField } from "@/components/MaskField";
+import { Header } from "@/components/Header";
 import { Workstation } from "@/components/Workstation";
 import { LoopDiagram } from "@/components/LoopDiagram";
 import { LiveTimer } from "@/components/LiveTimer";
@@ -40,24 +41,28 @@ const MODELS = [
   ["Anthropic, OpenAI, Gemini, OpenRouter", "An API key in your OS keychain", ""],
 ];
 
-export default function Home() {
+export const revalidate = 3600;
+
+/** The real star count from GitHub, refreshed hourly; null if GitHub doesn't answer. */
+async function getStars(): Promise<number | null> {
+  try {
+    const res = await fetch("https://api.github.com/repos/ultron-hq/ultron", {
+      headers: { accept: "application/vnd.github+json" },
+      next: { revalidate: 3600 },
+    });
+    if (!res.ok) return null;
+    const j = (await res.json()) as { stargazers_count?: number };
+    return typeof j.stargazers_count === "number" ? j.stargazers_count : null;
+  } catch {
+    return null;
+  }
+}
+
+export default async function Home() {
+  const stars = await getStars();
   return (
     <>
-      <header className="nav">
-        <a className="brand" href="/">
-          <img src="/logo.svg" alt="" width={24} height={24} />
-          Ultron
-        </a>
-        <nav aria-label="Main">
-          <a href="#hands">Hands</a>
-          <a href="#app">The app</a>
-          <a href="#safety">Safety</a>
-          <a href={`${REPO}/blob/main/ROADMAP.md`}>Roadmap</a>
-        </nav>
-        <a className="btn btn-quiet btn-sm" href={REPO}>
-          GitHub
-        </a>
-      </header>
+      <Header repo={REPO} stars={stars} />
 
       <main>
         <section className="hero">

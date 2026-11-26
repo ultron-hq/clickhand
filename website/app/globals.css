@@ -77,17 +77,35 @@ kbd {
 
 /* nav */
 .nav {
-  position: sticky; top: 0; z-index: 20;
-  display: flex; align-items: center; gap: 32px;
-  height: 64px; padding: 0 32px;
-  background: rgba(11, 13, 20, 0.8);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--line);
+  position: sticky; top: 0; z-index: 30;
+  background: rgba(11, 13, 20, 0);
+  border-bottom: 1px solid transparent;
+  transition: background-color 200ms var(--ease), border-color 200ms var(--ease);
 }
-.brand { display: flex; align-items: center; gap: 8px; font: 500 17px var(--sans); text-decoration: none; }
-.nav nav { display: flex; gap: 24px; margin-left: auto; }
-.nav nav a { color: var(--text-2); text-decoration: none; font-size: 14px; transition: color 150ms var(--ease); }
-.nav nav a:hover { color: var(--text); }
+.nav-scrolled, .nav-open { background: rgba(11, 13, 20, 0.82); backdrop-filter: blur(14px) saturate(1.2); border-bottom-color: var(--line); }
+.nav-inner { max-width: var(--page); margin: 0 auto; height: 64px; padding: 0 32px; display: flex; align-items: center; gap: 32px; }
+.brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+.brand-word { font: 800 22px/1 var(--display); font-variation-settings: "ROND" 0; letter-spacing: -0.04em; }
+.nav-links { display: flex; gap: 4px; margin: 0 auto; padding: 4px; border-radius: 12px; background: rgba(26, 30, 40, 0.5); border: 1px solid var(--line); }
+.nav-links a {
+  position: relative; height: 32px; padding: 0 14px; display: inline-flex; align-items: center;
+  border-radius: 8px; color: var(--text-2); text-decoration: none; font-size: 14px;
+  transition: color 150ms var(--ease), background-color 150ms var(--ease);
+}
+.nav-links a:hover { color: var(--text); background: rgba(238, 240, 245, 0.04); }
+.nav-links a[aria-current] { color: var(--text); background: var(--raised); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+.nav-links a[aria-current]::after {
+  content: ""; position: absolute; left: 14px; right: 14px; bottom: 4px; height: 2px; border-radius: 1px; background: var(--brand);
+}
+.nav-end { display: flex; align-items: center; gap: 8px; }
+.stars { display: inline-flex; align-items: center; gap: 4px; padding-left: 10px; margin-left: 2px; border-left: 1px solid var(--line-2); color: var(--text-2); font: 500 12px var(--mono); }
+.stars svg { color: var(--amber); }
+.nav-toggle { display: none; width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--line); background: var(--raised); color: var(--text); align-items: center; justify-content: center; cursor: pointer; }
+.nav-progress { position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--brand); transform: scaleX(0); transform-origin: 0 50%; }
+
+/* the EMP from the kill switch (pixelfx) */
+.estop-plinth { isolation: isolate; }
+.estop-fx { position: absolute; left: 50%; top: 66%; z-index: 2; pointer-events: none; image-rendering: pixelated; }
 
 /* sections */
 main > section { max-width: var(--page); margin: 0 auto; padding: 128px 32px; }
@@ -380,8 +398,15 @@ main > section.build { max-width: none; padding: 0; border-top: 1px solid var(--
   main > section { padding: 80px 24px; }
   .hands, .app, .safety { grid-template-columns: 1fr; gap: 48px; }
   .app-visual { aspect-ratio: 4 / 3; }
-  .nav nav { display: none; }
-  .nav .btn { margin-left: auto; }
+  .nav-links { display: none; }
+  .nav-end { margin-left: auto; }
+  .nav-toggle { display: inline-flex; }
+  .nav-open .nav-links {
+    display: grid; position: absolute; top: 64px; left: 0; right: 0; margin: 0; padding: 12px 20px 20px; gap: 4px;
+    border-radius: 0; border: 0; border-bottom: 1px solid var(--line); background: rgba(11, 13, 20, 0.96); backdrop-filter: blur(14px);
+  }
+  .nav-open .nav-links a { height: 44px; font-size: 16px; }
+  .nav-open .nav-links a[aria-current]::after { display: none; }
 }
 @media (max-width: 720px) {
   .screen { aspect-ratio: auto; height: 620px; }
@@ -389,7 +414,7 @@ main > section.build { max-width: none; padding: 0; border-top: 1px solid var(--
   .appwin { left: 3%; right: 3%; width: auto; top: 12%; }
   .safety ul { grid-template-columns: 1fr; }
   td.muted { display: none; }
-  .nav { padding: 0 20px; }
+  .nav-inner { padding: 0 20px; }
   main > section { padding: 64px 20px; }
 }
 @media (prefers-reduced-motion: reduce) {
