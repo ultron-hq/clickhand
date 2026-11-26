@@ -1,0 +1,15 @@
+[package]
+name = "ultron"
+description = "Ultron desktop agent. Front door: owns the CLI and falls back to the Python original for what is not ported yet."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "ultron-rs"
+path = "src/main.rs"
+
+[dependencies]
+ultron-core = { path = "../core" }

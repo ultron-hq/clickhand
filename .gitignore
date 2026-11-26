@@ -1,0 +1,7 @@
+target/
+__pycache__/
+node_modules/
+dist/
+# the Python original, kept locally as the reference for recordings (not published)
+reference/
+rust/app-cases/

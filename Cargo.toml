@@ -1,0 +1,14 @@
+[workspace]
+resolver = "2"
+members = ["crates/core", "crates/app"]
+
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/ultron-hq/ultron"
+rust-version = "1.85"
+
+[workspace.dependencies]
+fs4 = { version = "0.13", features = ["sync"] }
+interprocess = "2"

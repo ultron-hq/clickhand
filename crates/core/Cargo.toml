@@ -1,0 +1,12 @@
+[package]
+name = "ultron-core"
+description = "Ultron's logic with no UI: routing, memory, sessions, IPC."
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+fs4.workspace = true
+interprocess.workspace = true
