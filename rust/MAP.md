@@ -19,8 +19,8 @@ States: `open` · `claimed by <session> <date>` · `done (gate, replay)`.
 | --- | --- | --- |
 | Config + preferences + paths | preferences.py, live_config.py, model_settings.py | open |
 | Sessions store + reports | sessions.py, reports.py | done (2026-11-26): `core::sessions`, `core::reports`; 540 recorded cases replay (tests/recorded.rs), mutation-checked. HTML dashboard waits for tasks/runs/abilities |
-| Memory (facts, aliases, plans, corrections) | memory.py | open |
-| Tasks | tasks.py | open |
+| Memory (facts, aliases, plans, corrections) | memory.py | done (2026-11-26): `core::memory`; 190 recorded cases with tasks, template regex keys byte-identical to Python's (shared DB), aliases via fancy-regex; 3 mutation checks |
+| Tasks | tasks.py | done (2026-11-26): `core::tasks` (validate incl. all six ISO date forms Python 3.13 accepts, create/update/list, `link_session`). `focus()` moves to wave 3 (needs the island) |
 | Router: regex routes + skill MATCH table | brain.py, skills/__init__.py (static registry replaces importlib) | open |
 | App index + fuzzy open_app (replaces Laya) | apps_index.py | open |
 | Workflow selection | workflows.py, paper.py | open |

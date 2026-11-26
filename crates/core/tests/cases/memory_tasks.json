@@ -1,0 +1,2264 @@
+{
+ "memory": {
+  "normalize": [
+   {
+    "args": [
+     ""
+    ],
+    "out": ""
+   },
+   {
+    "args": [
+     "   "
+    ],
+    "out": ""
+   },
+   {
+    "args": [
+     "Hey Ultron, please open my notes!"
+    ],
+    "out": "open my notes"
+   },
+   {
+    "args": [
+     "ok ultron: pls play lofi"
+    ],
+    "out": "play lofi"
+   },
+   {
+    "args": [
+     "yo ultron - what's up?"
+    ],
+    "out": "what's up"
+   },
+   {
+    "args": [
+     "ULTRON open firefox"
+    ],
+    "out": "open firefox"
+   },
+   {
+    "args": [
+     "Please please search youtube for cat videos"
+    ],
+    "out": "search youtube for cat videos"
+   },
+   {
+    "args": [
+     "Ultronic devices are cool"
+    ],
+    "out": "ultronic devices are cool"
+   },
+   {
+    "args": [
+     "what’s my router ip?"
+    ],
+    "out": "what's my router ip"
+   },
+   {
+    "args": [
+     "“quoted” words … and ellipsis"
+    ],
+    "out": "quoted words and ellipsis"
+   },
+   {
+    "args": [
+     "set volume to 40%"
+    ],
+    "out": "set volume to 40%"
+   },
+   {
+    "args": [
+     "email me@site.com now"
+    ],
+    "out": "email me@site.com now"
+   },
+   {
+    "args": [
+     "go to https://example.com/path?q=1#frag"
+    ],
+    "out": "go to https://example.com/path q 1#frag"
+   },
+   {
+    "args": [
+     "c++ and c# rock"
+    ],
+    "out": "c++ and c# rock"
+   },
+   {
+    "args": [
+     "tab\tand\nnewline"
+    ],
+    "out": "tab and newline"
+   },
+   {
+    "args": [
+     "café crème brûlée"
+    ],
+    "out": "café crème brûlée"
+   },
+   {
+    "args": [
+     "日本語のテキスト"
+    ],
+    "out": "日本語のテキスト"
+   },
+   {
+    "args": [
+     "mixed: Ünïcödé + ASCII"
+    ],
+    "out": "mixed: ünïcödé + ascii"
+   },
+   {
+    "args": [
+     "trailing dots..."
+    ],
+    "out": "trailing dots"
+   },
+   {
+    "args": [
+     "'single quotes'"
+    ],
+    "out": "single quotes"
+   },
+   {
+    "args": [
+     "100% sure!!"
+    ],
+    "out": "100% sure"
+   },
+   {
+    "args": [
+     "remind me at 10:30"
+    ],
+    "out": "remind me at 10:30"
+   },
+   {
+    "args": [
+     "a/b/c-d_e"
+    ],
+    "out": "a/b/c-d_e"
+   },
+   {
+    "args": [
+     "hey ok ultron yo"
+    ],
+    "out": "hey ok ultron yo"
+   },
+   {
+    "args": [
+     "  pls   pls  "
+    ],
+    "out": ""
+   },
+   {
+    "args": [
+     "!!!???"
+    ],
+    "out": ""
+   },
+   {
+    "args": [
+     "don't stop"
+    ],
+    "out": "don't stop"
+   }
+  ],
+  "words": [
+   {
+    "args": [
+     ""
+    ],
+    "out": []
+   },
+   {
+    "args": [
+     "   "
+    ],
+    "out": []
+   },
+   {
+    "args": [
+     "Hey Ultron, please open my notes!"
+    ],
+    "out": [
+     "open",
+     "not"
+    ]
+   },
+   {
+    "args": [
+     "ok ultron: pls play lofi"
+    ],
+    "out": [
+     "ok",
+     "pls",
+     "play",
+     "lofi"
+    ]
+   },
+   {
+    "args": [
+     "yo ultron - what's up?"
+    ],
+    "out": [
+     "yo",
+     "s"
+    ]
+   },
+   {
+    "args": [
+     "ULTRON open firefox"
+    ],
+    "out": [
+     "open",
+     "firefox"
+    ]
+   },
+   {
+    "args": [
+     "Please please search youtube for cat videos"
+    ],
+    "out": [
+     "search",
+     "youtube",
+     "cat",
+     "video"
+    ]
+   },
+   {
+    "args": [
+     "Ultronic devices are cool"
+    ],
+    "out": [
+     "ultronic",
+     "devic",
+     "cool"
+    ]
+   },
+   {
+    "args": [
+     "what’s my router ip?"
+    ],
+    "out": [
+     "s",
+     "router",
+     "ip"
+    ]
+   },
+   {
+    "args": [
+     "“quoted” words … and ellipsis"
+    ],
+    "out": [
+     "quot",
+     "word",
+     "ellipsi"
+    ]
+   },
+   {
+    "args": [
+     "set volume to 40%"
+    ],
+    "out": [
+     "set",
+     "volume",
+     "40%"
+    ]
+   },
+   {
+    "args": [
+     "email me@site.com now"
+    ],
+    "out": [
+     "email",
+     "me@site.com",
+     "now"
+    ]
+   },
+   {
+    "args": [
+     "go to https://example.com/path?q=1#frag"
+    ],
+    "out": [
+     "go",
+     "https://example.com/path",
+     "q",
+     "1",
+     "frag"
+    ]
+   },
+   {
+    "args": [
+     "c++ and c# rock"
+    ],
+    "out": [
+     "c",
+     "c",
+     "rock"
+    ]
+   },
+   {
+    "args": [
+     "tab\tand\nnewline"
+    ],
+    "out": [
+     "tab",
+     "newline"
+    ]
+   },
+   {
+    "args": [
+     "café crème brûlée"
+    ],
+    "out": [
+     "caf",
+     "cr",
+     "br",
+     "l",
+     "e"
+    ]
+   },
+   {
+    "args": [
+     "日本語のテキスト"
+    ],
+    "out": []
+   },
+   {
+    "args": [
+     "mixed: Ünïcödé + ASCII"
+    ],
+    "out": [
+     "mix",
+     "n",
+     "c",
+     "d",
+     "ascii"
+    ]
+   },
+   {
+    "args": [
+     "trailing dots..."
+    ],
+    "out": [
+     "trail",
+     "dots"
+    ]
+   },
+   {
+    "args": [
+     "'single quotes'"
+    ],
+    "out": [
+     "single",
+     "quot"
+    ]
+   },
+   {
+    "args": [
+     "100% sure!!"
+    ],
+    "out": [
+     "100%",
+     "sure"
+    ]
+   },
+   {
+    "args": [
+     "remind me at 10:30"
+    ],
+    "out": [
+     "remind",
+     "10:30"
+    ]
+   },
+   {
+    "args": [
+     "a/b/c-d_e"
+    ],
+    "out": [
+     "a/b/c-d",
+     "e"
+    ]
+   },
+   {
+    "args": [
+     "hey ok ultron yo"
+    ],
+    "out": [
+     "ok",
+     "yo"
+    ]
+   },
+   {
+    "args": [
+     "  pls   pls  "
+    ],
+    "out": [
+     "pls",
+     "pls"
+    ]
+   },
+   {
+    "args": [
+     "!!!???"
+    ],
+    "out": []
+   },
+   {
+    "args": [
+     "don't stop"
+    ],
+    "out": [
+     "don",
+     "t",
+     "stop"
+    ]
+   }
+  ],
+  "build_template": [
+   {
+    "args": [
+     "show me some cat videos",
+     "search youtube for cat videos"
+    ],
+    "out": [
+     "^show\\s+me\\s+some\\s+(.+?)$",
+     "search youtube for {0}"
+    ]
+   },
+   {
+    "args": [
+     "show me some dog videos please",
+     "search youtube for dog videos"
+    ],
+    "out": [
+     "^show\\s+me\\s+some\\s+(.+?)\\s+please$",
+     "search youtube for {0}"
+    ]
+   },
+   {
+    "args": [
+     "open my notes",
+     "open obsidian"
+    ],
+    "out": [
+     "^(.+?)\\s+my\\s+notes$",
+     "{0} obsidian"
+    ]
+   },
+   {
+    "args": [
+     "play some lofi beats on spotify",
+     "spotify play lofi beats"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "hey ultron, search the web for rust borrow checker",
+     "web_search rust borrow checker"
+    ],
+    "out": [
+     "^search\\s+the\\s+web\\s+for\\s+(.+?)$",
+     "web_search {0}"
+    ]
+   },
+   {
+    "args": [
+     "the cat",
+     "search cat"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "start a timer for 25 minutes for study",
+     "timer 25 min study"
+    ],
+    "out": [
+     "^start\\s+a\\s+(.+?)\\s+for\\s+(.+?)\\s+minutes\\s+for\\s+(.+?)$",
+     "{0} {1} min {2}"
+    ]
+   },
+   {
+    "args": [
+     "translate hello world to french",
+     "translate hello world french"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "set volume to 40%",
+     "volume 40%"
+    ],
+    "out": [
+     "^set\\s+(.+?)\\s+to\\s+(.+?)$",
+     "{0} {1}"
+    ]
+   },
+   {
+    "args": [
+     "open the github page for ultron",
+     "open https://github.com/ultron-hq/ultron"
+    ],
+    "out": [
+     "^(.+?)\\s+the\\s+github\\s+page\\s+for\\s+ultron$",
+     "{0} https://github.com/ultron-hq/ultron"
+    ]
+   },
+   {
+    "args": [
+     "find files named report.pdf",
+     "find report.pdf"
+    ],
+    "out": [
+     "^(.+?)\\s+files\\s+named\\s+(.+?)$",
+     "{0} {1}"
+    ]
+   },
+   {
+    "args": [
+     "a b c",
+     "a b c"
+    ],
+    "out": null
+   },
+   {
+    "args": [
+     "download the video at youtube.com/watch",
+     "yt-dlp youtube.com/watch"
+    ],
+    "out": [
+     "^download\\s+the\\s+video\\s+at\\s+(.+?)$",
+     "yt-dlp {0}"
+    ]
+   },
+   {
+    "args": [
+     "send email to bob about lunch",
+     "mail bob lunch"
+    ],
+    "out": [
+     "^send\\s+email\\s+to\\s+(.+?)\\s+about\\s+(.+?)$",
+     "mail {0} {1}"
+    ]
+   },
+   {
+    "args": [
+     "tell me a joke about cats",
+     "joke cats"
+    ],
+    "out": [
+     "^tell\\s+me\\s+a\\s+(.+?)\\s+about\\s+(.+?)$",
+     "{0} {1}"
+    ]
+   },
+   {
+    "args": [
+     "search for c++ tutorials",
+     "web_search c++ tutorials"
+    ],
+    "out": [
+     "^search\\s+for\\s+(.+?)$",
+     "web_search {0}"
+    ]
+   },
+   {
+    "args": [
+     "look up café menus",
+     "web_search café menus"
+    ],
+    "out": [
+     "^look\\s+up\\s+(.+?)$",
+     "web_search {0}"
+    ]
+   },
+   {
+    "args": [
+     "open the read-me file for ultron",
+     "open readme ultron"
+    ],
+    "out": [
+     "^(.+?)\\s+the\\s+read\\-me\\s+file\\s+for\\s+(.+?)$",
+     "{0} readme {1}"
+    ]
+   },
+   {
+    "args": [
+     "check the node.js version for ultron",
+     "node --version ultron"
+    ],
+    "out": [
+     "^check\\s+the\\s+node\\.js\\s+version\\s+for\\s+(.+?)$",
+     "node --version {0}"
+    ]
+   },
+   {
+    "args": [
+     "show me some cat videos on node.js",
+     "search youtube for cat videos"
+    ],
+    "out": [
+     "^show\\s+me\\s+some\\s+(.+?)\\s+on\\s+node\\.js$",
+     "search youtube for {0}"
+    ]
+   }
+  ],
+  "ops": [
+   {
+    "op": [
+     "remember",
+     "My router IP is 192.168.1.1."
+    ],
+    "out": [
+     true,
+     "Got it, I'll remember that."
+    ],
+    "last_change": [
+     "fact",
+     1
+    ]
+   },
+   {
+    "op": [
+     "remember",
+     "my router ip is 192.168.1.1"
+    ],
+    "out": [
+     false,
+     "I already know that."
+    ],
+    "last_change": [
+     "fact",
+     1
+    ]
+   },
+   {
+    "op": [
+     "remember",
+     "The wifi password is hunter2"
+    ],
+    "out": [
+     false,
+     "I won't store passwords, keys or card numbers. Use a password manager."
+    ],
+    "last_change": [
+     "fact",
+     1
+    ]
+   },
+   {
+    "op": [
+     "remember",
+     "my api key is sk-123"
+    ],
+    "out": [
+     false,
+     "I won't store passwords, keys or card numbers. Use a password manager."
+    ],
+    "last_change": [
+     "fact",
+     1
+    ]
+   },
+   {
+    "op": [
+     "remember",
+     "   "
+    ],
+    "out": [
+     false,
+     "Remember what?"
+    ],
+    "last_change": [
+     "fact",
+     1
+    ]
+   },
+   {
+    "op": [
+     "remember",
+     "Mom's birthday is on March 3rd"
+    ],
+    "out": [
+     true,
+     "Got it, I'll remember that."
+    ],
+    "last_change": [
+     "fact",
+     2
+    ]
+   },
+   {
+    "op": [
+     "remember",
+     "I park on level 2 at the office garage"
+    ],
+    "out": [
+     true,
+     "Got it, I'll remember that."
+    ],
+    "last_change": [
+     "fact",
+     3
+    ]
+   },
+   {
+    "op": [
+     "remember",
+     "Dentist appointments are on Tuesdays"
+    ],
+    "out": [
+     true,
+     "Got it, I'll remember that."
+    ],
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "facts_about",
+     "what is my router ip",
+     5
+    ],
+    "out": [
+     [
+      2,
+      "My router IP is 192.168.1.1"
+     ]
+    ],
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "facts_about",
+     "birthday",
+     5
+    ],
+    "out": [
+     [
+      1,
+      "Mom's birthday is on March 3rd"
+     ]
+    ],
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "facts_about",
+     "",
+     3
+    ],
+    "out": [
+     [
+      0,
+      "Dentist appointments are on Tuesdays"
+     ],
+     [
+      0,
+      "I park on level 2 at the office garage"
+     ],
+     [
+      0,
+      "Mom's birthday is on March 3rd"
+     ]
+    ],
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "recall",
+     "what's my router ip"
+    ],
+    "out": "My router IP is 192.168.1.1",
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "recall",
+     "where did i park"
+    ],
+    "out": "I park on level 2 at the office garage",
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "recall",
+     "when is mom's birthday"
+    ],
+    "out": "Mom's birthday is on March 3rd",
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "recall",
+     "router"
+    ],
+    "out": null,
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "recall",
+     "the"
+    ],
+    "out": null,
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "recall",
+     "what is the weather"
+    ],
+    "out": null,
+    "last_change": [
+     "fact",
+     4
+    ]
+   },
+   {
+    "op": [
+     "add_alias",
+     "my notes",
+     "obsidian."
+    ],
+    "out": [
+     true,
+     "Got it: “my notes” means obsidian."
+    ],
+    "last_change": [
+     "alias",
+     1
+    ]
+   },
+   {
+    "op": [
+     "add_alias",
+     "Hey Ultron, my music",
+     "spotify"
+    ],
+    "out": [
+     true,
+     "Got it: “my music” means spotify."
+    ],
+    "last_change": [
+     "alias",
+     2
+    ]
+   },
+   {
+    "op": [
+     "add_alias",
+     "obsidian",
+     "Obsidian"
+    ],
+    "out": [
+     false,
+     "That's the same thing."
+    ],
+    "last_change": [
+     "alias",
+     2
+    ]
+   },
+   {
+    "op": [
+     "add_alias",
+     "",
+     "x"
+    ],
+    "out": [
+     false,
+     "Say it like: when I say “my notes” I mean obsidian."
+    ],
+    "last_change": [
+     "alias",
+     2
+    ]
+   },
+   {
+    "op": [
+     "add_alias",
+     "my notes",
+     "logseq"
+    ],
+    "out": [
+     true,
+     "Got it: “my notes” means logseq."
+    ],
+    "last_change": [
+     "alias",
+     1
+    ]
+   },
+   {
+    "op": [
+     "add_alias",
+     "work stuff",
+     "the work folder"
+    ],
+    "out": [
+     true,
+     "Got it: “work stuff” means the work folder."
+    ],
+    "last_change": [
+     "alias",
+     3
+    ]
+   },
+   {
+    "op": [
+     "expand",
+     "open my notes"
+    ],
+    "out": "open logseq",
+    "last_change": [
+     "alias",
+     3
+    ]
+   },
+   {
+    "op": [
+     "expand",
+     "Open My Notes and my music"
+    ],
+    "out": "Open logseq and spotify",
+    "last_change": [
+     "alias",
+     3
+    ]
+   },
+   {
+    "op": [
+     "expand",
+     "open my notesy"
+    ],
+    "out": "open my notesy",
+    "last_change": [
+     "alias",
+     3
+    ]
+   },
+   {
+    "op": [
+     "expand",
+     "open o'my notes"
+    ],
+    "out": "open o'my notes",
+    "last_change": [
+     "alias",
+     3
+    ]
+   },
+   {
+    "op": [
+     "expand",
+     "check work   stuff today"
+    ],
+    "out": "check the work folder today",
+    "last_change": [
+     "alias",
+     3
+    ]
+   },
+   {
+    "op": [
+     "learn",
+     "show me some cat videos",
+     "search",
+     "search youtube for cat videos",
+     null,
+     "haiku"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     1
+    ]
+   },
+   {
+    "op": [
+     "learn",
+     "what is the capital of france",
+     "llm",
+     null,
+     "Paris.",
+     "haiku"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     3
+    ]
+   },
+   {
+    "op": [
+     "learn",
+     "open my editor",
+     "apps",
+     "open code",
+     null,
+     "correction"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     4
+    ]
+   },
+   {
+    "op": [
+     "learn",
+     "open my editor",
+     "apps",
+     "open vim",
+     null,
+     "haiku"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     4
+    ]
+   },
+   {
+    "op": [
+     "learn",
+     "play some lofi beats on spotify",
+     "media",
+     "spotify play lofi beats",
+     null,
+     "haiku"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     6
+    ]
+   },
+   {
+    "op": [
+     "learn",
+     "",
+     "apps",
+     "x",
+     null,
+     "haiku"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     6
+    ]
+   },
+   {
+    "op": [
+     "learn",
+     "open the read-me file for ultron",
+     "apps",
+     "open readme ultron",
+     null,
+     "haiku"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "lookup",
+     "open the read-me file for jarvis"
+    ],
+    "out": {
+     "id": 8,
+     "skill": "apps",
+     "answer": null,
+     "kind": "template",
+     "command": "open readme jarvis"
+    },
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "lookup",
+     "show me some dog videos"
+    ],
+    "out": {
+     "id": 2,
+     "skill": "search",
+     "answer": null,
+     "kind": "template",
+     "command": "search youtube for dog videos"
+    },
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "lookup",
+     "Show me some cat videos!"
+    ],
+    "out": {
+     "id": 1,
+     "skill": "search",
+     "command": "search youtube for cat videos",
+     "answer": null,
+     "kind": "exact"
+    },
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "lookup",
+     "show me some a b c d e f g h videos"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "lookup",
+     "what is the capital of france"
+    ],
+    "out": {
+     "id": 3,
+     "skill": "llm",
+     "command": null,
+     "answer": "Paris.",
+     "kind": "exact"
+    },
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "lookup",
+     "open my editor"
+    ],
+    "out": {
+     "id": 4,
+     "skill": "apps",
+     "command": "open code",
+     "answer": null,
+     "kind": "exact"
+    },
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "lookup",
+     "play some jazz on spotify"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "lookup",
+     "nothing learned"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "used",
+     4
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "failed",
+     4
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "tick",
+     2678400
+    ],
+    "out": null
+   },
+   {
+    "op": [
+     "lookup",
+     "what is the capital of france"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "counts"
+    ],
+    "out": {
+     "facts": 4,
+     "aliases": 3,
+     "phrases": 3,
+     "templates": 3
+    },
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "log_request",
+     "open firefox",
+     "apps",
+     12.5
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "log_request",
+     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+     "llm",
+     null
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "routes",
+     7
+    ],
+    "out": {
+     "apps": 1,
+     "llm": 1
+    },
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "set_spot",
+     "Buy Half",
+     1520.7,
+     640
+    ],
+    "out": "buy half",
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "set_spot",
+     "buy half",
+     10,
+     20
+    ],
+    "out": "buy half",
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "set_spot",
+     "Hey Ultron, sell",
+     5,
+     6
+    ],
+    "out": "sell",
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "get_spot",
+     "BUY HALF"
+    ],
+    "out": [
+     10,
+     20
+    ],
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "get_spot",
+     "missing"
+    ],
+    "out": null,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "spots"
+    ],
+    "out": [
+     [
+      "buy half",
+      10,
+      20
+     ],
+     [
+      "sell",
+      5,
+      6
+     ]
+    ],
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "forget_spot",
+     "sell"
+    ],
+    "out": true,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "forget_spot",
+     "sell"
+    ],
+    "out": false,
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "facts"
+    ],
+    "out": [
+     "My router IP is 192.168.1.1",
+     "Mom's birthday is on March 3rd",
+     "I park on level 2 at the office garage",
+     "Dentist appointments are on Tuesdays"
+    ],
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "aliases"
+    ],
+    "out": [
+     [
+      "my music",
+      "spotify"
+     ],
+     [
+      "my notes",
+      "logseq"
+     ],
+     [
+      "work stuff",
+      "the work folder"
+     ]
+    ],
+    "last_change": [
+     "learned",
+     7
+    ]
+   },
+   {
+    "op": [
+     "forget",
+     "that"
+    ],
+    "out": [
+     "what “open the read-me file for ultron” means"
+    ],
+    "last_change": null
+   },
+   {
+    "op": [
+     "forget",
+     "router"
+    ],
+    "out": [
+     "“My router IP is 192.168.1.1”"
+    ],
+    "last_change": null
+   },
+   {
+    "op": [
+     "forget",
+     "my music"
+    ],
+    "out": [
+     "“my music” means spotify"
+    ],
+    "last_change": null
+   },
+   {
+    "op": [
+     "forget",
+     "open my editor"
+    ],
+    "out": [],
+    "last_change": null
+   },
+   {
+    "op": [
+     "forget",
+     "the last one"
+    ],
+    "out": [],
+    "last_change": null
+   },
+   {
+    "op": [
+     "forget",
+     "  .!? "
+    ],
+    "out": [],
+    "last_change": null
+   },
+   {
+    "op": [
+     "forget",
+     "dentist appointments"
+    ],
+    "out": [
+     "“Dentist appointments are on Tuesdays”"
+    ],
+    "last_change": null
+   },
+   {
+    "op": [
+     "counts"
+    ],
+    "out": {
+     "facts": 2,
+     "aliases": 2,
+     "phrases": 2,
+     "templates": 2
+    },
+    "last_change": null
+   },
+   {
+    "op": [
+     "forget_everything"
+    ],
+    "out": {
+     "facts": 2,
+     "aliases": 2,
+     "phrases": 2,
+     "templates": 2
+    },
+    "last_change": null
+   },
+   {
+    "op": [
+     "counts"
+    ],
+    "out": {
+     "facts": 0,
+     "aliases": 0,
+     "phrases": 0,
+     "templates": 0
+    },
+    "last_change": null
+   }
+  ],
+  "tables": {
+   "facts": [],
+   "aliases": [],
+   "learned": [],
+   "spots": [
+    [
+     "buy half",
+     10,
+     20,
+     1792678422.0
+    ]
+   ],
+   "requests": [
+    [
+     1,
+     1792678418.0,
+     "open firefox",
+     "apps",
+     12.5
+    ],
+    [
+     2,
+     1792678419.0,
+     "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+     "llm",
+     null
+    ]
+   ]
+  }
+ },
+ "tasks": {
+  "validate": [
+   {
+    "args": [
+     {
+      "title": "  Write report  "
+     },
+     true
+    ],
+    "out": {
+     "ok": {
+      "title": "Write report"
+     }
+    }
+   },
+   {
+    "args": [
+     {},
+     true
+    ],
+    "out": {
+     "err": "Give the task a title of 1–240 characters."
+    }
+   },
+   {
+    "args": [
+     {
+      "title": ""
+     },
+     true
+    ],
+    "out": {
+     "err": "Give the task a title of 1–240 characters."
+    }
+   },
+   {
+    "args": [
+     {
+      "title": "   "
+     },
+     true
+    ],
+    "out": {
+     "err": "Give the task a title of 1–240 characters."
+    }
+   },
+   {
+    "args": [
+     {
+      "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+     },
+     true
+    ],
+    "out": {
+     "ok": {
+      "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+     },
+     true
+    ],
+    "out": {
+     "err": "Give the task a title of 1–240 characters."
+    }
+   },
+   {
+    "args": [
+     {
+      "title": 5
+     },
+     true
+    ],
+    "out": {
+     "err": "Give the task a title of 1–240 characters."
+    }
+   },
+   {
+    "args": [
+     {
+      "nope": 1
+     },
+     false
+    ],
+    "out": {
+     "err": "Unknown task fields."
+    }
+   },
+   {
+    "args": [
+     {
+      "title": "ok",
+      "status": "doing"
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "title": "ok",
+      "status": "doing"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "status": "later"
+     },
+     false
+    ],
+    "out": {
+     "err": "Invalid task status."
+    }
+   },
+   {
+    "args": [
+     {
+      "priority": "urgent"
+     },
+     false
+    ],
+    "out": {
+     "err": "Invalid task priority."
+    }
+   },
+   {
+    "args": [
+     {
+      "priority": "high"
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "priority": "high"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": ""
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": null
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": null
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": null
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": 0
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": null
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "2026-12-01"
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": "2026-12-01"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "20261201"
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": "2026-12-01"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "2026-W49-2"
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": "2026-12-01"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "2026W492"
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": "2026-12-01"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "2026-W49"
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": "2026-11-30"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "2026W53"
+     },
+     false
+    ],
+    "out": {
+     "ok": {
+      "due": "2026-12-28"
+     }
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "2026-1-5"
+     },
+     false
+    ],
+    "out": {
+     "err": "Use a valid date for the due date."
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "2026-02-30"
+     },
+     false
+    ],
+    "out": {
+     "err": "Use a valid date for the due date."
+    }
+   },
+   {
+    "args": [
+     {
+      "due": "tomorrow"
+     },
+     false
+    ],
+    "out": {
+     "err": "Use a valid date for the due date."
+    }
+   },
+   {
+    "args": [
+     {
+      "due": 20261201
+     },
+     false
+    ],
+    "out": {
+     "err": "Use a valid date for the due date."
+    }
+   },
+   {
+    "args": [
+     {
+      "status": null
+     },
+     false
+    ],
+    "out": {
+     "err": "Invalid task status."
+    }
+   },
+   {
+    "args": [
+     {
+      "title": "日本語のタスク",
+      "due": "2027-01-01",
+      "priority": "low"
+     },
+     true
+    ],
+    "out": {
+     "ok": {
+      "title": "日本語のタスク",
+      "due": "2027-01-01",
+      "priority": "low"
+     }
+    }
+   }
+  ],
+  "ops": [
+   {
+    "op": [
+     "create",
+     {
+      "title": "Write report",
+      "priority": "high",
+      "due": "2026-12-01"
+     }
+    ],
+    "out": {
+     "ok": {
+      "id": 1,
+      "title": "Write report",
+      "status": "todo",
+      "priority": "high",
+      "due": "2026-12-01",
+      "created": 1790000001.0,
+      "updated": 1790000001.0,
+      "completed": null
+     }
+    }
+   },
+   {
+    "op": [
+     "create",
+     {
+      "title": "Study rust",
+      "status": "doing"
+     }
+    ],
+    "out": {
+     "ok": {
+      "id": 2,
+      "title": "Study rust",
+      "status": "doing",
+      "priority": "normal",
+      "due": null,
+      "created": 1790000002.0,
+      "updated": 1790000002.0,
+      "completed": null
+     }
+    }
+   },
+   {
+    "op": [
+     "create",
+     {
+      "title": "Groceries",
+      "priority": "low"
+     }
+    ],
+    "out": {
+     "ok": {
+      "id": 3,
+      "title": "Groceries",
+      "status": "todo",
+      "priority": "low",
+      "due": null,
+      "created": 1790000003.0,
+      "updated": 1790000003.0,
+      "completed": null
+     }
+    }
+   },
+   {
+    "op": [
+     "create",
+     {
+      "title": "Ship site",
+      "status": "done"
+     }
+    ],
+    "out": {
+     "ok": {
+      "id": 4,
+      "title": "Ship site",
+      "status": "done",
+      "priority": "normal",
+      "due": null,
+      "created": 1790000004.0,
+      "updated": 1790000004.0,
+      "completed": 1790000004.0
+     }
+    }
+   },
+   {
+    "op": [
+     "create",
+     {
+      "title": "Plan week",
+      "due": "2026-11-30"
+     }
+    ],
+    "out": {
+     "ok": {
+      "id": 5,
+      "title": "Plan week",
+      "status": "todo",
+      "priority": "normal",
+      "due": "2026-11-30",
+      "created": 1790000005.0,
+      "updated": 1790000005.0,
+      "completed": null
+     }
+    }
+   },
+   {
+    "op": [
+     "create",
+     {
+      "title": "bad",
+      "status": "nope"
+     }
+    ],
+    "out": {
+     "err": "Invalid task status."
+    }
+   },
+   {
+    "op": [
+     "link",
+     1,
+     1
+    ],
+    "out": {
+     "ok": "linked"
+    }
+   },
+   {
+    "op": [
+     "link",
+     2,
+     2
+    ],
+    "out": {
+     "ok": "linked"
+    }
+   },
+   {
+    "op": [
+     "link",
+     1,
+     3
+    ],
+    "out": {
+     "ok": "linked"
+    }
+   },
+   {
+    "op": [
+     "link",
+     2,
+     1
+    ],
+    "out": {
+     "ok": "already linked"
+    }
+   },
+   {
+    "op": [
+     "update",
+     3,
+     {
+      "status": "done"
+     }
+    ],
+    "out": {
+     "ok": {
+      "id": 3,
+      "title": "Groceries",
+      "status": "done",
+      "priority": "low",
+      "due": null,
+      "created": 1790000003.0,
+      "updated": 1790000007.0,
+      "completed": 1790000006.0
+     }
+    }
+   },
+   {
+    "op": [
+     "update",
+     4,
+     {
+      "status": "todo",
+      "title": "Ship site v2"
+     }
+    ],
+    "out": {
+     "ok": {
+      "id": 4,
+      "title": "Ship site v2",
+      "status": "todo",
+      "priority": "normal",
+      "due": null,
+      "created": 1790000004.0,
+      "updated": 1790000008.0,
+      "completed": null
+     }
+    }
+   },
+   {
+    "op": [
+     "update",
+     1,
+     {
+      "due": null
+     }
+    ],
+    "out": {
+     "ok": {
+      "id": 1,
+      "title": "Write report",
+      "status": "todo",
+      "priority": "high",
+      "due": null,
+      "created": 1790000001.0,
+      "updated": 1790000009.0,
+      "completed": null
+     }
+    }
+   },
+   {
+    "op": [
+     "update",
+     99,
+     {
+      "title": "ghost"
+     }
+    ],
+    "out": {
+     "err": "Task not found."
+    }
+   },
+   {
+    "op": [
+     "update",
+     2,
+     {
+      "weird": 1
+     }
+    ],
+    "out": {
+     "err": "Unknown task fields."
+    }
+   },
+   {
+    "op": [
+     "get",
+     5
+    ],
+    "out": {
+     "ok": {
+      "id": 5,
+      "title": "Plan week",
+      "status": "todo",
+      "priority": "normal",
+      "due": "2026-11-30",
+      "created": 1790000005.0,
+      "updated": 1790000005.0,
+      "completed": null
+     }
+    }
+   },
+   {
+    "op": [
+     "get",
+     42
+    ],
+    "out": {
+     "err": "Task not found."
+    }
+   },
+   {
+    "op": [
+     "listing"
+    ],
+    "out": {
+     "ok": [
+      {
+       "id": 2,
+       "title": "Study rust",
+       "status": "doing",
+       "priority": "normal",
+       "due": null,
+       "created": 1790000002.0,
+       "updated": 1790000002.0,
+       "completed": null,
+       "focused": 3000.0,
+       "sessions": 1
+      },
+      {
+       "id": 1,
+       "title": "Write report",
+       "status": "todo",
+       "priority": "high",
+       "due": null,
+       "created": 1790000001.0,
+       "updated": 1790000009.0,
+       "completed": null,
+       "focused": 2400.0,
+       "sessions": 2
+      },
+      {
+       "id": 5,
+       "title": "Plan week",
+       "status": "todo",
+       "priority": "normal",
+       "due": "2026-11-30",
+       "created": 1790000005.0,
+       "updated": 1790000005.0,
+       "completed": null,
+       "focused": 0,
+       "sessions": 0
+      },
+      {
+       "id": 4,
+       "title": "Ship site v2",
+       "status": "todo",
+       "priority": "normal",
+       "due": null,
+       "created": 1790000004.0,
+       "updated": 1790000008.0,
+       "completed": null,
+       "focused": 0,
+       "sessions": 0
+      },
+      {
+       "id": 3,
+       "title": "Groceries",
+       "status": "done",
+       "priority": "low",
+       "due": null,
+       "created": 1790000003.0,
+       "updated": 1790000007.0,
+       "completed": 1790000006.0,
+       "focused": 0,
+       "sessions": 0
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

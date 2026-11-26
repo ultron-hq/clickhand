@@ -19,3 +19,6 @@
 | summary (reports.summarize) | totals, buckets, labels, hours, sessions for one period | `core::reports::Summary` |
 | one-liner | the island's sentence for a summary | `core::reports::one_liner` |
 | recording | what the original returned, replayed by the port's tests | `rust/record/*.py` → `crates/core/tests/cases/` |
+| learned template | a regex key + `{0}` command, stored in `learned` and shared with Python | `core::memory::build_template`, `py_escape` |
+| spot | a remembered screen position ("buy half" → 1520, 640) | `Memory::set_spot` |
+| task link | a timer session counted toward a task | `core::tasks::link_session` |
