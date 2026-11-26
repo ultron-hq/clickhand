@@ -445,3 +445,4 @@ main > section.build { max-width: none; padding: 0; border-top: 1px solid var(--
 .paper dd { margin: 0; font-variant-numeric: tabular-nums; }
 .paper-total dt, .paper-total dd { color: #1d2027; font-weight: 600; }
 @media (max-width: 720px) { .pdf { display: none; } }
+.safety { overflow-x: clip; }
