@@ -1,4 +1,4 @@
-import { Keyboard, Timer, BookMarked, Cpu, Mic, Puzzle } from "lucide-react";
+import { Keyboard, Timer, BookMarked, Cpu, Mic, Puzzle, Scale, Monitor, Plug } from "lucide-react";
 import { MaskField } from "@/components/MaskField";
 import { Workstation } from "@/components/Workstation";
 import { SplitFlap } from "@/components/SplitFlap";
@@ -59,21 +59,23 @@ export default function Home() {
 
       <main>
         <section className="hero">
-          <div className="hero-copy">
-            <h1>Let any AI agent use your PC like a human</h1>
-            <p className="lede">
-              Ultron is an open-source desktop agent. Press <Keys keys={["Ctrl", "Space"]} /> and ask, or give Claude Code, Codex and any MCP agent the mouse and keyboard
-            </p>
-            <div className="actions">
-              <a className="btn btn-primary" href={REPO}>View on GitHub</a>
-              <a className="btn btn-quiet" href="#demo">See it work</a>
+          <MaskField />
+          <div className="hero-inner">
+            <div className="hero-copy">
+              <h1>Let any AI agent use your PC like a human</h1>
+              <p className="lede">
+                Ultron is an open-source desktop agent. Press <Keys keys={["Ctrl", "Space"]} /> and ask, or give Claude Code, Codex and any MCP agent the mouse and keyboard
+              </p>
+              <div className="actions">
+                <a className="btn btn-primary" href={REPO}>View on GitHub</a>
+                <a className="btn btn-quiet" href="#demo">See it work</a>
+              </div>
+              <ul className="facts">
+                <li><Scale size={16} strokeWidth={1.5} aria-hidden="true" />Open source, MIT or Apache-2.0</li>
+                <li><Monitor size={16} strokeWidth={1.5} aria-hidden="true" />Windows, macOS and Linux</li>
+                <li><Plug size={16} strokeWidth={1.5} aria-hidden="true" />Works with Claude Code, Codex and MCP</li>
+              </ul>
             </div>
-            <p className="note">
-              Early development. The Rust rewrite for Windows, macOS and Linux is under way, <a href={`${REPO}/blob/main/ROADMAP.md`}>see what works today</a>
-            </p>
-          </div>
-          <div className="hero-mask">
-            <MaskField />
           </div>
         </section>
 
@@ -81,6 +83,7 @@ export default function Home() {
           <div className="section-head">
             <h2>Your agent asks, Ultron clicks</h2>
             <p>A Claude Code session on the left, the desktop it controls on the right. Every step is a screenshot, an action and a check</p>
+            <p className="note">Early development. The Rust rewrite is under way, <a href={`${REPO}/blob/main/ROADMAP.md`}>see what works today</a></p>
           </div>
           <Workstation />
         </section>

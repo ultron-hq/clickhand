@@ -1,5 +1,6 @@
-/* Ultron — direction: watchful, mechanical, exact. A machined gunmetal workstation at night.
-   Ink ramp for every surface; the only red is the Hands cursor ring and the mask's eyes. */
+/* Ultron — direction: watchful, mechanical, exact. A machined gunmetal workstation at night,
+   lit by the mask's own eye light. Ink ramp for every surface; the brand is that light, a gradient
+   from crimson through ember to amber, used on the primary action, the hero and the desktop wallpaper. */
 :root {
   --deep: #07080d;
   --bg: #0b0d14;
@@ -11,6 +12,11 @@
   --line: rgba(238, 240, 245, 0.08);
   --line-2: rgba(238, 240, 245, 0.14);
   --signal: #ff514d;
+  --crimson: #c4302a;
+  --ember: #ff7a2f;
+  --amber: #ffcd8c;
+  --brand: linear-gradient(100deg, #ff4a3a 0%, #ff7a2f 55%, #ffb056 100%);
+  --brand-hover: linear-gradient(100deg, #ff5a4a 0%, #ff8a42 55%, #ffbd6e 100%);
   --metal-hi: #2b3039;
   --metal-lo: #1b1f26;
   --sans: var(--font-geist-sans), system-ui, sans-serif;
@@ -60,8 +66,8 @@ kbd {
   transition: background-color 150ms var(--ease), border-color 150ms var(--ease), transform 120ms var(--ease);
 }
 .btn:active { transform: scale(0.98); }
-.btn-primary { background: var(--text); color: var(--bg); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6); }
-.btn-primary:hover { background: #ffffff; }
+.btn-primary { background: var(--brand); color: #1c0805; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+.btn-primary:hover { background: var(--brand-hover); }
 .btn-quiet { background: var(--raised); border-color: var(--line); color: var(--text); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06); }
 .btn-quiet:hover { border-color: var(--line-2); }
 .btn-sm { height: 32px; padding: 0 12px; font-size: 14px; }
@@ -88,17 +94,17 @@ h2 { font-size: 40px; line-height: 1.1; letter-spacing: -0.02em; }
 .section-head p, .intro { margin-top: 16px; font-size: 18px; line-height: 28px; color: var(--text-2); }
 .note { font-size: 14px; line-height: 20px; color: var(--muted); }
 
-/* hero */
-.hero {
-  min-height: calc(100svh - 64px);
-  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 32px;
-  padding-top: 48px !important; padding-bottom: 48px !important;
-}
-.hero-copy { display: grid; gap: 32px; max-width: 560px; }
+/* hero: full-bleed canvas, text on the calm left */
+main > section.hero { position: relative; max-width: none; padding: 0; min-height: calc(100svh - 64px); overflow: hidden; }
+.maskfield { position: absolute; inset: 0; width: 100%; height: 100%; }
+.hero-inner { position: relative; max-width: var(--page); min-height: inherit; margin: 0 auto; padding: 64px 32px; display: flex; align-items: center; pointer-events: none; }
+.hero-copy { display: grid; gap: 32px; max-width: 560px; pointer-events: auto; }
 h1 { font-size: 68px; line-height: 1.03; letter-spacing: -0.03em; }
 .lede { font-size: 20px; line-height: 30px; color: var(--text-2); max-width: 36rem; }
-.hero-mask { position: relative; aspect-ratio: 1; width: 100%; max-height: 78svh; }
-.maskfield { position: absolute; inset: 0; width: 100%; height: 100%; }
+.facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; color: var(--text-2); font-size: 14px; }
+.facts li { display: flex; align-items: center; gap: 10px; }
+.facts svg { color: var(--ember); flex: none; }
+.section-head .note { margin-top: 12px; font-size: 14px; line-height: 20px; }
 
 @media (prefers-reduced-motion: no-preference) {
   .hero-copy > * { animation: rise 500ms var(--ease) both; }
@@ -130,7 +136,9 @@ h1 { font-size: 68px; line-height: 1.03; letter-spacing: -0.03em; }
   position: relative; overflow: hidden;
   aspect-ratio: 16 / 9; container-type: size;
   border-radius: 10px;
-  background: linear-gradient(180deg, #121620, #0c0f16);
+  background:
+    radial-gradient(150% 95% at 72% 112%, #ffb056 0%, #ff7a2f 12%, #c4302a 27%, #5a141b 44%, #1d0d14 60%, rgba(12, 15, 22, 0) 78%),
+    linear-gradient(180deg, #0c0f16, #10131c);
   font-size: 13px; line-height: 20px;
 }
 
@@ -232,7 +240,7 @@ pre .c { color: var(--muted); }
 .steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
 .steps li { display: flex; gap: 20px; padding: 24px 0; border-top: 1px solid var(--line); }
 .steps li:last-child { border-bottom: 1px solid var(--line); }
-.step-n { flex: none; font: 500 13px/24px var(--mono); color: var(--muted); width: 16px; }
+.step-n { flex: none; font: 500 13px/24px var(--mono); color: var(--ember); width: 16px; }
 .steps b { font-weight: 500; font-size: 17px; }
 .steps p { margin-top: 4px; color: var(--text-2); }
 
@@ -240,8 +248,11 @@ pre .c { color: var(--muted); }
 .app { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 64px; align-items: center; }
 .app-visual {
   position: relative; display: grid; place-items: center; gap: 24px; align-content: center;
-  aspect-ratio: 1; border-radius: 20px;
-  background: linear-gradient(180deg, #121620, #0c0f16); border: 1px solid var(--line);
+  aspect-ratio: 1; border-radius: 20px; overflow: hidden;
+  background:
+    radial-gradient(110% 70% at 30% 115%, #ffb056 0%, #ff7a2f 14%, #c4302a 30%, #4a1218 50%, rgba(12, 15, 22, 0) 72%),
+    linear-gradient(180deg, #0c0f16, #10131c);
+  border: 1px solid var(--line);
 }
 .app-visual .island { position: static; transform: none; }
 .promptbar {
@@ -288,8 +299,8 @@ td.muted { text-align: right; font-family: var(--mono); font-size: 12px; }
 
 /* ── smaller screens ── */
 @media (max-width: 960px) {
-  .hero { grid-template-columns: 1fr; min-height: 0; }
-  .hero-mask { order: -1; max-width: 420px; margin: 0 auto; }
+  main > section.hero { min-height: 0; }
+  .hero-inner { padding: calc(min(72vw, 340px) + 72px) 24px 64px; }
   h1 { font-size: 44px; line-height: 1.06; letter-spacing: -0.025em; }
   h2 { font-size: 32px; }
   main > section { padding: 80px 24px; }
