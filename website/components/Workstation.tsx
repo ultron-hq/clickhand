@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { SplitFlap } from "./SplitFlap";
+import { pausableWait } from "./stop";
 
 type Line =
   | { kind: "user"; text: string }
@@ -62,8 +63,7 @@ export function Workstation() {
     }
 
     let alive = true;
-    const wait = (ms: number) =>
-      new Promise<void>((res, rej) => setTimeout(() => (alive ? res() : rej(new Error("stop"))), ms));
+    const wait = (ms: number) => pausableWait(ms, () => alive);
     const push = (l: Line) => setLines((ls) => [...ls, l].slice(-9));
 
     const point = async (id: string) => {

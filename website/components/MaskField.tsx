@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { stopped } from "./stop";
 
 type Dot = {
   tx: number; ty: number;   // home position in the mask (0..1)
@@ -81,10 +82,11 @@ export function MaskField() {
         oy = 24;
       }
       beams = Array.from({ length: wide ? 34 : 18 }, (_, i) => {
-        const fromRight = i % 3 !== 0;
+        // on small screens the text sits under the mask, so light only comes from the right, above it
+        const fromRight = !wide || i % 3 !== 0;
         return {
           sx: fromRight ? w + 40 : ox + size * (0.2 + Math.random() * 1.4),
-          sy: fromRight ? h * (-0.1 + Math.random() * 1.2) : h + 40,
+          sy: fromRight ? (wide ? h * (-0.1 + Math.random() * 1.2) : (oy + size) * (-0.2 + Math.random() * 1.1)) : h + 40,
           c1: Math.random(), c2: Math.random(),
           eye: (i % 2) as 0 | 1,
           speed: 0.00006 + Math.random() * 0.00008,
@@ -238,7 +240,7 @@ export function MaskField() {
     };
 
     const loop = (now: number) => {
-      if (visible) draw(now);
+      if (visible && !stopped()) draw(now);
       raf = requestAnimationFrame(loop);
     };
 

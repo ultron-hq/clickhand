@@ -1,6 +1,10 @@
 import type { Metadata, Viewport } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
+import { Doto, Funnel_Sans, Martian_Mono } from "next/font/google";
+
+// Doto: a dot-matrix display face with square dots, the same points the hero mask is made of.
+const display = Doto({ subsets: ["latin"], variable: "--font-display", axes: ["ROND"] });
+const text = Funnel_Sans({ subsets: ["latin"], variable: "--font-text" });
+const mono = Martian_Mono({ subsets: ["latin"], variable: "--font-mono", axes: ["wdth"] });
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -20,7 +24,7 @@ export const viewport: Viewport = { themeColor: "#0b0d14", colorScheme: "dark" }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+    <html lang="en" className={`${display.variable} ${text.variable} ${mono.variable}`}>
       <body>{children}</body>
     </html>
   );
