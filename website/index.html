@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ultron: let any AI agent use your PC like a human</title>
+<meta name="description" content="Ultron is an open-source desktop agent for Windows, macOS and Linux. Press Ctrl+Space and ask, or give Claude Code and Codex a mouse and keyboard.">
+<meta property="og:title" content="Ultron">
+<meta property="og:description" content="An open-source desktop agent. Press Ctrl+Space and ask, or give your AI agent the mouse.">
+<meta property="og:image" content="https://getultron.vercel.app/logo.png">
+<link rel="icon" href="/logo.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="/"><img src="/logo.svg" alt="" width="28" height="28">Ultron</a>
+  <nav aria-label="Main">
+    <a href="#hands">Hands</a>
+    <a href="#app">The app</a>
+    <a href="#safety">Safety</a>
+    <a href="https://github.com/ultron-hq/ultron/blob/main/ROADMAP.md">Roadmap</a>
+    <a class="gh" href="https://github.com/ultron-hq/ultron">GitHub</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="hero-copy">
+      <h1>Let any AI agent use your&nbsp;PC like a&nbsp;human.</h1>
+      <p class="lede">Ultron is an open-source desktop agent. Press <kbd>Ctrl</kbd>+<kbd>Space</kbd> and ask it for something, or give Claude&nbsp;Code, Codex and any MCP agent a mouse and keyboard.</p>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/ultron-hq/ultron">View on GitHub</a>
+        <button class="btn" type="button" id="try">Try it here</button>
+      </div>
+      <p class="status">Early development: being rewritten in Rust for Windows, macOS and Linux. <a href="https://github.com/ultron-hq/ultron/blob/main/ROADMAP.md">See what works today</a>.</p>
+    </div>
+
+    <div class="desk" id="desk" aria-label="Interactive demo of Ultron on a desktop">
+      <div class="island" id="island" aria-live="polite">
+        <div class="flip" id="flip" aria-hidden="true"></div>
+        <div class="say" id="say"></div>
+      </div>
+
+      <div class="win settings" id="settings">
+        <div class="bar"><span></span><span></span><span></span><b>Settings</b></div>
+        <div class="body">
+          <div class="row"><span>Dark appearance</span><button class="toggle" id="dark" type="button" role="switch" aria-checked="false" aria-label="Dark appearance"></button></div>
+          <div class="row"><span>Night light</span><button class="toggle" type="button" role="switch" aria-checked="false" aria-label="Night light" tabindex="-1"></button></div>
+          <div class="row"><span>Volume</span><input type="range" id="vol" min="0" max="100" value="40" aria-label="Volume" tabindex="-1"></div>
+        </div>
+      </div>
+
+      <div class="win files" id="files">
+        <div class="bar"><span></span><span></span><span></span><b>Downloads</b></div>
+        <ul class="body" id="filelist">
+          <li>IMG_4021.jpg</li><li>scan (3).pdf</li><li>IMG_4022.jpg</li><li>invoice-nov.pdf</li>
+        </ul>
+      </div>
+
+      <form class="prompt" id="prompt" autocomplete="off">
+        <img src="/logo.svg" alt="" width="22" height="22">
+        <label class="sr" for="ask">Ask Ultron</label>
+        <input id="ask" placeholder="Ask Ultron…" spellcheck="false">
+      </form>
+      <div class="chips" id="chips">
+        <button type="button">turn on dark mode</button>
+        <button type="button">start a 25 minute timer</button>
+        <button type="button">sort my downloads</button>
+        <button type="button">what time is it in tokyo</button>
+      </div>
+
+      <div class="ring" id="ring" aria-hidden="true"></div>
+      <p class="hint" id="hint">Press <kbd>Ctrl</kbd>+<kbd>Space</kbd></p>
+    </div>
+  </section>
+
+  <section class="hands" id="hands">
+    <div class="col">
+      <h2>Hands for your agent</h2>
+      <p>Coding agents can read and write files, but they can't click. Ultron Hands is a skill for them: an <a href="https://modelcontextprotocol.io">MCP</a> server that lets the agent see your screen, move the mouse, click, scroll and type. Anything that needs a person at the computer, you can now hand off.</p>
+      <pre><code><span class="c"># Claude Code</span>
+claude mcp add ultron-hands -- ultron-hands
+<span class="c"># Codex</span>
+codex mcp add ultron-hands -- ultron-hands</code></pre>
+      <p class="small">Hands runs in the original Ultron today and comes to the Rust app in <a href="https://github.com/ultron-hq/ultron/blob/main/ROADMAP.md">wave 4</a>.</p>
+    </div>
+    <div class="col">
+      <h3>Ask for things like</h3>
+      <ul class="asks">
+        <li>“Turn on Discussions in this repo's GitHub settings.”</li>
+        <li>“Fill in this form with the details from invoice.pdf.”</li>
+        <li>“Find the export button in this app and save last month's report.”</li>
+      </ul>
+      <h3>How it works each step</h3>
+      <ol class="loop">
+        <li><b>Look.</b> The agent takes a screenshot, with the cursor marked by a red ring.</li>
+        <li><b>Act.</b> It clicks, types or scrolls, using exact control positions from the accessibility tree when the app exposes them.</li>
+        <li><b>Check.</b> It looks again and only moves on when the screen shows the step worked.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="app" id="app">
+    <h2>Ultron, the app</h2>
+    <p class="intro">A flip clock that lives at the top of your screen and answers when you talk to it.</p>
+    <dl class="features">
+      <div><dt>Prompt bar</dt><dd><kbd>Ctrl</kbd>+<kbd>Space</kbd> opens it in the middle of the screen, <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> beside your cursor.</dd></div>
+      <div><dt>Timers and focus time</dt><dd>Start a timer or stopwatch by asking. Every session is logged, so you can ask how much you worked this week.</dd></div>
+      <div><dt>Memory</dt><dd>Tell it facts and your own phrases once. It learns the plans that worked and takes corrections like “no, I meant…”.</dd></div>
+      <div><dt>Your choice of model</dt><dd>Claude Code, Codex, a local model through Ollama, or an API key from any provider. Different ones for different jobs.</dd></div>
+      <div><dt>Voice</dt><dd>Push to talk with Whisper running on your machine, or a live conversation with Gemini.</dd></div>
+      <div><dt>Abilities it writes itself</dt><dd>Ask for a tool it doesn't have and it builds one, run in a WebAssembly sandbox with only the permissions you grant.</dd></div>
+    </dl>
+  </section>
+
+  <section class="safety" id="safety">
+    <h2>You stay in charge</h2>
+    <ul>
+      <li><b>Your requests only.</b> It acts on what you asked, never on instructions it reads on a screen or a web page.</li>
+      <li><b>One command stops it.</b> A kill switch halts all control at once.</li>
+      <li><b>No passwords.</b> It never types them, and what it types is never logged.</li>
+      <li><b>A record of everything.</b> Every click and keystroke it makes is logged on your machine.</li>
+    </ul>
+  </section>
+
+  <section class="build">
+    <h2>Build it with us</h2>
+    <p>Ultron is MIT or Apache-2.0, written in Rust with a Tauri interface. Each piece of the rewrite is checked against the original app before it ships, and the open pieces are listed as issues.</p>
+    <pre><code>git clone https://github.com/ultron-hq/ultron
+cd ultron &amp;&amp; cargo build --release
+./target/release/ultron-rs --help</code></pre>
+    <div class="actions">
+      <a class="btn primary" href="https://github.com/ultron-hq/ultron/issues">Pick an issue</a>
+      <a class="btn" href="https://github.com/ultron-hq/ultron/blob/main/CONTRIBUTING.md">Read the contributing guide</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span><img src="/logo.svg" alt="" width="20" height="20"> Ultron, open source under MIT or Apache-2.0</span>
+  <nav aria-label="Footer">
+    <a href="https://github.com/ultron-hq/ultron">GitHub</a>
+    <a href="https://github.com/ultron-hq/ultron/discussions">Discussions</a>
+    <a href="https://github.com/ultron-hq/ultron/blob/main/SECURITY.md">Security</a>
+  </nav>
+</footer>
+
+<script src="/app.js"></script>
+</body>
+</html>
