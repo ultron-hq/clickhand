@@ -1,12 +1,15 @@
-# Handoff — 2026-11-26
+# Handoff — 2026-11-26 (wave 1 started)
 
-Done this session:
-- Grilling finished: ADR-001..011 in DECISIONS.md, plan in MAP.md, GLOSSARY.md started.
-- `rust-anything analyze . --whole-app` run (rust-anything 5.0.1; needs rustc ≥ 1.97).
-- Wave 0: Cargo workspace (`crates/core`, `crates/app`), `core::ipc` (single instance + line protocol, same socket/lock paths as Python), `ultron-rs` front door CLI (all flags; starting falls back to the Python launcher (`$ULTRON_ORIGINAL`)). Verified `ultron-rs --say` reaches the live Python Ultron.
-- CI for Linux / Windows / macOS arm64 + x86_64 (.github/workflows/ci.yml); not pushed anywhere yet.
+Done:
+- Wave 0 (see MAP). Repo public at github.com/ultron-hq/ultron, site at getultron.vercel.app (website/).
+- Wave 1, unit 1: sessions + reports. `crates/core/src/{sessions,reports}.rs`. Recorded with `rust/record/sessions_reports.py` (ADR-013): 540 cases from the Python original, replayed by `crates/core/tests/recorded.rs`. Mutation checks: breaking fmt rounding and the DST-gap rule both fail the replay.
+
+How to re-record a unit:
+    TZ=Europe/Paris PYTHONPATH=reference python3 rust/record/sessions_reports.py
+(the Python original lives in `reference/`, git-ignored; copy it from ~/laya/ultron if missing.)
 
 Next:
-1. Tauri needs `libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev` (installed with the system package manager).
-2. Wave 1 units, starting with sessions + reports (pure SQLite, easy to record with a copy of ultron.db).
-3. Never run `app record` on flags with side effects (--quit, --prompt) against the live Ultron: record with a stub instance.
+1. Memory (memory.py), then tasks (tasks.py), with the same recorder pattern. Memory touches Haiku-learned plans: stub the LLM in the recorder.
+2. Router (brain.py + skills/__init__.py): static registry; watch regex features (fancy-regex where Python uses lookaround).
+3. Reports HTML dashboard once tasks/runs/abilities are ported.
+4. Tauri still needs the WebKitGTK dev packages on Linux.

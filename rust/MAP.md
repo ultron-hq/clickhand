@@ -2,7 +2,7 @@
 
 **Goal:** one Rust app (Tauri) that does what Python Ultron does, on Windows, macOS and Linux. The Python original is the reference (kept locally in `reference/`, not published) and is never edited; it stays the daily driver until cutover (ADR-004).
 
-Decisions: [DECISIONS.md](DECISIONS.md) — ADR-001 Tauri · 002 drop Laya · 003 whisper-rs + Gemini · 004 side by side · 005 same data formats · 006 pluggable LLMs · 007 native control per OS · 008 WASM abilities · 009 three platforms · 010 equivalence bar · 011 hands MCP in Rust.
+Decisions: [DECISIONS.md](DECISIONS.md) — ADR-001 Tauri · 012 open source · 013 own recorder per unit ·  · 002 drop Laya · 003 whisper-rs + Gemini · 004 side by side · 005 same data formats · 006 pluggable LLMs · 007 native control per OS · 008 WASM abilities · 009 three platforms · 010 equivalence bar · 011 hands MCP in Rust.
 Terms: [GLOSSARY.md](GLOSSARY.md). Next session: read this, then HANDOFF.md.
 
 States: `open` · `claimed by <session> <date>` · `done (gate, replay)`.
@@ -18,7 +18,7 @@ States: `open` · `claimed by <session> <date>` · `done (gate, replay)`.
 | Unit | Original | State |
 | --- | --- | --- |
 | Config + preferences + paths | preferences.py, live_config.py, model_settings.py | open |
-| Sessions store + reports | sessions.py, reports.py | open |
+| Sessions store + reports | sessions.py, reports.py | done (2026-11-26): `core::sessions`, `core::reports`; 540 recorded cases replay (tests/recorded.rs), mutation-checked. HTML dashboard waits for tasks/runs/abilities |
 | Memory (facts, aliases, plans, corrections) | memory.py | open |
 | Tasks | tasks.py | open |
 | Router: regex routes + skill MATCH table | brain.py, skills/__init__.py (static registry replaces importlib) | open |

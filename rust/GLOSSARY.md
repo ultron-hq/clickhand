@@ -16,3 +16,6 @@
 | ability (generated) | user-requested tool Ultron writes itself | `abilities::Ability` (WASM, ADR-008) |
 | hands | MCP server letting Claude control the desktop | `hands` crate (ADR-011) |
 | ipc / lock | single instance + `ultron --prompt` messages | `app::single_instance` |
+| summary (reports.summarize) | totals, buckets, labels, hours, sessions for one period | `core::reports::Summary` |
+| one-liner | the island's sentence for a summary | `core::reports::one_liner` |
+| recording | what the original returned, replayed by the port's tests | `rust/record/*.py` → `crates/core/tests/cases/` |

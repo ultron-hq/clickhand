@@ -63,3 +63,9 @@ Decision: ultron/hands/server.py (Python mcp + PIL) becomes a Rust stdio MCP ser
 Status: accepted (2026-11-26)
 Decision: The Rust port is public at github.com/ultron-hq/ultron, licensed MIT OR Apache-2.0 (the Rust ecosystem default; ADR-001's MIT is superseded on licensing only). The Python original stays private and is not part of the repository; recordings made from it are kept out of git when they contain personal data.
 Consequences: No personal paths, accounts, tokens or recordings in the repo. Contributions are accepted under the same dual license.
+
+## ADR-013: Record Python units with our own recorder while `ultron/` is tangled
+Status: accepted (2026-11-26)
+Context: `rust-anything analyze` groups all of `ultron/` into one 6,820-line unit (readiness 0, imports tangled), so `bridge`/`record` cannot take `sessions.py` or `reports.py` on their own.
+Decision: Keep rust-anything's method (record the original on generated and trap inputs, replay against the port, nothing ships until every case matches) with a small Python recorder per unit in `rust/record/`. It runs the real original on a seeded synthetic database and writes `crates/core/tests/cases/`; a Rust test replays every case. Numbers match to 1e-6 relative, strings exactly.
+Consequences: Recordings carry no personal data and are committed. Time-dependent units take the zone as a parameter and are recorded under a pinned zone (Europe/Paris, with both DST changes in the data), so CI on Windows/macOS replays the same cases. A unit is done only after a mutation check shows the replay catches a deliberate bug.
