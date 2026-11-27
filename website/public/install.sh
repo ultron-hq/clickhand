@@ -36,7 +36,7 @@ sha256() {
 os=$(uname -s)
 arch=$(uname -m)
 case "$os" in
-  Linux) os=unknown-linux-gnu ;;
+  Linux) os=unknown-linux-musl ;;
   Darwin) os=apple-darwin ;;
   MINGW* | MSYS* | CYGWIN*) die "on Windows, run this in PowerShell instead: irm https://getultron.vercel.app/install.ps1 | iex" ;;
   *) die "this OS ($os) isn't supported yet" ;;
@@ -51,18 +51,24 @@ if [ "$os" = apple-darwin ] && [ "$arch" = x86_64 ] && [ "$(sysctl -n sysctl.pro
   arch=aarch64
 fi
 target="$arch-$os"
+release_url() {
+  if [ "$VERSION" = latest ]; then echo "https://github.com/$REPO/releases/latest/download/ultron-hands-$1.tar.gz"
+  else echo "https://github.com/$REPO/releases/download/$VERSION/ultron-hands-$1.tar.gz"; fi
+}
 asset="ultron-hands-$target.tar.gz"
-if [ "$VERSION" = latest ]; then
-  url="https://github.com/$REPO/releases/latest/download/$asset"
-else
-  url="https://github.com/$REPO/releases/download/$VERSION/$asset"
-fi
+url=$(release_url "$target")
 
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT INT TERM
 
 say "Installing Ultron Hands ($target)"
-if fetch "$url" "$tmp/$asset" 2>/dev/null; then
+# Linux builds are static (musl) and run on any distro; releases before v0.1.2 only had glibc ones.
+if ! fetch "$url" "$tmp/$asset" 2>/dev/null && [ "$os" = unknown-linux-musl ]; then
+  target="$arch-unknown-linux-gnu"
+  asset="ultron-hands-$target.tar.gz"
+  url=$(release_url "$target")
+fi
+if [ -s "$tmp/$asset" ] || fetch "$url" "$tmp/$asset" 2>/dev/null; then
   fetch "$url.sha256" "$tmp/$asset.sha256" || die "couldn't download the checksum"
   expected=$(cut -c1-64 "$tmp/$asset.sha256")
   actual=$(sha256 "$tmp/$asset")
@@ -80,7 +86,8 @@ else
   die "no prebuilt binary for $target yet. Install Rust (https://rustup.rs) and run this again to build it."
 fi
 
-say "Installed $("$bin" --version) to $bin"
+version=$("$bin" --version 2>/dev/null) || die "the downloaded ultron-hands doesn't run on this system ($target). Please open an issue: https://github.com/$REPO/issues"
+say "Installed $version to $bin"
 
 # Make `ultron-hands stop` and friends work in new terminals.
 dir=$(dirname "$bin")

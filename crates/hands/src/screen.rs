@@ -34,32 +34,71 @@ pub fn frame() -> Frame {
     *FRAME.lock().unwrap()
 }
 
+/// One X connection for the life of the server, reopened once if it drops. Holding it
+/// also stops a bare X server (Xvfb with no other clients) from resetting between calls,
+/// which drops anyone connecting mid-reset.
+#[cfg(target_os = "linux")]
+fn with_x<T>(f: impl Fn(&x11rb::rust_connection::RustConnection, usize) -> Result<T, String>) -> Result<T, HandsError> {
+    use x11rb::rust_connection::RustConnection;
+    static CONN: LazyLock<Mutex<Option<(RustConnection, usize)>>> = LazyLock::new(|| Mutex::new(None));
+    let mut conn = CONN.lock().unwrap_or_else(|e| e.into_inner());
+    let mut last = String::new();
+    for attempt in 0..3 {
+        if attempt > 0 {
+            std::thread::sleep(std::time::Duration::from_millis(150));
+        }
+        if conn.is_none() {
+            match x11rb::connect(None) {
+                Ok(c) => *conn = Some(c),
+                Err(e) => {
+                    last = e.to_string();
+                    continue;
+                }
+            }
+        }
+        let (c, n) = conn.as_ref().expect("connected above");
+        match f(c, *n) {
+            Ok(v) => return Ok(v),
+            Err(e) => {
+                last = e;
+                *conn = None;
+            }
+        }
+    }
+    Err(HandsError::new(format!(
+        "Screen capture failed ({last}). The screen may be locked or asleep."
+    )))
+}
+
 #[cfg(target_os = "linux")]
 fn capture() -> Result<RgbaImage, HandsError> {
     use x11rb::connection::Connection;
     use x11rb::protocol::xproto::{ConnectionExt, ImageFormat};
-    let fail = |e: &dyn std::fmt::Display| HandsError::new(format!("Screen capture failed ({e}). The screen may be locked or asleep."));
-    let (conn, n) = x11rb::connect(None).map_err(|e| fail(&e))?;
-    let root = &conn.setup().roots[n];
-    let (w, h) = (root.width_in_pixels, root.height_in_pixels);
-    let reply = conn
-        .get_image(ImageFormat::Z_PIXMAP, root.root, 0, 0, w, h, !0)
-        .map_err(|e| fail(&e))?
-        .reply()
-        .map_err(|e| fail(&e))?;
-    let bpp = conn
-        .setup()
-        .pixmap_formats
-        .iter()
-        .find(|f| f.depth == reply.depth)
-        .map(|f| f.bits_per_pixel)
-        .unwrap_or(32);
+    let (w, h, depth, data, bpp) = with_x(|conn, n| {
+        let root = &conn.setup().roots[n];
+        let (w, h) = (root.width_in_pixels, root.height_in_pixels);
+        let reply = conn
+            .get_image(ImageFormat::Z_PIXMAP, root.root, 0, 0, w, h, !0)
+            .map_err(|e| e.to_string())?
+            .reply()
+            .map_err(|e| e.to_string())?;
+        let bpp = conn
+            .setup()
+            .pixmap_formats
+            .iter()
+            .find(|f| f.depth == reply.depth)
+            .map(|f| f.bits_per_pixel)
+            .unwrap_or(32);
+        Ok((w, h, reply.depth, reply.data, bpp))
+    })?;
     if bpp != 32 {
-        return Err(fail(&format!("unsupported {bpp}-bit display")));
+        return Err(HandsError::new(format!(
+            "Screen capture failed (unsupported {bpp}-bit, depth {depth} display)."
+        )));
     }
     // 32-bit ZPixmap, least significant byte first: B G R X
     let mut img = RgbaImage::new(w as u32, h as u32);
-    for (px, chunk) in img.pixels_mut().zip(reply.data.chunks_exact(4)) {
+    for (px, chunk) in img.pixels_mut().zip(data.chunks_exact(4)) {
         *px = Rgba([chunk[2], chunk[1], chunk[0], 255]);
     }
     Ok(img)
@@ -83,9 +122,11 @@ pub fn screen_size() -> Result<(u32, u32), HandsError> {
     #[cfg(target_os = "linux")]
     {
         use x11rb::connection::Connection;
-        let (conn, n) = x11rb::connect(None).map_err(|e| HandsError::new(format!("No display: {e}")))?;
-        let root = &conn.setup().roots[n];
-        Ok((root.width_in_pixels as u32, root.height_in_pixels as u32))
+        with_x(|conn, n| {
+            let root = &conn.setup().roots[n];
+            Ok((root.width_in_pixels as u32, root.height_in_pixels as u32))
+        })
+        .map_err(|e| HandsError::new(e.0.replace("Screen capture failed", "No display")))
     }
     #[cfg(not(target_os = "linux"))]
     {

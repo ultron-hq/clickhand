@@ -2418,6 +2418,7 @@ dependencies = [
  "dirs 6.0.0",
  "enigo",
  "image",
+ "libc",
  "regex",
  "serde_json",
  "x11rb 0.14.0",

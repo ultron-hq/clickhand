@@ -516,6 +516,11 @@ fn serve() {
 
 fn main() {
     use std::io::IsTerminal;
+    // Exit quietly when the reader goes away (`ultron-hands log | head`) instead of panicking.
+    #[cfg(unix)]
+    unsafe {
+        libc::signal(libc::SIGPIPE, libc::SIG_DFL);
+    }
     let args: Vec<String> = std::env::args().skip(1).collect();
     let yes = args.iter().any(|a| a == "--yes" || a == "-y");
     let first = args

@@ -1,0 +1,77 @@
+name: e2e
+# Ultron Hands end to end on real Windows and macOS desktops and on Linux (Xvfb):
+# get the binary, then tests/e2e/drive.py starts the MCP server, opens a window, clicks
+# into it and types, and checks the window got exactly that text. Screenshots are
+# uploaded as artifacts.
+#   source: build this commit (checks unreleased changes)
+#   live:   the one-line installer from getultron.vercel.app (checks what users get)
+on:
+  workflow_dispatch:
+    inputs:
+      source:
+        description: "build or live"
+        default: build
+  release:
+    types: [published]
+
+env:
+  CARGO_TERM_COLOR: always
+  SOURCE: ${{ github.event_name == 'release' && 'live' || inputs.source || 'build' }}
+
+jobs:
+  e2e:
+    name: e2e (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, macos-15-intel, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Linux desktop (Xvfb)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb xterm xdotool >/dev/null
+          Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >/dev/null 2>&1 &
+          echo "DISPLAY=:99" >> "$GITHUB_ENV"
+
+      - name: Build from source
+        if: env.SOURCE == 'build'
+        shell: bash
+        run: |
+          rustup toolchain install stable --profile minimal
+          cargo build --release --locked -p ultron-hands
+          bin="$PWD/target/release/ultron-hands"
+          [[ "$RUNNER_OS" == "Windows" ]] && bin="$bin.exe"
+          echo "UH=$bin" >> "$GITHUB_ENV"
+
+      - name: Install with the one-liner (macOS, Linux)
+        if: env.SOURCE == 'live' && runner.os != 'Windows'
+        run: |
+          curl -fsSL https://getultron.vercel.app/install.sh | sh
+          echo "UH=$HOME/.local/bin/ultron-hands" >> "$GITHUB_ENV"
+
+      - name: Install with the one-liner (Windows)
+        if: env.SOURCE == 'live' && runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          irm https://getultron.vercel.app/install.ps1 | iex
+          "UH=$env:LOCALAPPDATA\ultron\bin\ultron-hands.exe" | Out-File -Append $env:GITHUB_ENV
+
+      - name: Setup (non-interactive)
+        shell: bash
+        run: '"$UH" setup --yes || true'
+
+      - name: Drive it
+        shell: bash
+        run: python tests/e2e/drive.py "$UH" e2e-out
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-${{ matrix.os }}-${{ env.SOURCE }}
+          path: e2e-out
