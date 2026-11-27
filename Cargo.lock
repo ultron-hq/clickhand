@@ -599,7 +599,7 @@ dependencies = [
 
 [[package]]
 name = "clickhand"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "base64 0.22.1",
  "dirs 6.0.0",
@@ -619,7 +619,7 @@ dependencies = [
 
 [[package]]
 name = "clickhand-app"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "gtk",
  "regex",
@@ -5192,14 +5192,14 @@ dependencies = [
 
 [[package]]
 name = "ultron"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "ultron-core",
 ]
 
 [[package]]
 name = "ultron-core"
-version = "0.2.1"
+version = "0.2.2"
 dependencies = [
  "chrono",
  "chrono-tz",

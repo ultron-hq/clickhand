@@ -5,6 +5,13 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-11-27
+
+### Fixed
+- Linux: the island is its real size (an invisible strip under the clock was blocking clicks).
+- The welcome window's "Start using Clickhand" button no longer wraps.
+- The Mac installer falls back to the newest release that has the app while a new one is still building.
+
 ## [0.2.1] - 2026-11-27
 
 ### Changed
