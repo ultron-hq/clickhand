@@ -9,9 +9,9 @@ Clickhand lets Claude Code, Codex, Cursor or any MCP agent see your screen, move
 so it can do anything that needs a person at the computer, or teach you how while you click.</p>
 
 <p align="center">
-  <a href="https://github.com/ultron-hq/ultron/actions/workflows/ci.yml"><img src="https://github.com/ultron-hq/ultron/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/ultron-hq/clickhand/actions/workflows/ci.yml"><img src="https://github.com/ultron-hq/clickhand/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/Windows%20·%20macOS%20·%20Linux-supported-2563EB" alt="Windows, macOS and Linux">
-  <a href="https://github.com/ultron-hq/ultron/releases/latest"><img src="https://img.shields.io/github/v/release/ultron-hq/ultron?label=release&color=ff7a2f" alt="Latest release"></a>
+  <a href="https://github.com/ultron-hq/clickhand/releases/latest"><img src="https://img.shields.io/github/v/release/ultron-hq/clickhand?label=release&color=ff7a2f" alt="Latest release"></a>
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-555" alt="MIT OR Apache-2.0"></a>
 </p>
 
@@ -26,7 +26,7 @@ so it can do anything that needs a person at the computer, or teach you how whil
 | **Linux** | `curl -fsSL https://clickhand.vercel.app/install.sh \| sh` |
 
 Or download the `.dmg`, Windows setup or Linux `.AppImage`/`.deb` from the
-[latest release](https://github.com/ultron-hq/ultron/releases/latest). Setup connects your AI apps;
+[latest release](https://github.com/ultron-hq/clickhand/releases/latest). Setup connects your AI apps;
 on a Mac you allow Screen Recording and Accessibility **once, for Clickhand**, and every AI app works
 through it.
 
@@ -47,131 +47,89 @@ Then ask your agent:
 
 ## How Clickhand works
 
-Claude Code, Codex and other agents can edit files but can't click. **Clickhand** gives them a
-mouse and keyboard: an [MCP](https://modelcontextprotocol.io) server that lets any agent see the
-screen, click, scroll and type, so you can ask it for anything that needs a person at the computer.
+Claude Code, Codex and other agents can edit files but can't click. Clickhand gives them a mouse
+and keyboard: an [MCP](https://modelcontextprotocol.io) server that lets any agent see the screen,
+click, scroll and type. It works in a loop: a screenshot (the pointer marked by a red ring), one
+action, then another look to check it worked.
 
-**Install** (one line, no Rust needed):
+**Setup** (it runs after install, and again any time you run `clickhand`):
 
-```sh
-curl -fsSL https://clickhand.vercel.app/install.sh | sh          # macOS, Linux
-```
-
-```powershell
-irm https://clickhand.vercel.app/install.ps1 | iex               # Windows (PowerShell)
-```
-
-The installer checks the download, then starts a short setup that:
-
-1. checks this computer can be seen and controlled (and on macOS opens the Screen Recording and
-   Accessibility settings if they're off),
+1. checks this computer can be seen and controlled,
 2. finds your agents and connects every one: **Claude Code, Codex, Cursor, VS Code, Windsurf,
-   Claude Desktop and Gemini CLI**. It never replaces another server without asking,
-3. tells you what to ask first.
+   Claude Desktop and Gemini CLI**. It merges into their configs and never replaces another
+   server without asking,
+3. adds the three skills to Claude Code and Codex and tells you what to ask first.
 
-While an agent works you see an orange frame around the screen and an "Clickhand is using your
-mouse" tag by the pointer (click-through, and hidden from the agent's own screenshots).
+**On a Mac**, the Clickhand app runs Hands for every agent, so macOS asks for Screen Recording and
+Accessibility once, for Clickhand, instead of once for Terminal, iTerm, Cursor, Claude and the rest.
 
-**Skills.** Setup also adds three agent skills to Claude Code and Codex: `clickhand`
-(do it for me), `clickhand-teach` (show me how) and `clickhand-post` (post on X, LinkedIn, Threads
-or Bluesky from your own logged-in browser). **Clickhand Teach** works on Linux and Windows. Teach points at things on your screen with a
-glowing box and a caption, and you do the clicking:
+**You always see it working.** While an agent works, an orange frame glows around the screen and a
+"Clickhand is using your mouse" tag follows the pointer. Both are click-through and hidden from the
+agent's own screenshots.
 
-```
-/clickhand-teach show me how to export a frame as PNG in Figma
-/clickhand-teach where are the API keys in this dashboard?
-/clickhand-post announce v2 on X and LinkedIn with ~/Videos/demo.mp4
-```
+**Skills**
 
-Then open your agent and ask, for example: *"Use clickhand to open clickhand.vercel.app and press
-the big red button."*
+| Skill | What it does |
+| --- | --- |
+| `/clickhand` | Do it for me: forms, settings, apps without an API |
+| `/clickhand-teach` | Show me how: a glowing box and caption on each button; you do the clicking |
+| `/clickhand-post` | Post on X, LinkedIn, Threads or Bluesky from your own logged-in browser |
+
+**Commands**
 
 | Command | What it does |
 | --- | --- |
 | `clickhand` | Setup again (connects agents you installed since) |
 | `clickhand stop` / `resume` | Kill switch: every click and keystroke is refused until you resume |
 | `clickhand log` | What it did, most recent last |
-| `clickhand skills` | Reinstall the `clickhand`, `clickhand-teach` and `clickhand-post` skills |
 | `clickhand doctor` | Check the screen, input and permissions |
 | `clickhand agents` | Which agents are connected |
 | `clickhand connect <agent>` / `disconnect <agent>` | One agent at a time |
+| `clickhand skills` | Reinstall the skills |
 
-<details>
-<summary>Manual setup, or building from source</summary>
-
-```sh
-cargo install --git https://github.com/ultron-hq/ultron clickhand
-claude mcp add -s user clickhand -- clickhand     # Claude Code
-codex mcp add clickhand -- clickhand              # Codex
-```
-
-For any other MCP app, add a stdio server whose command is the path of `clickhand`.
-</details>
-
-It works in a loop (screenshot with the cursor marked by a red ring, act, look again to verify),
-with these safety rules: the kill switch, a read-only mode (`CLICKHAND_READONLY=1`), a rate
+**Safety:** the kill switch, a read-only mode (`CLICKHAND_READONLY=1`, Teach still works), a rate
 limit, no shell tool, and a local log of every action in which typed text is stored only as its
-length. During setup you choose whether agents may act without asking before each action; the
-kill switch stops them either way.
+length. All 18 tools are in the [docs](https://clickhand.vercel.app/docs#tools).
 
-Status: 17 of the original's 18 tools, built for Windows, macOS and Linux (X11) and tested on Linux.
-Coming next: the accessibility tree (`a11y_snapshot`), window focus on Windows and macOS, and a
-stop hotkey.
+**Tested** on every change on real Windows, macOS (Apple silicon and Intel) and Ubuntu desktops,
+and before releases on Ubuntu, Debian, Fedora, Arch, openSUSE and Alpine.
 
 ## Build from source
 
-From source (any OS with Rust 1.85+):
+Any OS with Rust 1.85+ (on Linux the app also needs WebKitGTK:
+`sudo apt install libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev`):
 
 ```sh
-git clone https://github.com/ultron-hq/ultron
+git clone https://github.com/ultron-hq/clickhand
 cd clickhand
-cargo build --release
-./target/release/ultron-rs --help
+cargo build --release -p clickhand          # the MCP server and CLI
+cargo build --release -p clickhand-app      # the desktop app
 ```
 
-On Linux, the desktop UI (from wave 3) also needs WebKitGTK:
+## The desktop app
 
-```sh
-sudo apt install libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libxdo-dev
-```
+The Clickhand app (`.dmg`, Windows setup, `.AppImage`/`.deb`, with the MCP server inside) adds:
 
-Bind the hotkeys in your desktop's keyboard settings:
-
-| Shortcut | Command |
-| --- | --- |
-| <kbd>Ctrl</kbd>+<kbd>Space</kbd> | `ultron-rs --prompt` |
-| <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>Space</kbd> | `ultron-rs --cursor` |
-| <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>Space</kbd> | `ultron-rs --voice` |
-
-Installers for Windows (`.msi`), macOS (`.dmg`) and Linux (`.AppImage`, `.deb`) will be attached
-to [releases](https://github.com/ultron-hq/ultron/releases) once the desktop UI lands.
-
-## The desktop app, inside
+- **The island:** a small flip clock at the top of the screen. It shows the time, or your timer.
+- **<kbd>Ctrl</kbd>+<kbd>Space</kbd>:** a prompt bar. Timers ("start a 25 minute timer for
+  review"), the stopwatch, pause, resume and stop are answered on the spot and logged; anything
+  else goes to Claude Code or Codex, which can use the computer through Clickhand.
+- **A welcome window** on first run: move to Applications (Mac), connect your AI apps in one
+  click, allow the two Mac permissions once, start at login.
 
 ```mermaid
 flowchart LR
-  K["Hotkey / CLI"] --> D["clickhand front door"]
-  D -->|line protocol| A["Running Clickhand"]
-  A --> R["Router: regex skills + fuzzy app match"]
-  R -->|unsure| L["LLM provider"]
-  R --> S["Skills"]
-  S --> C["Desktop control"]
-  S --> M[("SQLite: sessions, memory, tasks")]
-  A --> U["Island · prompt bar · companion (Tauri)"]
+  K["Ctrl+Space / island"] --> B["Prompt bar"]
+  B -->|timers| T[("Sessions database")]
+  B -->|anything else| A["Claude Code / Codex"]
+  A --> H["Clickhand MCP"]
+  X["Cursor, VS Code, Gemini CLI…"] --> H
+  H -->|on a Mac, through the app's broker| D["Your screen, mouse and keyboard"]
 ```
 
-- **Front door.** `ultron-rs` owns the command line. It talks to a running Clickhand over a local
-  socket (a named pipe on Windows) and guarantees a single instance with a lock file.
-- **Router.** Unambiguous requests are matched by each skill's patterns; anything unclear goes
-  to the model, which may only rewrite it into a skill command or answer in one sentence. It never
-  runs shell commands.
-- **Skills.** One module per ability, registered statically.
-- **Control.** `enigo` for input, `xcap` for screenshots, and the platform accessibility API
-  (AT-SPI, UI Automation, AX) for exact control positions.
-
-More in [docs/architecture.md](docs/architecture.md). The port is planned as an explicit set of
-decisions in [rust/DECISIONS.md](rust/DECISIONS.md) and tracked unit by unit in
-[rust/MAP.md](rust/MAP.md).
+Coming from the original app, unit by unit: memory, the router and app matching, voice, and the
+reports. The plan is in [ROADMAP.md](ROADMAP.md), the decisions in
+[rust/DECISIONS.md](rust/DECISIONS.md), and each unit's status in [rust/MAP.md](rust/MAP.md).
 
 ## Models
 
@@ -186,7 +144,7 @@ Each role (router, desktop agent, team) can use a different one. See [docs/provi
 
 ## Safety
 
-Clickhand can move your mouse and type. These rules carry over from the original and every port must keep them:
+Clickhand can move your mouse and type. Every change must keep these rules:
 
 - Actions that delete, send, buy or post run only when the request came from you, never from
   text it read on screen or in a web page.

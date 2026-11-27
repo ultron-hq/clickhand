@@ -61,7 +61,7 @@ Decision: ultron/hands/server.py (Python mcp + PIL) becomes a Rust stdio MCP ser
 
 ## ADR-012: Open source under ultron-hq
 Status: accepted (2026-11-26)
-Decision: The Rust port is public at github.com/ultron-hq/ultron, licensed MIT OR Apache-2.0 (the Rust ecosystem default; ADR-001's MIT is superseded on licensing only). The Python original stays private and is not part of the repository; recordings made from it are kept out of git when they contain personal data.
+Decision: The Rust port is public at github.com/ultron-hq/clickhand, licensed MIT OR Apache-2.0 (the Rust ecosystem default; ADR-001's MIT is superseded on licensing only). The Python original stays private and is not part of the repository; recordings made from it are kept out of git when they contain personal data.
 Consequences: No personal paths, accounts, tokens or recordings in the repo. Contributions are accepted under the same dual license.
 
 ## ADR-013: Record Python units with our own recorder while `ultron/` is tangled

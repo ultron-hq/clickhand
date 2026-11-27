@@ -502,11 +502,11 @@
    {
     "args": [
      "open the github page for ultron",
-     "open https://github.com/ultron-hq/ultron"
+     "open https://github.com/ultron-hq/clickhand"
     ],
     "out": [
      "^(.+?)\\s+the\\s+github\\s+page\\s+for\\s+ultron$",
-     "{0} https://github.com/ultron-hq/ultron"
+     "{0} https://github.com/ultron-hq/clickhand"
     ]
    },
    {

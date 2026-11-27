@@ -28,7 +28,7 @@ jobs:
       - name: The disk image window
         run: |
           case "$(uname -m)" in arm64) a=apple-silicon ;; *) a=intel ;; esac
-          curl -fsSL -o c.dmg "https://github.com/ultron-hq/ultron/releases/latest/download/Clickhand-mac-$a.dmg"
+          curl -fsSL -o c.dmg "https://github.com/ultron-hq/clickhand/releases/latest/download/Clickhand-mac-$a.dmg"
           open c.dmg
           sleep 10
           screencapture -x shots/2-dmg.png

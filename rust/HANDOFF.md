@@ -1,7 +1,7 @@
 # Handoff — 2026-11-26 (wave 1: 6 of 8 units done)
 
 Done:
-- Wave 0 (see MAP). Repo public at github.com/ultron-hq/ultron, site at getultron.vercel.app (website/).
+- Wave 0 (see MAP). Repo public at github.com/ultron-hq/clickhand, site at getultron.vercel.app (website/).
 - Wave 1, unit 1: sessions + reports. `crates/core/src/{sessions,reports}.rs`. Recorded with `rust/record/sessions_reports.py` (ADR-013): 540 cases from the Python original, replayed by `crates/core/tests/recorded.rs`. Mutation checks: breaking fmt rounding and the DST-gap rule both fail the replay.
 
 How to re-record a unit:

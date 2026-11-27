@@ -6,7 +6,7 @@ itself. We treat security reports as the top priority.
 ## Reporting a vulnerability
 
 Please **do not open a public issue**. Report privately through GitHub:
-[Security → Report a vulnerability](https://github.com/ultron-hq/ultron/security/advisories/new).
+[Security → Report a vulnerability](https://github.com/ultron-hq/clickhand/security/advisories/new).
 
 Include what you found, how to reproduce it, and what an attacker could do with it. We aim to
 reply within 72 hours and to ship a fix or mitigation within 30 days, and we will credit you in

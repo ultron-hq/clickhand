@@ -6,7 +6,7 @@ members = ["crates/core", "crates/app", "crates/hands", "crates/desktop"]
 edition = "2021"
 version = "0.2.1"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/ultron-hq/ultron"
+repository = "https://github.com/ultron-hq/clickhand"
 rust-version = "1.85"
 
 [workspace.dependencies]

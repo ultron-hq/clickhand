@@ -4,7 +4,7 @@
 #
 # Downloads the prebuilt binary from GitHub Releases, checks its SHA-256, puts it in
 # %LOCALAPPDATA%\clickhand\bin, adds that to your PATH and starts the guided setup, which
-# connects your AI agents. Source: https://github.com/ultron-hq/ultron
+# connects your AI agents. Source: https://github.com/ultron-hq/clickhand
 #
 # Options (environment variables): CLICKHAND_INSTALL_DIR, CLICKHAND_VERSION (e.g. v0.1.0),
 # CLICKHAND_NO_SETUP=1.
@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 $ProgressPreference = 'SilentlyContinue'
 [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12
 
-$repo = 'ultron-hq/ultron'
+$repo = 'ultron-hq/clickhand'
 $dir = if ($env:CLICKHAND_INSTALL_DIR) { $env:CLICKHAND_INSTALL_DIR } else { Join-Path $env:LOCALAPPDATA 'clickhand\bin' }
 $arch = $env:PROCESSOR_ARCHITECTURE
 if ($arch -ne 'AMD64' -and $arch -ne 'ARM64') { throw "This CPU ($arch) isn't supported yet." }

@@ -6,7 +6,7 @@
 # Downloads the prebuilt binary for this computer from GitHub Releases, checks its
 # SHA-256, puts it in ~/.local/bin and starts the guided setup, which connects your
 # AI agents (Claude Code, Codex, Cursor, VS Code, ...). Source:
-# https://github.com/ultron-hq/ultron
+# https://github.com/ultron-hq/clickhand
 #
 # Options (environment variables):
 #   CLICKHAND_INSTALL_DIR=/path   where to put the binary (default ~/.local/bin)
@@ -15,7 +15,7 @@
 #   CLICKHAND_NO_MODIFY_PATH=1    don't add the install folder to your shell's PATH
 set -eu
 
-REPO="ultron-hq/ultron"
+REPO="ultron-hq/clickhand"
 BIN_DIR="${CLICKHAND_INSTALL_DIR:-$HOME/.local/bin}"
 VERSION="${CLICKHAND_VERSION:-latest}"
 

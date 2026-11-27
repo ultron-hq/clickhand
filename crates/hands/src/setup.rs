@@ -883,7 +883,7 @@ Usage: clickhand [command]
   serve               run the MCP server on stdin/stdout (what agents start)
   --version           print the version
 
-Docs: https://github.com/ultron-hq/ultron";
+Docs: https://github.com/ultron-hq/clickhand";
 
 #[cfg(test)]
 mod tests {

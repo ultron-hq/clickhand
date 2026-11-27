@@ -7,10 +7,10 @@
 # Intel), copies Clickhand.app into /Applications and opens it; the app's welcome screen
 # does the rest (connects your AI apps, asks macOS for the two permissions once).
 # Installing this way skips the "downloaded from the internet" warning, because curl
-# doesn't mark files as quarantined. Source: https://github.com/ultron-hq/ultron
+# doesn't mark files as quarantined. Source: https://github.com/ultron-hq/clickhand
 set -eu
 
-REPO="ultron-hq/ultron"
+REPO="ultron-hq/clickhand"
 say() { printf '%s\n' "$*"; }
 die() { printf '\033[31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 
