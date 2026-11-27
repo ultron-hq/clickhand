@@ -25,6 +25,12 @@
   footer { display: flex; justify-content: space-between; align-items: center; }
   footer span { color: var(--muted); font-size: 12.5px; }
   [hidden] { display: none !important; }
+  .perm { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: center; margin-top: 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 9px; background: var(--ink); font-size: 13.5px; }
+  .perm b { font-weight: 600; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--raised); border: 1px solid var(--line); }
+  .dot.on { background: #3ddc84; border-color: #3ddc84; box-shadow: 0 0 8px rgba(61,220,132,0.6); }
+  .perm button.on { opacity: 0.5; pointer-events: none; }
+  .tip { font-size: 12.5px !important; color: var(--muted) !important; }
 </style></head>
 <body><main>
   <header><img src="logo.png" alt=""><div><h1>Welcome to Ultron</h1><p>A few steps and your AI can use this computer, or teach you how.</p></div></header>
@@ -46,9 +52,12 @@
       <pre id="connect-out"></pre>
     </div></li>
     <li id="s-perm" hidden><span class="n">·</span><div>
-      <h2>Allow screen and control</h2>
-      <p>macOS asks once. Turn on <b>Ultron</b> (and your terminal or AI app) in both lists, then come back.</p>
-      <div class="acts"><button id="screen">Open Screen Recording</button><button id="access">Open Accessibility</button></div>
+      <h2>Allow Ultron to see and click</h2>
+      <p>Only Ultron needs these. Claude Code, Codex, Cursor and every other AI app work through it, so you won't be asked again for each one.</p>
+      <div class="perm"><span class="dot" id="p-screen"></span><b>Screen Recording</b><button id="screen">Allow</button></div>
+      <div class="perm"><span class="dot" id="p-access"></span><b>Accessibility</b><button id="access">Allow</button></div>
+      <p class="tip" id="perm-tip">Turn on <b>Ultron</b> in the window macOS opens. This list updates by itself.</p>
+      <div class="acts" id="relaunch-row" hidden><button class="primary" id="relaunch">Relaunch Ultron to finish</button></div>
     </div></li>
     <li id="s-login"><span class="n">·</span><div>
       <h2>Start with your computer</h2>
@@ -74,6 +83,7 @@ async function load() {
     $("agents-text").innerHTML = "No AI app found yet. Install <b>Claude Code</b> (claude.com/claude-code) or <b>Codex</b>, then press the button. Timers work without one.";
   }
   if (!s.hands) $("connect").disabled = true;
+  if (s.os === "macos") { perms(); setInterval(perms, 1500); }
   number();
 }
 $("move").onclick = async () => {
@@ -89,8 +99,20 @@ $("connect").onclick = async () => {
   } catch (e) { $("connect-out").textContent = String(e); }
   $("connect").disabled = false;
 };
-$("screen").onclick = () => invoke("open_settings", { pane: "screen" });
-$("access").onclick = () => invoke("open_settings", { pane: "accessibility" });
+let asked = { screen: false };
+$("screen").onclick = () => { asked.screen = true; invoke("request_permission", { pane: "screen" }); };
+$("access").onclick = () => invoke("request_permission", { pane: "accessibility" });
+$("relaunch").onclick = () => invoke("relaunch");
+async function perms() {
+  const p = await invoke("permissions");
+  $("p-screen").classList.toggle("on", p.screen);
+  $("p-access").classList.toggle("on", p.accessibility);
+  $("screen").classList.toggle("on", p.screen); $("screen").textContent = p.screen ? "Allowed" : "Allow";
+  $("access").classList.toggle("on", p.accessibility); $("access").textContent = p.accessibility ? "Allowed" : "Allow";
+  // Screen Recording reads as off until Ultron restarts
+  $("relaunch-row").hidden = !(asked.screen && !p.screen);
+  if (p.screen && p.accessibility) { $("perm-tip").textContent = "All set. Every AI app you connected can now see and click through Ultron."; $("s-perm").classList.add("done"); }
+}
 $("autostart").onchange = async (e) => {
   try { e.target.checked = await invoke("set_autostart", { on: e.target.checked }); } catch { e.target.checked = !e.target.checked; }
 };

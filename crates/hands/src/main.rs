@@ -528,10 +528,13 @@ fn find_display() {
 
 /// The MCP server: newline-delimited JSON-RPC on stdin/stdout.
 fn serve() {
+    serve_on(std::io::stdin().lock(), std::io::stdout());
+}
+
+/// The MCP loop over any line stream: stdin/stdout, or a broker connection.
+fn serve_on(input: impl BufRead, mut stdout: impl Write) {
     let tools = tools();
-    let stdin = std::io::stdin();
-    let mut stdout = std::io::stdout();
-    for line in stdin.lock().lines() {
+    for line in input.lines() {
         let Ok(line) = line else { break };
         if line.trim().is_empty() {
             continue;
@@ -547,8 +550,98 @@ fn serve() {
     }
 }
 
+/// The broker: the copy of Hands that the Ultron app starts. macOS grants Screen Recording
+/// and Accessibility to the app that is "responsible" for a process; agents start Hands from
+/// Terminal, Cursor or Claude, which would each need their own grant. So agent-started
+/// copies relay to this one, which runs under the app, and the person allows only Ultron.
+#[cfg(unix)]
+mod broker {
+    use std::io::{BufReader, Write};
+    use std::os::unix::net::{UnixListener, UnixStream};
+    use std::path::PathBuf;
+
+    pub fn socket() -> PathBuf {
+        crate::log::cache_dir().join("hands.sock")
+    }
+
+    /// Accept MCP connections on the socket, one thread each. With `parent`, exits when
+    /// that process (the Ultron app) goes away.
+    pub fn run(path: PathBuf, parent: Option<i32>) {
+        let _ = std::fs::remove_file(&path);
+        let listener = match UnixListener::bind(&path) {
+            Ok(l) => l,
+            Err(e) => {
+                eprintln!("ultron-hands broker: can't listen on {}: {e}", path.display());
+                std::process::exit(1);
+            }
+        };
+        if let Some(pid) = parent {
+            let watch = path.clone();
+            std::thread::spawn(move || loop {
+                std::thread::sleep(std::time::Duration::from_secs(2));
+                // signal 0 only checks the process still exists
+                if unsafe { libc::kill(pid, 0) } != 0 {
+                    let _ = std::fs::remove_file(&watch);
+                    std::process::exit(0);
+                }
+            });
+        }
+        std::thread::spawn(move || {
+            for conn in listener.incoming().flatten() {
+                std::thread::spawn(move || {
+                    let Ok(read) = conn.try_clone() else { return };
+                    super::serve_on(BufReader::new(read), conn);
+                });
+            }
+        });
+    }
+
+    /// Relay stdin/stdout to a running broker. False when there is none.
+    pub fn relay() -> bool {
+        if std::env::var_os("ULTRON_HANDS_DIRECT").is_some() {
+            return false;
+        }
+        let Ok(conn) = UnixStream::connect(socket()) else { return false };
+        let Ok(mut to_broker) = conn.try_clone() else { return false };
+        eprintln!("ultron-hands: relaying to the Ultron app's broker");
+        std::thread::spawn(move || {
+            let _ = std::io::copy(&mut std::io::stdin().lock(), &mut to_broker);
+            let _ = to_broker.shutdown(std::net::Shutdown::Write);
+        });
+        let mut out = std::io::stdout();
+        let mut from = BufReader::new(conn);
+        let mut line = String::new();
+        while std::io::BufRead::read_line(&mut from, &mut line).is_ok_and(|n| n > 0) {
+            let _ = out.write_all(line.as_bytes());
+            let _ = out.flush();
+            line.clear();
+        }
+        true
+    }
+}
+
+/// `ultron-hands broker [socket]`: serve every connection; on macOS the main thread runs
+/// the on-screen overlay.
+#[cfg(unix)]
+fn run_broker(path: Option<&str>, parent: Option<i32>) {
+    let path = path.map(std::path::PathBuf::from).unwrap_or_else(broker::socket);
+    broker::run(path, parent);
+    #[cfg(target_os = "macos")]
+    if let Some(mtm) = objc2::MainThreadMarker::new() {
+        overlay::run_main(mtm, || false);
+        return;
+    }
+    loop {
+        std::thread::sleep(std::time::Duration::from_secs(3600));
+    }
+}
+
 /// Serve MCP; on macOS the main thread runs the on-screen overlay meanwhile.
 fn serve_with_overlay() {
+    #[cfg(unix)]
+    if broker::relay() {
+        return;
+    }
     #[cfg(target_os = "macos")]
     if let Some(mtm) = objc2::MainThreadMarker::new() {
         let server = std::thread::spawn(serve);
@@ -588,6 +681,22 @@ fn main() {
         None if std::io::stdin().is_terminal() => setup::setup(yes),
         None | Some("serve") => {
             serve_with_overlay();
+            0
+        }
+        #[cfg(unix)]
+        Some("broker") => {
+            let parent = args
+                .iter()
+                .position(|a| a == "--parent")
+                .and_then(|i| args.get(i + 1))
+                .and_then(|p| p.parse().ok());
+            let path = args
+                .iter()
+                .enumerate()
+                .skip(1)
+                .find(|(i, a)| !a.starts_with('-') && args[i - 1] != "--parent" && *a != "broker")
+                .map(|(_, a)| a.as_str());
+            run_broker(path, parent);
             0
         }
         Some("setup") => setup::setup(yes),

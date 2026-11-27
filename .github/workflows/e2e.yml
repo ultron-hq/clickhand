@@ -70,6 +70,15 @@ jobs:
         shell: bash
         run: python tests/e2e/drive.py "$UH" e2e-out
 
+      - name: Drive it through the broker (how the Mac app runs Hands)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          "$UH" broker --parent $$ &
+          for i in $(seq 20); do [ -S "$HOME/Library/Caches/ultron/hands.sock" ] || [ -S "$HOME/.cache/ultron/hands.sock" ] && break; sleep 0.3; done
+          python tests/e2e/drive.py "$UH" e2e-out/broker 2> relay.err
+          grep -q "relaying to the Ultron app's broker" relay.err && echo "relayed through the broker"
+
       - uses: actions/upload-artifact@v4
         if: always()
         with:

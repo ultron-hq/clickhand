@@ -12,3 +12,10 @@ rust-version = "1.85"
 [workspace.dependencies]
 fs4 = { version = "0.13", features = ["sync"] }
 interprocess = "2"
+
+[profile.dev]
+# keep debug builds small: line tables are enough for backtraces
+debug = "line-tables-only"
+
+[profile.dev.package."*"]
+debug = false

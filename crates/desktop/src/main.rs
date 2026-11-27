@@ -279,7 +279,10 @@ fn main() {
             onboard::connect_agents,
             onboard::open_settings,
             onboard::set_autostart,
-            onboard::finish_onboarding
+            onboard::finish_onboarding,
+            onboard::permissions,
+            onboard::request_permission,
+            onboard::relaunch
         ])
         .on_window_event(|w, e| {
             if w.label() == "bar" {
@@ -331,7 +334,13 @@ fn main() {
             tray.build(app)?;
             // macOS: no Dock icon; Ultron lives in the menu bar and the island.
             #[cfg(target_os = "macos")]
-            app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+            {
+                app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+                // Hands for every agent runs under Ultron, so one permission grant covers all.
+                if let Some(child) = onboard::start_broker() {
+                    app.manage(Mutex::new(Some(child)));
+                }
+            }
             if onboard::first_run() {
                 onboard::show(app.handle());
             }

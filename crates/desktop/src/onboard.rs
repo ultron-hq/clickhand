@@ -172,3 +172,118 @@ pub fn show(app: &AppHandle) {
         let _ = w.set_focus();
     }
 }
+
+/// macOS privacy permissions, checked and requested for this app. Hands runs as this app's
+/// broker, so these two grants cover every AI agent.
+#[cfg(target_os = "macos")]
+mod tcc {
+    use std::ffi::c_void;
+    #[link(name = "CoreGraphics", kind = "framework")]
+    unsafe extern "C" {
+        fn CGPreflightScreenCaptureAccess() -> bool;
+        fn CGRequestScreenCaptureAccess() -> bool;
+    }
+    #[link(name = "ApplicationServices", kind = "framework")]
+    unsafe extern "C" {
+        fn AXIsProcessTrusted() -> bool;
+        fn AXIsProcessTrustedWithOptions(options: *const c_void) -> bool;
+        static kAXTrustedCheckOptionPrompt: *const c_void;
+    }
+    #[link(name = "CoreFoundation", kind = "framework")]
+    unsafe extern "C" {
+        static kCFBooleanTrue: *const c_void;
+        static kCFTypeDictionaryKeyCallBacks: c_void;
+        static kCFTypeDictionaryValueCallBacks: c_void;
+        fn CFDictionaryCreate(
+            alloc: *const c_void,
+            keys: *const *const c_void,
+            values: *const *const c_void,
+            n: isize,
+            kcb: *const c_void,
+            vcb: *const c_void,
+        ) -> *const c_void;
+        fn CFRelease(cf: *const c_void);
+    }
+    pub fn screen() -> bool {
+        unsafe { CGPreflightScreenCaptureAccess() }
+    }
+    pub fn accessibility() -> bool {
+        unsafe { AXIsProcessTrusted() }
+    }
+    pub fn ask_screen() {
+        unsafe {
+            CGRequestScreenCaptureAccess();
+        }
+    }
+    /// Shows macOS's own prompt, which also adds Ultron to the Accessibility list.
+    pub fn ask_accessibility() {
+        unsafe {
+            let keys = [kAXTrustedCheckOptionPrompt];
+            let values = [kCFBooleanTrue];
+            let d = CFDictionaryCreate(
+                std::ptr::null(),
+                keys.as_ptr(),
+                values.as_ptr(),
+                1,
+                &raw const kCFTypeDictionaryKeyCallBacks,
+                &raw const kCFTypeDictionaryValueCallBacks,
+            );
+            AXIsProcessTrustedWithOptions(d);
+            if !d.is_null() {
+                CFRelease(d);
+            }
+        }
+    }
+}
+
+#[derive(Serialize)]
+pub struct Permissions {
+    screen: bool,
+    accessibility: bool,
+}
+
+#[tauri::command]
+pub fn permissions() -> Permissions {
+    #[cfg(target_os = "macos")]
+    return Permissions {
+        screen: tcc::screen(),
+        accessibility: tcc::accessibility(),
+    };
+    #[cfg(not(target_os = "macos"))]
+    Permissions {
+        screen: true,
+        accessibility: true,
+    }
+}
+
+/// Trigger macOS's prompt for "screen" or "accessibility", then open its settings pane.
+#[tauri::command]
+pub fn request_permission(pane: String) {
+    #[cfg(target_os = "macos")]
+    if pane == "screen" {
+        tcc::ask_screen();
+    } else {
+        tcc::ask_accessibility();
+    }
+    open_settings(pane);
+}
+
+/// Screen Recording only takes effect after a restart.
+#[tauri::command]
+pub fn relaunch(app: AppHandle) {
+    app.restart();
+}
+
+/// Start the bundled Hands as this app's broker, so agent-started copies relay to it and
+/// macOS checks Ultron's permissions, not Terminal's or Cursor's.
+#[cfg(target_os = "macos")]
+pub fn start_broker() -> Option<std::process::Child> {
+    let bin = hands()?;
+    Command::new(bin)
+        .args(["broker", "--parent", &std::process::id().to_string()])
+        .stdin(std::process::Stdio::null())
+        .stdout(std::process::Stdio::null())
+        .stderr(std::process::Stdio::null())
+        .spawn()
+        .ok()
+}
