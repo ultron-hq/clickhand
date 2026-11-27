@@ -1,9 +1,9 @@
-export const REPO = "https://github.com/ultron-hq/clickhand";
+export const REPO = "https://github.com/ultron-hq/openhud";
 
 /** The real star count from GitHub, refreshed hourly; null if GitHub doesn't answer. */
 export async function getStars(): Promise<number | null> {
   try {
-    const res = await fetch("https://api.github.com/repos/ultron-hq/clickhand", {
+    const res = await fetch("https://api.github.com/repos/ultron-hq/openhud", {
       headers: { accept: "application/vnd.github+json" },
       next: { revalidate: 3600 },
     });

@@ -27,7 +27,7 @@ export function HeroClip() {
       <div className="clip-frame">
         <div className="clip-bar" aria-hidden="true">
           <span /><span /><span />
-          <p>/clickhand-teach how do I add RSI on TradingView?</p>
+          <p>/openhud-teach how do I add RSI on TradingView?</p>
         </div>
         <video
           ref={video}

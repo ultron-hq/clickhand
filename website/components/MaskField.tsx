@@ -42,13 +42,13 @@ function heat(t: number): string {
 }
 
 // Eye centres in the 64×64 logo.
-// The two click ripples above the fingertip: they light up last and cast the beams.
-const EYES = [{ x: 24 / 64, y: 9.5 / 64 }, { x: 21 / 64, y: 5.5 / 64 }];
-// The mask's outline in the 64×64 logo: beams stop at the edge of the face.
-const OUTLINE = "M27 11 36 11 36 26 55 30 55 44 45 57 32 57 12 40 14 33 27 41Z";
+// The reticle's core: it lights up last and casts the beams.
+const EYES = [{ x: 31 / 64, y: 32 / 64 }, { x: 33 / 64, y: 32 / 64 }];
+// The reticle's outline in the 64×64 logo: beams stop at its edge.
+const OUTLINE = "M32 4 52 12 60 32 52 52 32 60 12 52 4 32 12 12Z";
 
 /**
- * The hero: the Clickhand mask in points, lit by its own red light, with lines of light
+ * The hero: the OpenHUD mask in points, lit by its own red light, with lines of light
  * sweeping in from the edge of the page and converging on its eyes. The dots fly in
  * and lock into the face on load; the eyes then follow the pointer and the dots part
  * around it. Still when reduced motion is on.
@@ -271,5 +271,5 @@ export function MaskField() {
     };
   }, []);
 
-  return <canvas ref={canvas} className="maskfield" role="img" aria-label="The Clickhand mask, drawn in points and lit red, with lines of light running into its eyes" />;
+  return <canvas ref={canvas} className="maskfield" role="img" aria-label="The OpenHUD mask, drawn in points and lit red, with lines of light running into its eyes" />;
 }

@@ -4,7 +4,7 @@
 //! hidden while a screenshot is taken, so the agent never sees or hits it.
 //! Linux (X11), Windows and macOS. On macOS AppKit needs the main thread, so the MCP
 //! server runs on a worker thread there and the main thread runs `run_main`.
-//! Set CLICKHAND_OVERLAY=0 to turn it off.
+//! Set OPENHUD_OVERLAY=0 to turn it off.
 use std::time::Duration;
 
 /// How long the screen frame stays after the agent's last call (it thinks between calls).
@@ -13,7 +13,7 @@ pub const FRAME_FOR: Duration = Duration::from_secs(12);
 pub const TAG_FOR: Duration = Duration::from_millis(3000);
 
 pub fn enabled() -> bool {
-    std::env::var("CLICKHAND_OVERLAY").as_deref() != Ok("0")
+    std::env::var("OPENHUD_OVERLAY").as_deref() != Ok("0")
 }
 
 #[cfg(target_os = "macos")]
@@ -94,7 +94,7 @@ mod x {
     const INK: u32 = 0x160b09;
     const TEXT: u32 = 0xfff1e8;
     const EDGE: u16 = 4;
-    const TAG: &str = "Clickhand is using your mouse";
+    const TAG: &str = "OpenHUD is using your mouse";
     const LINE: i16 = 16;
 
     #[derive(Default)]
@@ -168,7 +168,7 @@ mod x {
                 )?;
                 // An empty input shape: clicks go straight through to what's below.
                 conn.shape_rectangles(shape::SO::SET, shape::SK::INPUT, ClipOrdering::UNSORTED, w, 0, 0, &[])?;
-                conn.change_property8(PropMode::REPLACE, w, AtomEnum::WM_NAME, AtomEnum::STRING, b"clickhand overlay")?;
+                conn.change_property8(PropMode::REPLACE, w, AtomEnum::WM_NAME, AtomEnum::STRING, b"openhud overlay")?;
                 Ok(w)
             };
             let edges = [make(EMBER, 0)?, make(EMBER, 0)?, make(EMBER, 0)?, make(EMBER, 0)?];
@@ -394,7 +394,7 @@ mod win {
     const TEXT: u32 = 0x00e8_f1ff;
     const EDGE: i32 = 4;
     const LINE: i32 = 18;
-    const TAG: &str = "Clickhand is using your mouse";
+    const TAG: &str = "OpenHUD is using your mouse";
 
     type Rect = (i32, i32, i32, i32);
 
@@ -510,7 +510,7 @@ mod win {
 
     unsafe fn run(ready: std::sync::mpsc::Sender<bool>) {
         let inst = GetModuleHandleW(std::ptr::null());
-        let class = wide("ClickhandHandsOverlay");
+        let class = wide("OpenHUDHandsOverlay");
         let wc = WNDCLASSW {
             style: 0,
             lpfnWndProc: Some(proc),
@@ -524,7 +524,7 @@ mod win {
             lpszClassName: class.as_ptr(),
         };
         RegisterClassW(&wc);
-        let title = wide("clickhand overlay");
+        let title = wide("openhud overlay");
         let ex = WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOPMOST | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE;
         let mut wins = [0isize; 4];
         let mut excluded = true;
@@ -719,7 +719,7 @@ mod mac {
 
     use super::{wrap, FRAME_FOR, TAG_FOR};
 
-    const TAG: &str = "Clickhand is using your mouse";
+    const TAG: &str = "OpenHUD is using your mouse";
 
     type Rect = (i32, i32, i32, i32);
 

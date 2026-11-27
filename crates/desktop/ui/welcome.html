@@ -1,5 +1,5 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>Welcome to Clickhand</title>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>Welcome to OpenHUD</title>
 <style>
   html, body { background: var(--ink); overflow-y: auto; user-select: text; }
   main { padding: 34px 34px 28px; display: grid; gap: 22px; }
@@ -35,38 +35,38 @@
   .tip { font-size: 12.5px !important; color: var(--muted) !important; }
 </style></head>
 <body><main>
-  <header><img src="logo.png" alt=""><div><h1>Welcome to Clickhand</h1><p>A few steps and your AI can use this computer, or teach you how.</p></div></header>
+  <header><img src="logo.png" alt=""><div><h1>Welcome to OpenHUD</h1><p>A few steps and your AI can use this computer, or teach you how.</p></div></header>
   <ol>
     <li id="s-move" hidden><span class="n">1</span><div>
-      <h2>Move Clickhand to Applications</h2>
-      <p>You're running it from the download. Clickhand needs to live in Applications so it keeps working and macOS remembers its permissions.</p>
+      <h2>Move OpenHUD to Applications</h2>
+      <p>You're running it from the download. OpenHUD needs to live in Applications so it keeps working and macOS remembers its permissions.</p>
       <div class="acts"><button class="primary" id="move">Move to Applications</button></div>
       <pre id="move-out"></pre>
     </div></li>
     <li id="s-key"><span class="n">·</span><div>
       <h2>Your shortcut: <kbd id="key">Ctrl+Space</kbd></h2>
-      <p>Press it anywhere to ask Clickhand. Try “start a 25 minute timer”. The flip clock at the top of your screen shows it, and clicking the clock opens the bar too.</p>
+      <p>Press it anywhere to ask OpenHUD. Try “start a 25 minute timer”. The flip clock at the top of your screen shows it, and clicking the clock opens the bar too.</p>
     </div></li>
     <li id="s-agents"><span class="n">·</span><div>
       <h2>Connect your AI</h2>
-      <p id="agents-text">Clickhand lets Claude Code, Codex, Cursor and others see your screen and use the mouse and keyboard. One click connects every one it finds, with the Teach and Post skills.</p>
+      <p id="agents-text">OpenHUD lets Claude Code, Codex, Cursor and others see your screen and use the mouse and keyboard. One click connects every one it finds, with the Teach and Post skills.</p>
       <div class="acts"><button class="primary" id="connect">Connect my AI apps</button></div>
       <pre id="connect-out"></pre>
     </div></li>
     <li id="s-perm" hidden><span class="n">·</span><div>
-      <h2>Allow Clickhand to see and click</h2>
-      <p>Only Clickhand needs these. Claude Code, Codex, Cursor and every other AI app work through it, so you won't be asked again for each one.</p>
+      <h2>Allow OpenHUD to see and click</h2>
+      <p>Only OpenHUD needs these. Claude Code, Codex, Cursor and every other AI app work through it, so you won't be asked again for each one.</p>
       <div class="perm"><span class="dot" id="p-screen"></span><b>Screen Recording</b><button id="screen">Allow</button></div>
       <div class="perm"><span class="dot" id="p-access"></span><b>Accessibility</b><button id="access">Allow</button></div>
-      <p class="tip" id="perm-tip">Turn on <b>Clickhand</b> in the window macOS opens. This list updates by itself.</p>
-      <div class="acts" id="relaunch-row" hidden><button class="primary" id="relaunch">Relaunch Clickhand to finish</button></div>
+      <p class="tip" id="perm-tip">Turn on <b>OpenHUD</b> in the window macOS opens. This list updates by itself.</p>
+      <div class="acts" id="relaunch-row" hidden><button class="primary" id="relaunch">Relaunch OpenHUD to finish</button></div>
     </div></li>
     <li id="s-login"><span class="n">·</span><div>
       <h2>Start with your computer</h2>
-      <label><input type="checkbox" id="autostart"> Open Clickhand when I log in</label>
+      <label><input type="checkbox" id="autostart"> Open OpenHUD when I log in</label>
     </div></li>
   </ol>
-  <footer><span>You can open this again from the Clickhand menu in the tray.</span><button class="primary" id="done">Start using Clickhand</button></footer>
+  <footer><span>You can open this again from the OpenHUD menu in the tray.</span><button class="primary" id="done">Start using OpenHUD</button></footer>
 </main>
 <script>
 const { invoke } = window.__TAURI__.core;
@@ -111,9 +111,9 @@ async function perms() {
   $("p-access").classList.toggle("on", p.accessibility);
   $("screen").classList.toggle("on", p.screen); $("screen").textContent = p.screen ? "Allowed" : "Allow";
   $("access").classList.toggle("on", p.accessibility); $("access").textContent = p.accessibility ? "Allowed" : "Allow";
-  // Screen Recording reads as off until Clickhand restarts
+  // Screen Recording reads as off until OpenHUD restarts
   $("relaunch-row").hidden = !(asked.screen && !p.screen);
-  if (p.screen && p.accessibility) { $("perm-tip").textContent = "All set. Every AI app you connected can now see and click through Clickhand."; $("s-perm").classList.add("done"); }
+  if (p.screen && p.accessibility) { $("perm-tip").textContent = "All set. Every AI app you connected can now see and click through OpenHUD."; $("s-perm").classList.add("done"); }
 }
 $("autostart").onchange = async (e) => {
   try { e.target.checked = await invoke("set_autostart", { on: e.target.checked }); } catch { e.target.checked = !e.target.checked; }

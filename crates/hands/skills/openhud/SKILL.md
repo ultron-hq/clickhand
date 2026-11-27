@@ -1,14 +1,14 @@
 ---
-name: clickhand
-description: Use the person's real computer like a human, through the clickhand MCP tools (screenshot, click, type, scroll, keys, windows, apps, URLs). Use when a task needs a GUI: a website or desktop app with no API, filling a form, clicking through settings, checking how something looks, or any "do this on my computer" request.
+name: openhud
+description: Use the person's real computer like a human, through the openhud MCP tools (screenshot, click, type, scroll, keys, windows, apps, URLs). Use when a task needs a GUI: a website or desktop app with no API, filling a form, clicking through settings, checking how something looks, or any "do this on my computer" request.
 ---
-<!-- Installed by clickhand setup. Edits are kept only if you delete this line. -->
+<!-- Installed by openhud setup. Edits are kept only if you delete this line. -->
 
-# Using the computer with Clickhand
+# Using the computer with OpenHUD
 
-You have a mouse, a keyboard and eyes on the person's screen through the `clickhand`
+You have a mouse, a keyboard and eyes on the person's screen through the `openhud`
 MCP tools. The person sees an orange frame around the screen and a tag by the pointer
-while you work, and can stop you at any moment (`clickhand stop`).
+while you work, and can stop you at any moment (`openhud stop`).
 
 ## The loop
 
@@ -45,4 +45,4 @@ while you work, and can stop you at any moment (`clickhand stop`).
   unless the person clearly asked for exactly that. Stop at the final confirmation and
   ask when in doubt.
 - If a tool says the kill switch is on, stop and tell the person. Don't retry.
-- To show the person where something is instead of doing it, use the `clickhand-teach` skill.
+- To show the person where something is instead of doing it, use the `openhud-teach` skill.

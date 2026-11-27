@@ -1,5 +1,5 @@
-# dmgbuild settings for the Clickhand disk image: the app on the left, Applications on the
-# right, over a background that says "Drag Clickhand into Applications". dmgbuild writes the
+# dmgbuild settings for the OpenHUD disk image: the app on the left, Applications on the
+# right, over a background that says "Drag OpenHUD into Applications". dmgbuild writes the
 # Finder layout itself, so this works on CI machines where scripting Finder doesn't.
 import os.path
 

@@ -13,22 +13,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Install with the one-liner
-        run: curl -fsSL https://clickhand.vercel.app/mac.sh | sh
+        run: curl -fsSL https://openhud.vercel.app/mac.sh | sh
       - name: Welcome window
         run: |
           mkdir -p shots
           sleep 12
-          ls -la /Applications/Clickhand.app/Contents/MacOS
-          pgrep -fl clickhand || true
+          ls -la /Applications/OpenHUD.app/Contents/MacOS
+          pgrep -fl openhud || true
           screencapture -x shots/1-welcome.png
       - name: Broker started by the app
         run: |
-          ls -la "$HOME/Library/Caches/clickhand/" || true
-          test -S "$HOME/Library/Caches/clickhand/hands.sock" && echo "broker socket is up"
+          ls -la "$HOME/Library/Caches/openhud/" || true
+          test -S "$HOME/Library/Caches/openhud/hands.sock" && echo "broker socket is up"
       - name: The disk image window
         run: |
           case "$(uname -m)" in arm64) a=apple-silicon ;; *) a=intel ;; esac
-          curl -fsSL -o c.dmg "https://github.com/ultron-hq/clickhand/releases/latest/download/Clickhand-mac-$a.dmg"
+          curl -fsSL -o c.dmg "https://github.com/ultron-hq/openhud/releases/latest/download/OpenHUD-mac-$a.dmg"
           open c.dmg
           sleep 10
           screencapture -x shots/2-dmg.png

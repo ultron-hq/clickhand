@@ -1,13 +1,13 @@
 ---
-name: clickhand-post
-description: Write and publish social posts from the person's own logged-in accounts with Clickhand — X (Twitter), LinkedIn, Threads, Bluesky — including video or image attachments, replies and threads. Use when they ask to post, tweet, share, announce, reply to a post, or "put this on X/LinkedIn".
+name: openhud-post
+description: Write and publish social posts from the person's own logged-in accounts with OpenHUD — X (Twitter), LinkedIn, Threads, Bluesky — including video or image attachments, replies and threads. Use when they ask to post, tweet, share, announce, reply to a post, or "put this on X/LinkedIn".
 ---
-<!-- Installed by clickhand setup. Edits are kept only if you delete this line. -->
+<!-- Installed by openhud setup. Edits are kept only if you delete this line. -->
 
-# Posting with Clickhand
+# Posting with OpenHUD
 
 You post as the person, from their browser where they're already logged in, using the
-`clickhand` tools. A post is public and permanent, so: draft, check, post, verify.
+`openhud` tools. A post is public and permanent, so: draft, check, post, verify.
 
 ## 1. Draft
 

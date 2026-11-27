@@ -6,17 +6,17 @@ import { Check, Copy } from "lucide-react";
 const CMDS = {
   mac: {
     label: "macOS",
-    cmd: "curl -fsSL https://clickhand.vercel.app/mac.sh | sh",
-    note: "Installs the Clickhand app into Applications and opens it. Its welcome screen connects Claude Code, Codex, Cursor and the rest, and asks macOS for permission once",
+    cmd: "curl -fsSL https://openhud.vercel.app/mac.sh | sh",
+    note: "Installs the OpenHUD app into Applications and opens it. Its welcome screen connects Claude Code, Codex, Cursor and the rest, and asks macOS for permission once",
   },
   win: {
     label: "Windows",
-    cmd: "irm https://clickhand.vercel.app/install.ps1 | iex",
+    cmd: "irm https://openhud.vercel.app/install.ps1 | iex",
     note: "Then a short setup connects Claude Code, Codex, Cursor, VS Code, Windsurf, Claude Desktop and Gemini CLI",
   },
   linux: {
     label: "Linux",
-    cmd: "curl -fsSL https://clickhand.vercel.app/install.sh | sh",
+    cmd: "curl -fsSL https://openhud.vercel.app/install.sh | sh",
     note: "Then a short setup connects Claude Code, Codex, Cursor, VS Code, Windsurf, Claude Desktop and Gemini CLI",
   },
 } as const;

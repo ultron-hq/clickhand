@@ -1,6 +1,6 @@
 [package]
-name = "clickhand-app"
-description = "Clickhand, the desktop app: a flip-clock island, a Ctrl+Space prompt bar and a tray icon."
+name = "openhud-app"
+description = "OpenHUD, the desktop app: a flip-clock island, a Ctrl+Space prompt bar and a tray icon."
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,7 +8,7 @@ repository.workspace = true
 rust-version.workspace = true
 
 [[bin]]
-name = "clickhand-app"
+name = "openhud-app"
 path = "src/main.rs"
 
 [build-dependencies]

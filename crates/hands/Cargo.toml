@@ -1,6 +1,6 @@
 [package]
-name = "clickhand"
-description = "Clickhand: an MCP server that lets Claude Code, Codex or any MCP agent see and use your desktop."
+name = "openhud"
+description = "OpenHUD: an MCP server that lets Claude Code, Codex or any MCP agent see and use your desktop."
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,7 +8,7 @@ repository.workspace = true
 rust-version.workspace = true
 
 [[bin]]
-name = "clickhand"
+name = "openhud"
 path = "src/main.rs"
 
 [dependencies]

@@ -7,9 +7,9 @@ import { REPO, getStars } from "@/lib/site";
 export const revalidate = 3600;
 
 export const metadata: Metadata = {
-  title: "Docs · Clickhand",
+  title: "Docs · OpenHUD",
   description:
-    "Install Clickhand, connect Claude Code, Codex, Cursor and other agents, and use the clickhand, clickhand-teach and clickhand-post skills. Commands, tools, safety and troubleshooting.",
+    "Install OpenHUD, connect Claude Code, Codex, Cursor and other agents, and use the openhud, openhud-teach and openhud-post skills. Commands, tools, safety and troubleshooting.",
 };
 
 const TOC = [
@@ -36,16 +36,16 @@ const AGENTS = [
 ];
 
 const COMMANDS = [
-  ["clickhand", "Setup: check this computer and connect every agent found. Safe to run again"],
-  ["clickhand stop", "Kill switch. Every click and keystroke is refused until you resume"],
-  ["clickhand resume", "Turn the kill switch off"],
-  ["clickhand log [n]", "The last n actions (default 20). Typed text is stored only as its length"],
-  ["clickhand doctor", "Check the screen, input and permissions"],
-  ["clickhand agents", "Which agents are installed and connected"],
-  ["clickhand connect <agent>", "Connect one agent (ids in the table above)"],
-  ["clickhand disconnect <agent>", "Remove Hands from one agent"],
-  ["clickhand skills", "Reinstall the three skills. Copies you edited are left alone"],
-  ["clickhand serve", "The MCP server on stdin/stdout. Agents start this themselves"],
+  ["openhud", "Setup: check this computer and connect every agent found. Safe to run again"],
+  ["openhud stop", "Kill switch. Every click and keystroke is refused until you resume"],
+  ["openhud resume", "Turn the kill switch off"],
+  ["openhud log [n]", "The last n actions (default 20). Typed text is stored only as its length"],
+  ["openhud doctor", "Check the screen, input and permissions"],
+  ["openhud agents", "Which agents are installed and connected"],
+  ["openhud connect <agent>", "Connect one agent (ids in the table above)"],
+  ["openhud disconnect <agent>", "Remove Hands from one agent"],
+  ["openhud skills", "Reinstall the three skills. Copies you edited are left alone"],
+  ["openhud serve", "The MCP server on stdin/stdout. Agents start this themselves"],
 ];
 
 const TOOLS: [string, string, string][] = [
@@ -86,7 +86,7 @@ export default async function Docs() {
 
         <article className="docs-body">
           <header className="docs-head">
-            <p className="docs-kicker">Clickhand</p>
+            <p className="docs-kicker">OpenHUD</p>
             <h1>Docs</h1>
             <p className="lede">
               Hands is an MCP server that gives Claude Code, Codex and other AI agents a mouse, a keyboard and eyes on your screen. One small binary for Windows, macOS and Linux. Install it, run the setup, and ask your agent
@@ -98,16 +98,16 @@ export default async function Docs() {
             <p>One line, no Rust needed. It downloads the binary for your computer, checks its SHA-256, adds it to your PATH and starts the setup</p>
             <InstallBox />
             <p>
-              Prefer to build it yourself: <code>cargo install --git {REPO} clickhand</code>, then run <code>clickhand</code>. Every release is on <a href={`${REPO}/releases`}>GitHub</a> with checksums
+              Prefer to build it yourself: <code>cargo install --git {REPO} openhud</code>, then run <code>openhud</code>. Every release is on <a href={`${REPO}/releases`}>GitHub</a> with checksums
             </p>
           </section>
 
           <section id="setup">
             <h2>Setup and agents</h2>
-            <p>Running <code>clickhand</code> in a terminal walks you through three steps:</p>
+            <p>Running <code>openhud</code> in a terminal walks you through three steps:</p>
             <ol>
-              <li><b>Checks this computer:</b> it can find the screen, take screenshots and move the mouse. On a Mac, install the app (<code>mac.sh</code>): its welcome window asks macOS for Screen Recording and Accessibility once, for Clickhand, and every AI app then works through it instead of each needing its own permission</li>
-              <li><b>Connects your agents:</b> every one it finds below. It merges into your existing config, keeps a one-time <code>.bak</code>, and never replaces another server named <code>clickhand</code> without asking. It also asks once whether agents may act without confirming each step; the kill switch stops them either way</li>
+              <li><b>Checks this computer:</b> it can find the screen, take screenshots and move the mouse. On a Mac, install the app (<code>mac.sh</code>): its welcome window asks macOS for Screen Recording and Accessibility once, for OpenHUD, and every AI app then works through it instead of each needing its own permission</li>
+              <li><b>Connects your agents:</b> every one it finds below. It merges into your existing config, keeps a one-time <code>.bak</code>, and never replaces another server named <code>openhud</code> without asking. It also asks once whether agents may act without confirming each step; the kill switch stops them either way</li>
               <li><b>Tells you what to ask first</b>, and installs the three skills into Claude Code and Codex</li>
             </ol>
             <div className="docs-table">
@@ -120,7 +120,7 @@ export default async function Docs() {
                 </tbody>
               </table>
             </div>
-            <p>Any other MCP app: add a stdio server whose command is the full path of <code>clickhand</code> (shown by the setup). Restart an agent that was already open so it picks Hands up</p>
+            <p>Any other MCP app: add a stdio server whose command is the full path of <code>openhud</code> (shown by the setup). Restart an agent that was already open so it picks Hands up</p>
           </section>
 
           <section id="skills">
@@ -128,19 +128,19 @@ export default async function Docs() {
             <p>Skills teach your agent how to use Hands well. Setup puts them in <code>~/.claude/skills</code> and <code>~/.codex/skills</code>. Call one by name, or just ask and the agent picks it</p>
             <div className="docs-cards">
               <div>
-                <h3><code>/clickhand</code> do it for me</h3>
+                <h3><code>/openhud</code> do it for me</h3>
                 <p>The look, act, check loop, keyboard first, with the safety rules built in: no passwords, nothing sent, bought or deleted unless you asked</p>
-                <pre><code>/clickhand fill in this form from invoice.pdf</code></pre>
+                <pre><code>/openhud fill in this form from invoice.pdf</code></pre>
               </div>
               <div>
-                <h3><code>/clickhand-teach</code> show me how</h3>
+                <h3><code>/openhud-teach</code> show me how</h3>
                 <p>It points at each button with a glowing box and a short caption, waits until it sees you did the step, then shows the next one. It never clicks for you. Good for learning Figma, Excel, Blender, a trading or banking dashboard, or finding a setting</p>
-                <pre><code>/clickhand-teach where are the API keys in this dashboard?</code></pre>
+                <pre><code>/openhud-teach where are the API keys in this dashboard?</code></pre>
               </div>
               <div>
-                <h3><code>/clickhand-post</code> post it for me</h3>
+                <h3><code>/openhud-post</code> post it for me</h3>
                 <p>Posts, replies and threads on X, LinkedIn, Threads and Bluesky from your own logged-in browser. It checks the length the way each site counts it, attaches media first, types slowly so nothing is dropped, and checks your profile afterwards. It shows you the draft unless you said exactly what to post</p>
-                <pre><code>/clickhand-post announce v2 on X and LinkedIn with ~/Videos/demo.mp4</code></pre>
+                <pre><code>/openhud-post announce v2 on X and LinkedIn with ~/Videos/demo.mp4</code></pre>
               </div>
             </div>
             <p>The skills are plain Markdown. Edit yours freely: once you remove the line saying it was installed by setup, updates leave it alone</p>
@@ -156,10 +156,10 @@ export default async function Docs() {
               <li>“Post this screenshot on LinkedIn with a short note about the launch”</li>
             </ul>
             <p>
-              While an agent works you see an <b>orange frame around the screen</b>, and an <b>“Clickhand is using your mouse”</b> tag by the pointer whenever it clicks or types. Both are click-through and hidden from the agent’s own screenshots. Turn them off with <code>CLICKHAND_OVERLAY=0</code>
+              While an agent works you see an <b>orange frame around the screen</b>, and an <b>“OpenHUD is using your mouse”</b> tag by the pointer whenever it clicks or types. Both are click-through and hidden from the agent’s own screenshots. Turn them off with <code>OPENHUD_OVERLAY=0</code>
             </p>
             <p>
-              Codex asks before every MCP call unless you let it: the setup can turn that on, or start Codex with <code>-c &apos;mcp_servers.clickhand.default_tools_approval_mode=&quot;approve&quot;&apos;</code>
+              Codex asks before every MCP call unless you let it: the setup can turn that on, or start Codex with <code>-c &apos;mcp_servers.openhud.default_tools_approval_mode=&quot;approve&quot;&apos;</code>
             </p>
           </section>
 
@@ -194,8 +194,8 @@ export default async function Docs() {
           <section id="safety">
             <h2>Safety</h2>
             <ul>
-              <li><b>Kill switch:</b> <code>clickhand stop</code> makes every input tool refuse until <code>clickhand resume</code>. It works mid-task</li>
-              <li><b>Read-only mode:</b> <code>CLICKHAND_READONLY=1</code> lets an agent look and highlight but never click or type. Ideal for teaching</li>
+              <li><b>Kill switch:</b> <code>openhud stop</code> makes every input tool refuse until <code>openhud resume</code>. It works mid-task</li>
+              <li><b>Read-only mode:</b> <code>OPENHUD_READONLY=1</code> lets an agent look and highlight but never click or type. Ideal for teaching</li>
               <li><b>No shell tool:</b> Hands can only see and use the screen like a person would</li>
               <li><b>A local log</b> of every action in <code>hands.log.jsonl</code> (in your cache folder). Typed text is stored only as its length</li>
               <li><b>A rate limit</b> of 120 actions a minute, and clicks only happen once the pointer is confirmed at the target</li>
@@ -215,7 +215,7 @@ export default async function Docs() {
                   <tr><td>List windows</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                   <tr><td>Focus a window</td><td>Yes</td><td>Coming</td><td>Coming</td></tr>
                   <tr><td>The desktop app (island, Ctrl+Space)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-                  <tr><td>Permissions asked once, for Clickhand</td><td>n/a</td><td>n/a</td><td>Yes, with the app</td></tr>
+                  <tr><td>Permissions asked once, for OpenHUD</td><td>n/a</td><td>n/a</td><td>Yes, with the app</td></tr>
                 </tbody>
               </table>
             </div>
@@ -225,14 +225,14 @@ export default async function Docs() {
           <section id="troubleshooting">
             <h2>Troubleshooting</h2>
             <dl>
-              <dt>The agent doesn’t list clickhand tools</dt>
-              <dd>Restart the agent. Then run <code>clickhand agents</code>; if it says “uses a different clickhand”, run <code>clickhand connect &lt;agent&gt;</code></dd>
+              <dt>The agent doesn’t list openhud tools</dt>
+              <dd>Restart the agent. Then run <code>openhud agents</code>; if it says “uses a different openhud”, run <code>openhud connect &lt;agent&gt;</code></dd>
               <dt>Screenshots are black</dt>
-              <dd>The screen is locked or asleep. On macOS, allow Screen Recording for the terminal or agent app and reopen it. <code>clickhand doctor</code> says which</dd>
+              <dd>The screen is locked or asleep. On macOS, allow Screen Recording for the terminal or agent app and reopen it. <code>openhud doctor</code> says which</dd>
               <dt>Clicks or typing do nothing on macOS</dt>
               <dd>Allow Accessibility for the terminal or agent app in System Settings → Privacy &amp; Security</dd>
               <dt>“Kill switch is on”</dt>
-              <dd>You (or someone) ran <code>clickhand stop</code>. Run <code>clickhand resume</code></dd>
+              <dd>You (or someone) ran <code>openhud stop</code>. Run <code>openhud resume</code></dd>
               <dt>Windows SmartScreen warns about the download</dt>
               <dd>The binary isn’t code-signed yet. Check its SHA-256 against the release, then choose “Run anyway”</dd>
               <dt>Something else</dt>
@@ -242,10 +242,10 @@ export default async function Docs() {
 
           <section id="uninstall">
             <h2>Uninstall</h2>
-            <pre><code>{`clickhand disconnect claude-code   # and any other agents
-rm "$(command -v clickhand)"
-rm -r ~/.claude/skills/clickhand-* ~/.codex/skills/clickhand-*`}</code></pre>
-            <p>On Windows, delete <code>%LOCALAPPDATA%\clickhand</code> and remove it from your user PATH</p>
+            <pre><code>{`openhud disconnect claude-code   # and any other agents
+rm "$(command -v openhud)"
+rm -r ~/.claude/skills/openhud-* ~/.codex/skills/openhud-*`}</code></pre>
+            <p>On Windows, delete <code>%LOCALAPPDATA%\openhud</code> and remove it from your user PATH</p>
           </section>
         </article>
       </main>

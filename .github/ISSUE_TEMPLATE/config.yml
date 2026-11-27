@@ -1,8 +1,8 @@
 blank_issues_enabled: false
 contact_links:
   - name: Security vulnerability
-    url: https://github.com/ultron-hq/clickhand/security/advisories/new
+    url: https://github.com/ultron-hq/openhud/security/advisories/new
     about: Report privately, never in a public issue.
   - name: Questions and ideas
-    url: https://github.com/ultron-hq/clickhand/discussions
+    url: https://github.com/ultron-hq/openhud/discussions
     about: Ask and discuss in Discussions.

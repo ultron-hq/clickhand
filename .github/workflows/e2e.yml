@@ -1,10 +1,10 @@
 name: e2e
-# Clickhand end to end on real Windows and macOS desktops and on Linux (Xvfb):
+# OpenHUD end to end on real Windows and macOS desktops and on Linux (Xvfb):
 # get the binary, then tests/e2e/drive.py starts the MCP server, opens a window, clicks
 # into it and types, and checks the window got exactly that text. Screenshots are
 # uploaded as artifacts.
 #   source: build this commit (checks unreleased changes)
-#   live:   the one-line installer from clickhand.vercel.app (checks what users get)
+#   live:   the one-line installer from openhud.vercel.app (checks what users get)
 on:
   workflow_dispatch:
     inputs:
@@ -44,23 +44,23 @@ jobs:
         shell: bash
         run: |
           rustup toolchain install stable --profile minimal
-          cargo build --release --locked -p clickhand
-          bin="$PWD/target/release/clickhand"
+          cargo build --release --locked -p openhud
+          bin="$PWD/target/release/openhud"
           [[ "$RUNNER_OS" == "Windows" ]] && bin="$bin.exe"
           echo "UH=$bin" >> "$GITHUB_ENV"
 
       - name: Install with the one-liner (macOS, Linux)
         if: env.SOURCE == 'live' && runner.os != 'Windows'
         run: |
-          curl -fsSL https://clickhand.vercel.app/install.sh | sh
-          echo "UH=$HOME/.local/bin/clickhand" >> "$GITHUB_ENV"
+          curl -fsSL https://openhud.vercel.app/install.sh | sh
+          echo "UH=$HOME/.local/bin/openhud" >> "$GITHUB_ENV"
 
       - name: Install with the one-liner (Windows)
         if: env.SOURCE == 'live' && runner.os == 'Windows'
         shell: pwsh
         run: |
-          irm https://clickhand.vercel.app/install.ps1 | iex
-          "UH=$env:LOCALAPPDATA\clickhand\bin\clickhand.exe" | Out-File -Append $env:GITHUB_ENV
+          irm https://openhud.vercel.app/install.ps1 | iex
+          "UH=$env:LOCALAPPDATA\openhud\bin\openhud.exe" | Out-File -Append $env:GITHUB_ENV
 
       - name: Setup (non-interactive)
         shell: bash
@@ -75,9 +75,9 @@ jobs:
         shell: bash
         run: |
           "$UH" broker --parent $$ &
-          for i in $(seq 20); do [ -S "$HOME/Library/Caches/clickhand/hands.sock" ] || [ -S "$HOME/.cache/clickhand/hands.sock" ] && break; sleep 0.3; done
+          for i in $(seq 20); do [ -S "$HOME/Library/Caches/openhud/hands.sock" ] || [ -S "$HOME/.cache/openhud/hands.sock" ] && break; sleep 0.3; done
           python tests/e2e/drive.py "$UH" e2e-out/broker 2> relay.err
-          grep -q "relaying to the Clickhand app's broker" relay.err && echo "relayed through the broker"
+          grep -q "relaying to the OpenHUD app's broker" relay.err && echo "relayed through the broker"
 
       - uses: actions/upload-artifact@v4
         if: always()

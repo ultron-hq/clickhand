@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""End-to-end check of an installed clickhand, the way an agent uses it.
+"""End-to-end check of an installed openhud, the way an agent uses it.
 
-    python3 tests/e2e/drive.py [path/to/clickhand] [out-dir]
+    python3 tests/e2e/drive.py [path/to/openhud] [out-dir]
 
 Starts the MCP server, opens a small window that writes one typed line to a file,
 then uses Hands to find the window, click into it and type. Passes only if the
@@ -18,10 +18,10 @@ import sys
 import tempfile
 import time
 
-BIN = sys.argv[1] if len(sys.argv) > 1 else (shutil.which("clickhand") or "clickhand")
+BIN = sys.argv[1] if len(sys.argv) > 1 else (shutil.which("openhud") or "openhud")
 OUT = sys.argv[2] if len(sys.argv) > 2 else "e2e-out"
-TITLE = "clickhand-e2e"
-TEXT = "hello from clickhand 42"
+TITLE = "openhud-e2e"
+TEXT = "hello from openhud 42"
 os.makedirs(OUT, exist_ok=True)
 
 results = []
@@ -102,9 +102,9 @@ def reader_window(out_file):
 
 
 def main():
-    print(f"clickhand e2e on {sys.platform}: {BIN}", flush=True)
+    print(f"openhud e2e on {sys.platform}: {BIN}", flush=True)
     v = subprocess.run([BIN, "--version"], capture_output=True, text=True)
-    check("--version", v.returncode == 0 and v.stdout.startswith("clickhand"), v.stdout.strip())
+    check("--version", v.returncode == 0 and v.stdout.startswith("openhud"), v.stdout.strip())
     d = subprocess.run([BIN, "doctor"], capture_output=True, text=True)
     print(d.stdout, flush=True)
     check("doctor", d.returncode == 0, d.stdout.strip().splitlines()[-1] if d.stdout.strip() else d.stderr)
@@ -112,7 +112,7 @@ def main():
 
     s = Server()
     init = s.rpc("initialize", {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "e2e", "version": "1"}})
-    check("initialize", init["result"]["serverInfo"]["name"] == "clickhand", init["result"]["serverInfo"])
+    check("initialize", init["result"]["serverInfo"]["name"] == "openhud", init["result"]["serverInfo"])
     s.rpc("notifications/initialized", notify=True)
     tools = [t["name"] for t in s.rpc("tools/list")["result"]["tools"]]
     check("tools/list", len(tools) >= 17, f"{len(tools)} tools")
@@ -174,7 +174,7 @@ def main():
             u = ctypes.windll.user32
             found = []
             proc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(
-                lambda h, _: found.append(h) or True if u.IsWindowVisible(h) and _cls(u, h) == "ClickhandHandsOverlay" else True)
+                lambda h, _: found.append(h) or True if u.IsWindowVisible(h) and _cls(u, h) == "OpenHUDHandsOverlay" else True)
             u.EnumWindows(proc, 0)
             check("overlay windows are on screen", len(found) >= 2, f"{len(found)} visible")
         if sys.platform == "darwin":

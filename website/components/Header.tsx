@@ -54,9 +54,9 @@ export function Header({ repo, stars }: { repo: string; stars: number | null }) 
   return (
     <header className={`nav${scrolled ? " nav-scrolled" : ""}${open ? " nav-open" : ""}`}>
       <div className="nav-inner">
-        <a className="brand" href="/" aria-label="Clickhand, home">
+        <a className="brand" href="/" aria-label="OpenHUD, home">
           <img src="/logo.svg" alt="" width={26} height={26} />
-          <span className="brand-word">Clickhand</span>
+          <span className="brand-word">OpenHUD</span>
         </a>
         <nav className="nav-links" aria-label="Main">
           {LINKS.map(({ id, label }) => (

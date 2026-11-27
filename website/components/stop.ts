@@ -1,17 +1,17 @@
 // The page's own kill switch: pressing it freezes every moving part, like
-// `touch ~/.cache/clickhand/hands.stop` freezes Clickhand's hands.
+// `touch ~/.cache/openhud/hands.stop` freezes OpenHUD's hands.
 declare global {
   interface Window {
-    __clickhandStopped?: boolean;
+    __openhudStopped?: boolean;
   }
 }
 
-export const stopped = () => typeof window !== "undefined" && !!window.__clickhandStopped;
+export const stopped = () => typeof window !== "undefined" && !!window.__openhudStopped;
 
 export function setStopped(on: boolean) {
-  window.__clickhandStopped = on;
+  window.__openhudStopped = on;
   document.documentElement.classList.toggle("stopped", on);
-  window.dispatchEvent(new CustomEvent("clickhand:stop", { detail: on }));
+  window.dispatchEvent(new CustomEvent("openhud:stop", { detail: on }));
 }
 
 /** A timeout that does not count time while the page is stopped. */

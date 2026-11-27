@@ -31,7 +31,7 @@ TEMPLATE_PAIRS = [
     ("start a timer for 25 minutes for study", "timer 25 min study"),
     ("translate hello world to french", "translate hello world french"),
     ("set volume to 40%", "volume 40%"),
-    ("open the github page for ultron", "open https://github.com/ultron-hq/clickhand"),
+    ("open the github page for ultron", "open https://github.com/ultron-hq/openhud"),
     ("find files named report.pdf", "find report.pdf"),
     ("a b c", "a b c"),
     ("download the video at youtube.com/watch", "yt-dlp youtube.com/watch"),

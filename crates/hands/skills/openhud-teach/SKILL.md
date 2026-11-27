@@ -1,10 +1,10 @@
 ---
-name: clickhand-teach
+name: openhud-teach
 description: Teach the person to use an app or website on their own screen, or show them where something is, by pointing at it with on-screen highlights instead of clicking for them. Use when they ask "how do I...", "where is...", "show me how to...", "teach me...", "help me find ... in ...", or want to learn a platform (Figma, Excel, Blender, Notion, a trading or banking dashboard, settings, anything).
 ---
-<!-- Installed by clickhand setup. Edits are kept only if you delete this line. -->
+<!-- Installed by openhud setup. Edits are kept only if you delete this line. -->
 
-# Teaching with Clickhand
+# Teaching with OpenHUD
 
 The person wants to learn, so they do the clicking. You watch their screen with
 `screenshot` and point with `highlight`: a glowing box with a caption drawn on their
@@ -33,7 +33,7 @@ which menu or page it lives in and highlight the way there.
 ## Rules
 
 - Don't click, type or scroll for them unless they say "do it for me" (then use the
-  `clickhand` skill). Opening a menu to show what's inside is fine if you say so first.
+  `openhud` skill). Opening a menu to show what's inside is fine if you say so first.
 - Keep captions short (under ~50 characters). Use your reply for the explanation.
 - Use plain words. Explain jargon the first time it appears.
 - Real money, accounts and settings: explain what a button does before they press it,

@@ -1,11 +1,11 @@
 #!/bin/sh
-# Install Clickhand from the live one-liner on fresh Linux distros (Docker) and run
+# Install OpenHUD from the live one-liner on fresh Linux distros (Docker) and run
 # the end-to-end driver against a virtual X screen in each.
 #
 #   tests/e2e/linux.sh [out-dir] [image ...]
 #
 # Each image gets its own folder of screenshots, results.json and log.txt.
-# E2E_BIN=/path/to/static/clickhand tests a local build instead of the live install.
+# E2E_BIN=/path/to/static/openhud tests a local build instead of the live install.
 set -u
 here=$(cd "$(dirname "$0")" && pwd)
 out=$(realpath -m "${1:-e2e-linux}")
@@ -35,8 +35,8 @@ if [ -x /uh ]; then
   bin=/uh
 else
   echo "== install"
-  curl -fsSL https://clickhand.vercel.app/install.sh | sh
-  bin="$HOME/.local/bin/clickhand"
+  curl -fsSL https://openhud.vercel.app/install.sh | sh
+  bin="$HOME/.local/bin/openhud"
 fi
 echo "== e2e"
 python3 /e2e/drive.py "$bin" /out

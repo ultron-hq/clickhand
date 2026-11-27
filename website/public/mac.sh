@@ -1,20 +1,20 @@
 #!/bin/sh
-# Clickhand for Mac: installs the app into Applications and opens it.
+# OpenHUD for Mac: installs the app into Applications and opens it.
 #
-#   curl -fsSL https://clickhand.vercel.app/mac.sh | sh
+#   curl -fsSL https://openhud.vercel.app/mac.sh | sh
 #
-# Downloads the latest Clickhand .dmg from GitHub Releases for this Mac (Apple silicon or
-# Intel), copies Clickhand.app into /Applications and opens it; the app's welcome screen
+# Downloads the latest OpenHUD .dmg from GitHub Releases for this Mac (Apple silicon or
+# Intel), copies OpenHUD.app into /Applications and opens it; the app's welcome screen
 # does the rest (connects your AI apps, asks macOS for the two permissions once).
 # Installing this way skips the "downloaded from the internet" warning, because curl
-# doesn't mark files as quarantined. Source: https://github.com/ultron-hq/clickhand
+# doesn't mark files as quarantined. Source: https://github.com/ultron-hq/openhud
 set -eu
 
-REPO="ultron-hq/clickhand"
+REPO="ultron-hq/openhud"
 say() { printf '%s\n' "$*"; }
 die() { printf '\033[31merror:\033[0m %s\n' "$*" >&2; exit 1; }
 
-[ "$(uname -s)" = Darwin ] || die "this installer is for macOS. On Linux: curl -fsSL https://clickhand.vercel.app/install.sh | sh"
+[ "$(uname -s)" = Darwin ] || die "this installer is for macOS. On Linux: curl -fsSL https://openhud.vercel.app/install.sh | sh"
 
 arch=$(uname -m)
 # An Apple silicon Mac running this shell under Rosetta still gets the native app.
@@ -22,8 +22,8 @@ if [ "$arch" = x86_64 ] && [ "$(sysctl -n sysctl.proc_translated 2>/dev/null || 
   arch=arm64
 fi
 case "$arch" in
-  arm64) asset="Clickhand-mac-apple-silicon.dmg" ;;
-  x86_64) asset="Clickhand-mac-intel.dmg" ;;
+  arm64) asset="OpenHUD-mac-apple-silicon.dmg" ;;
+  x86_64) asset="OpenHUD-mac-intel.dmg" ;;
   *) die "this Mac ($arch) isn't supported" ;;
 esac
 
@@ -35,7 +35,7 @@ cleanup() {
 }
 trap cleanup EXIT INT TERM
 
-say "Downloading Clickhand for $( [ "$arch" = arm64 ] && echo 'Apple silicon' || echo 'Intel' )…"
+say "Downloading OpenHUD for $( [ "$arch" = arm64 ] && echo 'Apple silicon' || echo 'Intel' )…"
 # The newest release has the app a few minutes after it's published; until then, use the
 # newest release that has it.
 if ! curl -fsL "https://github.com/$REPO/releases/latest/download/$asset" -o "$tmp/$asset"; then
@@ -51,7 +51,7 @@ app=$(find "$mnt" -maxdepth 1 -name "*.app" | head -1)
 dest="/Applications/$(basename "$app")"
 
 # Quit a running copy so it can be replaced.
-osascript -e 'quit app "Clickhand"' >/dev/null 2>&1 || true
+osascript -e 'quit app "OpenHUD"' >/dev/null 2>&1 || true
 
 say "Installing into Applications…"
 if [ -w /Applications ]; then
@@ -62,5 +62,5 @@ else
 fi
 xattr -dr com.apple.quarantine "$dest" 2>/dev/null || true
 
-say "Opening Clickhand. Follow the welcome window: it connects your AI apps and asks macOS for permission once."
+say "Opening OpenHUD. Follow the welcome window: it connects your AI apps and asks macOS for permission once."
 open "$dest"

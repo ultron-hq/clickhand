@@ -1,23 +1,23 @@
 #!/bin/sh
-# Clickhand installer for macOS and Linux.
+# OpenHUD installer for macOS and Linux.
 #
-#   curl -fsSL https://clickhand.vercel.app/install.sh | sh
+#   curl -fsSL https://openhud.vercel.app/install.sh | sh
 #
 # Downloads the prebuilt binary for this computer from GitHub Releases, checks its
 # SHA-256, puts it in ~/.local/bin and starts the guided setup, which connects your
 # AI agents (Claude Code, Codex, Cursor, VS Code, ...). Source:
-# https://github.com/ultron-hq/clickhand
+# https://github.com/ultron-hq/openhud
 #
 # Options (environment variables):
-#   CLICKHAND_INSTALL_DIR=/path   where to put the binary (default ~/.local/bin)
-#   CLICKHAND_VERSION=v0.1.0      a specific release (default: the latest)
-#   CLICKHAND_NO_SETUP=1          install only, skip the setup
-#   CLICKHAND_NO_MODIFY_PATH=1    don't add the install folder to your shell's PATH
+#   OPENHUD_INSTALL_DIR=/path   where to put the binary (default ~/.local/bin)
+#   OPENHUD_VERSION=v0.1.0      a specific release (default: the latest)
+#   OPENHUD_NO_SETUP=1          install only, skip the setup
+#   OPENHUD_NO_MODIFY_PATH=1    don't add the install folder to your shell's PATH
 set -eu
 
-REPO="ultron-hq/clickhand"
-BIN_DIR="${CLICKHAND_INSTALL_DIR:-$HOME/.local/bin}"
-VERSION="${CLICKHAND_VERSION:-latest}"
+REPO="ultron-hq/openhud"
+BIN_DIR="${OPENHUD_INSTALL_DIR:-$HOME/.local/bin}"
+VERSION="${OPENHUD_VERSION:-latest}"
 
 say() { printf '%s\n' "$*"; }
 die() { printf '\033[31merror:\033[0m %s\n' "$*" >&2; exit 1; }
@@ -38,7 +38,7 @@ arch=$(uname -m)
 case "$os" in
   Linux) os=unknown-linux-musl ;;
   Darwin) os=apple-darwin ;;
-  MINGW* | MSYS* | CYGWIN*) die "on Windows, run this in PowerShell instead: irm https://clickhand.vercel.app/install.ps1 | iex" ;;
+  MINGW* | MSYS* | CYGWIN*) die "on Windows, run this in PowerShell instead: irm https://openhud.vercel.app/install.ps1 | iex" ;;
   *) die "this OS ($os) isn't supported yet" ;;
 esac
 case "$arch" in
@@ -52,20 +52,20 @@ if [ "$os" = apple-darwin ] && [ "$arch" = x86_64 ] && [ "$(sysctl -n sysctl.pro
 fi
 target="$arch-$os"
 release_url() {
-  if [ "$VERSION" = latest ]; then echo "https://github.com/$REPO/releases/latest/download/clickhand-$1.tar.gz"
-  else echo "https://github.com/$REPO/releases/download/$VERSION/clickhand-$1.tar.gz"; fi
+  if [ "$VERSION" = latest ]; then echo "https://github.com/$REPO/releases/latest/download/openhud-$1.tar.gz"
+  else echo "https://github.com/$REPO/releases/download/$VERSION/openhud-$1.tar.gz"; fi
 }
-asset="clickhand-$target.tar.gz"
+asset="openhud-$target.tar.gz"
 url=$(release_url "$target")
 
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT INT TERM
 
-say "Installing Clickhand ($target)"
+say "Installing OpenHUD ($target)"
 # Linux builds are static (musl) and run on any distro; releases before v0.1.2 only had glibc ones.
 if ! fetch "$url" "$tmp/$asset" 2>/dev/null && [ "$os" = unknown-linux-musl ]; then
   target="$arch-unknown-linux-gnu"
-  asset="clickhand-$target.tar.gz"
+  asset="openhud-$target.tar.gz"
   url=$(release_url "$target")
 fi
 if [ -s "$tmp/$asset" ] || fetch "$url" "$tmp/$asset" 2>/dev/null; then
@@ -75,46 +75,48 @@ if [ -s "$tmp/$asset" ] || fetch "$url" "$tmp/$asset" 2>/dev/null; then
   [ "$expected" = "$actual" ] || die "checksum mismatch, the download may be damaged; try again"
   tar -xzf "$tmp/$asset" -C "$tmp"
   mkdir -p "$BIN_DIR"
-  mv -f "$tmp/clickhand" "$BIN_DIR/clickhand"
-  chmod +x "$BIN_DIR/clickhand"
-  bin="$BIN_DIR/clickhand"
+  mv -f "$tmp/openhud" "$BIN_DIR/openhud"
+  chmod +x "$BIN_DIR/openhud"
+  bin="$BIN_DIR/openhud"
 elif command -v cargo >/dev/null 2>&1; then
   say "No prebuilt binary for $target, so building it with cargo (takes a minute or two)..."
-  cargo install --locked --git "https://github.com/$REPO" clickhand
-  bin="${CARGO_HOME:-$HOME/.cargo}/bin/clickhand"
+  cargo install --locked --git "https://github.com/$REPO" openhud
+  bin="${CARGO_HOME:-$HOME/.cargo}/bin/openhud"
 else
   die "no prebuilt binary for $target yet. Install Rust (https://rustup.rs) and run this again to build it."
 fi
 
-# Agents set up before the rename start `ultron-hands`; keep that name working.
-[ -e "$(dirname "$bin")/ultron-hands" ] || ln -s "$bin" "$(dirname "$bin")/ultron-hands" 2>/dev/null || true
+# Agents set up before the renames start `ultron-hands` or `clickhand`; keep both working.
+for old in ultron-hands clickhand; do
+  [ -e "$(dirname "$bin")/$old" ] || ln -s "$bin" "$(dirname "$bin")/$old" 2>/dev/null || true
+done
 
-version=$("$bin" --version 2>/dev/null) || die "the downloaded clickhand doesn't run on this system ($target). Please open an issue: https://github.com/$REPO/issues"
+version=$("$bin" --version 2>/dev/null) || die "the downloaded openhud doesn't run on this system ($target). Please open an issue: https://github.com/$REPO/issues"
 say "Installed $version to $bin"
 
-# Make `clickhand stop` and friends work in new terminals.
+# Make `openhud stop` and friends work in new terminals.
 dir=$(dirname "$bin")
 case ":$PATH:" in
   *":$dir:"*) ;;
   *)
-    if [ -z "${CLICKHAND_NO_MODIFY_PATH:-}" ]; then
+    if [ -z "${OPENHUD_NO_MODIFY_PATH:-}" ]; then
       case "${SHELL:-}" in
         */zsh) rc="$HOME/.zshrc"; line="export PATH=\"$dir:\$PATH\"" ;;
         */bash) rc="$HOME/.bashrc"; line="export PATH=\"$dir:\$PATH\"" ;;
         */fish) rc="$HOME/.config/fish/config.fish"; line="fish_add_path \"$dir\"" ;;
         *) rc="$HOME/.profile"; line="export PATH=\"$dir:\$PATH\"" ;;
       esac
-      if ! grep -qs "# clickhand" "$rc"; then
+      if ! grep -qs "# openhud" "$rc"; then
         mkdir -p "$(dirname "$rc")"
-        printf '\n%s  # clickhand\n' "$line" >>"$rc"
+        printf '\n%s  # openhud\n' "$line" >>"$rc"
         say "Added $dir to your PATH in $rc (open a new terminal to use it)"
       fi
     fi
     ;;
 esac
 
-if [ -n "${CLICKHAND_NO_SETUP:-}" ]; then
-  say "Run \`clickhand\` to connect your AI agents."
+if [ -n "${OPENHUD_NO_SETUP:-}" ]; then
+  say "Run \`openhud\` to connect your AI agents."
   exit 0
 fi
 say ""

@@ -75,7 +75,7 @@ pub fn windows(limit: usize) -> Vec<Value> {
     for wid in ids.split_whitespace() {
         let name = run(&["xdotool", "getwindowname", wid], 8.0, false).unwrap_or_default();
         let geo = run(&["xdotool", "getwindowgeometry", "--shell", wid], 8.0, false).unwrap_or_default();
-        if name.is_empty() || geo.is_empty() || name == "clickhand overlay" {
+        if name.is_empty() || geo.is_empty() || name == "openhud overlay" {
             continue;
         }
         let g: BTreeMap<&str, i64> = geo
