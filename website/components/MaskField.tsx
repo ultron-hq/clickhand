@@ -42,9 +42,10 @@ function heat(t: number): string {
 }
 
 // Eye centres in the 64×64 logo.
-const EYES = [{ x: 21.5 / 64, y: 28 / 64 }, { x: 42.5 / 64, y: 28 / 64 }];
+// The two click ripples above the fingertip: they light up last and cast the beams.
+const EYES = [{ x: 24 / 64, y: 9.5 / 64 }, { x: 21 / 64, y: 5.5 / 64 }];
 // The mask's outline in the 64×64 logo: beams stop at the edge of the face.
-const OUTLINE = "M18 6 27 3 32 10 37 3 46 6 54 19 51 43 41 59H23L13 43 10 19Z";
+const OUTLINE = "M27 11 36 11 36 26 55 30 55 44 45 57 32 57 12 40 14 33 27 41Z";
 
 /**
  * The hero: the Clickhand mask in points, lit by its own red light, with lines of light
@@ -97,7 +98,7 @@ export function MaskField() {
     };
 
     const img = new Image();
-    img.src = "/logo.svg";
+    img.src = "/hero.svg";
     img.onload = () => {
       const s = document.createElement("canvas");
       s.width = GRID; s.height = GRID;

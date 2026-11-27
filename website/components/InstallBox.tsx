@@ -4,19 +4,34 @@ import { useEffect, useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 const CMDS = {
-  unix: { label: "macOS / Linux", cmd: "curl -fsSL https://clickhand.vercel.app/install.sh | sh" },
-  win: { label: "Windows", cmd: "irm https://clickhand.vercel.app/install.ps1 | iex" },
+  mac: {
+    label: "macOS",
+    cmd: "curl -fsSL https://clickhand.vercel.app/mac.sh | sh",
+    note: "Installs the Clickhand app into Applications and opens it. Its welcome screen connects Claude Code, Codex, Cursor and the rest, and asks macOS for permission once",
+  },
+  win: {
+    label: "Windows",
+    cmd: "irm https://clickhand.vercel.app/install.ps1 | iex",
+    note: "Then a short setup connects Claude Code, Codex, Cursor, VS Code, Windsurf, Claude Desktop and Gemini CLI",
+  },
+  linux: {
+    label: "Linux",
+    cmd: "curl -fsSL https://clickhand.vercel.app/install.sh | sh",
+    note: "Then a short setup connects Claude Code, Codex, Cursor, VS Code, Windsurf, Claude Desktop and Gemini CLI",
+  },
 } as const;
 
 type Os = keyof typeof CMDS;
 
 /** The one-line install, preset to the visitor's OS, with a copy button. */
 export function InstallBox() {
-  const [os, setOs] = useState<Os>("unix");
+  const [os, setOs] = useState<Os>("mac");
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    if (/Windows/i.test(navigator.userAgent)) setOs("win");
+    const ua = navigator.userAgent;
+    if (/Windows/i.test(ua)) setOs("win");
+    else if (/Linux|X11|CrOS/i.test(ua) && !/Android/i.test(ua)) setOs("linux");
   }, []);
 
   async function copy() {
@@ -53,9 +68,7 @@ export function InstallBox() {
           {copied ? <Check size={16} strokeWidth={2} /> : <Copy size={16} strokeWidth={1.75} />}
         </button>
       </div>
-      <p className="install-note">
-        Then a short setup connects Claude Code, Codex, Cursor, VS Code, Windsurf, Claude Desktop and Gemini CLI
-      </p>
+      <p className="install-note">{CMDS[os].note}</p>
     </div>
   );
 }
