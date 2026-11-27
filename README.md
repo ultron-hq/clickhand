@@ -4,52 +4,48 @@
 
 <h1 align="center">Clickhand</h1>
 
-<p align="center"><b>A desktop agent that lives on your screen, and hands for any AI agent that needs to use your PC like a human.</b><br>
-Press <kbd>Ctrl</kbd>+<kbd>Space</kbd>, say what you want, and it opens the app, runs the timer,<br>
-remembers what you taught it, or takes the mouse and does the task while you watch.</p>
+<p align="center"><b>Give your AI a hand.</b><br>
+Clickhand lets Claude Code, Codex, Cursor or any MCP agent see your screen, move the mouse and type,<br>
+so it can do anything that needs a person at the computer, or teach you how while you click.</p>
 
 <p align="center">
   <a href="https://github.com/ultron-hq/ultron/actions/workflows/ci.yml"><img src="https://github.com/ultron-hq/ultron/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <img src="https://img.shields.io/badge/Windows%20·%20macOS%20·%20Linux-planned-2563EB" alt="Windows, macOS and Linux">
-  <img src="https://img.shields.io/badge/rust-1.85%2B-CE422B?logo=rust" alt="Rust 1.85+">
+  <img src="https://img.shields.io/badge/Windows%20·%20macOS%20·%20Linux-supported-2563EB" alt="Windows, macOS and Linux">
+  <a href="https://github.com/ultron-hq/ultron/releases/latest"><img src="https://img.shields.io/github/v/release/ultron-hq/ultron?label=release&color=ff7a2f" alt="Latest release"></a>
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-555" alt="MIT OR Apache-2.0"></a>
 </p>
 
-<p align="center"><a href="https://clickhand.vercel.app">Website</a> · <a href="#quick-start">Quick start</a> · <a href="#how-it-works">How it works</a> · <a href="ROADMAP.md">Roadmap</a> · <a href="docs/architecture.md">Architecture</a> · <a href="CONTRIBUTING.md">Contributing</a></p>
+<p align="center"><a href="https://clickhand.vercel.app">Website</a> · <a href="https://clickhand.vercel.app/docs">Docs</a> · <a href="#install">Install</a> · <a href="ROADMAP.md">Roadmap</a> · <a href="CONTRIBUTING.md">Contributing</a></p>
 
-> [!IMPORTANT]
-> **Clickhand is being rewritten in Rust, and this is that rewrite.** It is early: the command line
-> and single-instance core work today; the island, prompt bar, skills and desktop control land
-> wave by wave (see the [roadmap](ROADMAP.md)). Every piece is checked against the behavior of the
-> original Python app before it ships, with [rust-anything](https://github.com/erkamyaman/rust-anything).
+## Install
 
-## Why
-
-The original Clickhand runs every day on one Linux desktop: a flip-clock "island" at the top of the
-screen, a prompt bar on <kbd>Ctrl</kbd>+<kbd>Space</kbd>, voice, memory, timers and an agent that
-can drive the desktop. It is Python + Qt and tied to X11. The rewrite keeps all of it and makes it:
-
-- **Cross-platform**: one app for Windows, macOS and Linux, with native installers.
-- **Small and fast**: a single Rust binary with a web-tech UI (Tauri), no Python, no PyTorch.
-- **Yours to point anywhere**: Claude Code, Codex, a local model, or an API key from any provider.
-- **Safe by default**: destructive actions only when you asked for them, a kill switch, and a log of everything it did.
-
-## What it does
-
-| Feature | Status |
+| | |
 | --- | --- |
-| `clickhand` CLI: `--prompt`, `--cursor`, `--voice`, `--say`, `--quit`, single instance | ported |
-| Flip-clock island with timer and stopwatch, sessions logged to SQLite | wave 3 |
-| Prompt bar, centred or beside the cursor | wave 3 |
-| Skills: open apps, search, volume, timers, reports, tasks, memory, deploy, … | wave 1–2 |
-| Memory: facts, your own phrases, plans learned from the model | wave 1 |
-| Pluggable models: Claude Code CLI, Codex CLI, Ollama / OpenAI-compatible, any API key | wave 2 |
-| Desktop control: mouse, keyboard, screenshots, accessibility tree per OS | wave 4 |
-| **Hands**: an MCP server so your coding agent can see and use your desktop | preview |
-| Voice: local Whisper transcription, Gemini Live conversations | wave 5 |
-| Abilities Clickhand writes for itself, sandboxed in WebAssembly | wave 6 |
+| **macOS** (the app, with everything inside) | `curl -fsSL https://clickhand.vercel.app/mac.sh \| sh` |
+| **Windows** | `irm https://clickhand.vercel.app/install.ps1 \| iex` |
+| **Linux** | `curl -fsSL https://clickhand.vercel.app/install.sh \| sh` |
 
-## Hands: let your AI agent use the PC
+Or download the `.dmg`, Windows setup or Linux `.AppImage`/`.deb` from the
+[latest release](https://github.com/ultron-hq/ultron/releases/latest). Setup connects your AI apps;
+on a Mac you allow Screen Recording and Accessibility **once, for Clickhand**, and every AI app works
+through it.
+
+Then ask your agent:
+
+```
+/clickhand        fill in this form from invoice.pdf
+/clickhand-teach  show me how to add RSI on TradingView
+/clickhand-post   announce v2 on X with ~/Videos/demo.mp4
+```
+
+> [!NOTE]
+> Clickhand started as **Ultron**, a personal desktop agent written in Python (a flip-clock island,
+> a Ctrl+Space prompt bar, voice, memory). Its Hands, the part that lets an AI use the computer,
+> became this project. The rest of that app is being rewritten here in Rust, one unit at a time,
+> each checked against the original before it ships with
+> [rust-anything](https://github.com/erkamyaman/rust-anything). See the [roadmap](ROADMAP.md).
+
+## How Clickhand works
 
 Claude Code, Codex and other agents can edit files but can't click. **Clickhand** gives them a
 mouse and keyboard: an [MCP](https://modelcontextprotocol.io) server that lets any agent see the
@@ -122,7 +118,7 @@ Status: 17 of the original's 18 tools, built for Windows, macOS and Linux (X11) 
 Coming next: the accessibility tree (`a11y_snapshot`), window focus on Windows and macOS, and a
 stop hotkey.
 
-## Quick start
+## Build from source
 
 From source (any OS with Rust 1.85+):
 
@@ -150,7 +146,7 @@ Bind the hotkeys in your desktop's keyboard settings:
 Installers for Windows (`.msi`), macOS (`.dmg`) and Linux (`.AppImage`, `.deb`) will be attached
 to [releases](https://github.com/ultron-hq/ultron/releases) once the desktop UI lands.
 
-## How it works
+## The desktop app, inside
 
 ```mermaid
 flowchart LR
