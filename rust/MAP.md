@@ -2,7 +2,7 @@
 
 **Goal:** one Rust app (Tauri) that does what Python Ultron does, on Windows, macOS and Linux. The Python original is the reference (kept locally in `reference/`, not published) and is never edited; it stays the daily driver until cutover (ADR-004).
 
-Decisions: [DECISIONS.md](DECISIONS.md) — ADR-001 Tauri · 012 open source · 013 own recorder per unit ·  · 002 drop Laya · 003 whisper-rs + Gemini · 004 side by side · 005 same data formats · 006 pluggable LLMs · 007 native control per OS · 008 WASM abilities · 009 three platforms · 010 equivalence bar · 011 hands MCP in Rust.
+Decisions: [DECISIONS.md](DECISIONS.md) — ADR-001 Tauri · 012 open source · 013 own recorder per unit · 014 personal integrations off ·  · 002 drop Laya · 003 whisper-rs + Gemini · 004 side by side · 005 same data formats · 006 pluggable LLMs · 007 native control per OS · 008 WASM abilities · 009 three platforms · 010 equivalence bar · 011 hands MCP in Rust.
 Terms: [GLOSSARY.md](GLOSSARY.md). Next session: read this, then HANDOFF.md.
 
 States: `open` · `claimed by <session> <date>` · `done (gate, replay)`.
@@ -24,7 +24,8 @@ States: `open` · `claimed by <session> <date>` · `done (gate, replay)`.
 | Router: regex routes + skill MATCH table | brain.py, skills/__init__.py (static registry replaces importlib) | done (2026-11-26): `core::router`; registry extracted to router/skills.json in the original's order; skills + planner are traits; 349 cases with config, 3 mutation checks. `handle()` waits for commands.py; desktop follow-ups for wave 4 |
 | App index + fuzzy open_app (replaces Laya) | apps_index.py | open |
 | Workflow selection | workflows.py, paper.py | open |
-| Commands / annotations / identity | commands.py, annotations.py, identity.py | open |
+| Commands | commands.py | done (2026-11-27): `core::commands` (slash commands, @ tags, build requests, autocomplete) + `Router::handle`; personal integrations off by default (ADR-014); 108 cases, 3 mutation checks |
+| Annotations / identity | annotations.py, identity.py | open |
 
 ## Wave 2 — LLM + skills
 | Unit | State |

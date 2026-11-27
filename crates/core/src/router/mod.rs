@@ -130,6 +130,14 @@ pub struct Ctx {
     pub origin: Origin,
     pub request: String,
     pub dry_run: bool,
+    /// Forced workflow mode from /research, /teach, /analyze, /do, /paper.
+    pub mode: Option<String>,
+    /// @screen, @tasks, @activity, @task:N attachments.
+    pub references: Vec<serde_json::Value>,
+    /// A /task title taken literally (never read as tags).
+    pub literal_title: Option<String>,
+    /// A /timer: seconds and optional label.
+    pub timer: Option<(u32, Option<String>)>,
 }
 
 impl Default for Ctx {
@@ -138,6 +146,10 @@ impl Default for Ctx {
             origin: Origin::User,
             request: String::new(),
             dry_run: false,
+            mode: None,
+            references: Vec::new(),
+            literal_title: None,
+            timer: None,
         }
     }
 }
@@ -197,6 +209,14 @@ pub struct Router<C: Fn() -> f64> {
     pub planner: Option<Box<dyn Planner>>,
     /// (text, monotonic time) of the last real request, for corrections.
     pub last: Option<(String, f64)>,
+    /// A millisecond clock for timing requests (injectable for tests).
+    pub perf_ms: Box<dyn Fn() -> f64>,
+}
+
+fn real_perf_ms() -> f64 {
+    use std::sync::OnceLock;
+    static ORIGIN: OnceLock<std::time::Instant> = OnceLock::new();
+    ORIGIN.get_or_init(std::time::Instant::now).elapsed().as_secs_f64() * 1000.0
 }
 
 impl<C: Fn() -> f64> Router<C> {
@@ -206,7 +226,63 @@ impl<C: Fn() -> f64> Router<C> {
             memory,
             planner,
             last: None,
+            perf_ms: Box::new(real_perf_ms),
         }
+    }
+
+    /// A request from the prompt bar: the command layer first, then a fixed skill or the
+    /// routing chain. Returns (reply, skill, confidence); "commands" when the command
+    /// layer answered itself. `now` is monotonic seconds, for corrections.
+    pub fn handle(
+        &mut self,
+        text: &str,
+        commands: &crate::commands::Context,
+        config: &crate::config::Config,
+        now: f64,
+        skills: &mut dyn Skills,
+        ctx: &mut Ctx,
+    ) -> (String, String, f64) {
+        let t0 = (self.perf_ms)();
+        let request = match crate::commands::prepare(text, commands) {
+            Ok(r) => r,
+            Err(e) => return (e, "commands".into(), 1.0),
+        };
+        if let Some(cmd) = &request.settings_command {
+            let reply = match config.handle(cmd, ctx.dry_run) {
+                Ok(r) => r.unwrap_or_default(),
+                Err(e) => e,
+            };
+            return (reply, "commands".into(), 1.0);
+        }
+        if let Some(reply) = request.reply {
+            return (reply, "commands".into(), 1.0);
+        }
+        let text = request.goal;
+        ctx.timer = request.timer;
+        ctx.literal_title = request.literal_title;
+        ctx.references = request.references;
+        ctx.mode = request.mode;
+        ctx.request = text.clone();
+        let res = if let Some(skill) = request.skill {
+            let reply = match self.run_skill(skills, &skill, &text, ctx) {
+                Ok(r) => r,
+                Err(unclear) => unclear,
+            };
+            outcome(reply, &skill, 1.0, "command", Some(text.clone()), true)
+        } else {
+            match self.correct(&text, now, skills, ctx) {
+                Some(r) => r,
+                None => self.route(&text, skills, ctx),
+            }
+        };
+        let ms = (self.perf_ms)() - t0;
+        if let Some(mem) = &self.memory {
+            mem.log_request(&text, &res.via, Some(ms));
+        }
+        if res.via != "correction" && res.skill != "memory" && res.skill != "time_report" {
+            self.last = Some((text, now));
+        }
+        (res.reply, res.skill, res.conf)
     }
 
     fn run_skill(&self, skills: &mut dyn Skills, name: &str, text: &str, ctx: &mut Ctx) -> Result<String, String> {

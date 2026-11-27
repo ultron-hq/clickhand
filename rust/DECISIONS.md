@@ -69,3 +69,9 @@ Status: accepted (2026-11-26)
 Context: `rust-anything analyze` groups all of `ultron/` into one 6,820-line unit (readiness 0, imports tangled), so `bridge`/`record` cannot take `sessions.py` or `reports.py` on their own.
 Decision: Keep rust-anything's method (record the original on generated and trap inputs, replay against the port, nothing ships until every case matches) with a small Python recorder per unit in `rust/record/`. It runs the real original on a seeded synthetic database and writes `crates/core/tests/cases/`; a Rust test replays every case. Numbers match to 1e-6 relative, strings exactly.
 Consequences: Recordings carry no personal data and are committed. Time-dependent units take the zone as a parameter and are recorded under a pinned zone (Europe/Paris, with both DST changes in the data), so CI on Windows/macOS replays the same cases. A unit is done only after a mutation check shows the replay catches a deliberate bug.
+
+## ADR-014: Personal integrations are off in the public build
+Status: accepted (2026-11-27)
+Context: The original's command layer includes the founder's own integrations: THE SYSTEM (/today /quest /plan /did /log), deen (/dua /ayah) and Simora paper trading on padre.gg (/paper). They make no sense for other users of an open-source product.
+Decision: They are ported faithfully (and recorded like everything else) but marked `personal`; `commands::Context.personal` is false in the public build, which makes them unknown commands and drops them from /help and autocomplete.
+Consequences: The founder's build turns them on. Their skills (system, deen) follow the same rule when they are ported in wave 2.

@@ -1,0 +1,2332 @@
+{
+ "prepare": [
+  {
+   "args": [
+    ""
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Type a request, /help, or @ to attach context.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "   "
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Type a request, /help, or @ to attach context.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/help"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Commands\n/build <what you want> — Build anything as a new /command\n/abilities — Open your installed abilities\n/ability <name> — Open an installed ability by name\n/hacker --authorized <path> | tools — Audit an authorized local project\n/agents [--count 2–4] <task> — Collaborate with parallel specialists\n/deploy <ability name | folder> | list — Deploy a web app to Vercel\n/workspace [notes|calendar|email|tasks|memory|gallery|cookbook|library|status|restart|stop] — Open Ultron Workspace: chat, research, docs, email, notes, calendar\n/model [desktop|router] [haiku|sonnet|opus] — Choose the desktop or routing model\n/effort [low|medium|high] — Set desktop reasoning effort\n/speed [fast|balanced|thorough] — Apply a speed and reasoning preset\n/settings — Show active models and effort\n/voice — Start or end a voice conversation\n/commands — Show commands and context tags\n/today — Today's quests from THE SYSTEM\n/quest <objective> — Add a quest for today in THE SYSTEM\n/plan <objective> — Plan a quest for tomorrow\n/did <quest name> — Mark a quest in THE SYSTEM done\n/log <kind> <values> — Log sleep, study, quran, money, weight or water\n/dua [morning|evening] — A supplication / adhkar (UmmahAPI)\n/ayah — A Qur’an verse (UmmahAPI)\n/task <title> — Add a task\n/tasks — List your active tasks\n/focus <task ID> — Focus on a task for 25 minutes\n/done <task ID> — Complete a task\n/timer <minutes> [label] — Start a focus timer\n/research <question> — Research with source links\n/teach <goal> — Learn one step at a time\n/analyze <question> — Analyze the screen or attached context\n/do <goal> — Carry out a desktop task\n/paper [goal] — Start a bounded Simora paper session\n/report — Open your time and task report\n/runs — Summarize recent runs\n/new — Clear conversation context\n/stop — Stop the current task\n\nYour abilities\n/habits [add|list] <habit> — Track daily habits\n/convert — Convert units\n\nContext tags\n@screen — Use the current screen\n@tasks — Attach up to 20 active tasks\n@activity — Attach the last five run summaries\n@task: — Attach one task by ID\n\nExample: /analyze @tasks What should I work on first?",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/commands"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Commands\n/build <what you want> — Build anything as a new /command\n/abilities — Open your installed abilities\n/ability <name> — Open an installed ability by name\n/hacker --authorized <path> | tools — Audit an authorized local project\n/agents [--count 2–4] <task> — Collaborate with parallel specialists\n/deploy <ability name | folder> | list — Deploy a web app to Vercel\n/workspace [notes|calendar|email|tasks|memory|gallery|cookbook|library|status|restart|stop] — Open Ultron Workspace: chat, research, docs, email, notes, calendar\n/model [desktop|router] [haiku|sonnet|opus] — Choose the desktop or routing model\n/effort [low|medium|high] — Set desktop reasoning effort\n/speed [fast|balanced|thorough] — Apply a speed and reasoning preset\n/settings — Show active models and effort\n/voice — Start or end a voice conversation\n/commands — Show commands and context tags\n/today — Today's quests from THE SYSTEM\n/quest <objective> — Add a quest for today in THE SYSTEM\n/plan <objective> — Plan a quest for tomorrow\n/did <quest name> — Mark a quest in THE SYSTEM done\n/log <kind> <values> — Log sleep, study, quran, money, weight or water\n/dua [morning|evening] — A supplication / adhkar (UmmahAPI)\n/ayah — A Qur’an verse (UmmahAPI)\n/task <title> — Add a task\n/tasks — List your active tasks\n/focus <task ID> — Focus on a task for 25 minutes\n/done <task ID> — Complete a task\n/timer <minutes> [label] — Start a focus timer\n/research <question> — Research with source links\n/teach <goal> — Learn one step at a time\n/analyze <question> — Analyze the screen or attached context\n/do <goal> — Carry out a desktop task\n/paper [goal] — Start a bounded Simora paper session\n/report — Open your time and task report\n/runs — Summarize recent runs\n/new — Clear conversation context\n/stop — Stop the current task\n\nYour abilities\n/habits [add|list] <habit> — Track daily habits\n/convert — Convert units\n\nContext tags\n@screen — Use the current screen\n@tasks — Attach up to 20 active tasks\n@activity — Attach the last five run summaries\n@task: — Attach one task by ID\n\nExample: /analyze @tasks What should I work on first?",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/HELP"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Commands\n/build <what you want> — Build anything as a new /command\n/abilities — Open your installed abilities\n/ability <name> — Open an installed ability by name\n/hacker --authorized <path> | tools — Audit an authorized local project\n/agents [--count 2–4] <task> — Collaborate with parallel specialists\n/deploy <ability name | folder> | list — Deploy a web app to Vercel\n/workspace [notes|calendar|email|tasks|memory|gallery|cookbook|library|status|restart|stop] — Open Ultron Workspace: chat, research, docs, email, notes, calendar\n/model [desktop|router] [haiku|sonnet|opus] — Choose the desktop or routing model\n/effort [low|medium|high] — Set desktop reasoning effort\n/speed [fast|balanced|thorough] — Apply a speed and reasoning preset\n/settings — Show active models and effort\n/voice — Start or end a voice conversation\n/commands — Show commands and context tags\n/today — Today's quests from THE SYSTEM\n/quest <objective> — Add a quest for today in THE SYSTEM\n/plan <objective> — Plan a quest for tomorrow\n/did <quest name> — Mark a quest in THE SYSTEM done\n/log <kind> <values> — Log sleep, study, quran, money, weight or water\n/dua [morning|evening] — A supplication / adhkar (UmmahAPI)\n/ayah — A Qur’an verse (UmmahAPI)\n/task <title> — Add a task\n/tasks — List your active tasks\n/focus <task ID> — Focus on a task for 25 minutes\n/done <task ID> — Complete a task\n/timer <minutes> [label] — Start a focus timer\n/research <question> — Research with source links\n/teach <goal> — Learn one step at a time\n/analyze <question> — Analyze the screen or attached context\n/do <goal> — Carry out a desktop task\n/paper [goal] — Start a bounded Simora paper session\n/report — Open your time and task report\n/runs — Summarize recent runs\n/new — Clear conversation context\n/stop — Stop the current task\n\nYour abilities\n/habits [add|list] <habit> — Track daily habits\n/convert — Convert units\n\nContext tags\n@screen — Use the current screen\n@tasks — Attach up to 20 active tasks\n@activity — Attach the last five run summaries\n@task: — Attach one task by ID\n\nExample: /analyze @tasks What should I work on first?",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/unknown thing"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Unknown command /unknown. Type /help for the available commands.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/habits add read"
+   ],
+   "out": {
+    "ok": {
+     "goal": "@generated:g1 add read",
+     "reply": null,
+     "skill": "generated",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/convert"
+   ],
+   "out": {
+    "ok": {
+     "goal": "@generated:g2",
+     "reply": null,
+     "skill": "generated",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/model opus"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": "/model opus"
+    }
+   }
+  },
+  {
+   "args": [
+    "/settings"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": "/settings"
+    }
+   }
+  },
+  {
+   "args": [
+    "/voice"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Use the microphone button or Ctrl+Alt+Space to start or end voice.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/today"
+   ],
+   "out": {
+    "ok": {
+     "goal": "/today",
+     "reply": null,
+     "skill": "system",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/quest finish chapter 3"
+   ],
+   "out": {
+    "ok": {
+     "goal": "/quest finish chapter 3",
+     "reply": null,
+     "skill": "system",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/log sleep 7h"
+   ],
+   "out": {
+    "ok": {
+     "goal": "/log sleep 7h",
+     "reply": null,
+     "skill": "system",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/dua morning"
+   ],
+   "out": {
+    "ok": {
+     "goal": "/dua morning",
+     "reply": null,
+     "skill": "deen",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/ayah"
+   ],
+   "out": {
+    "ok": {
+     "goal": "/ayah",
+     "reply": null,
+     "skill": "deen",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/ability Unit Converter"
+   ],
+   "out": {
+    "ok": {
+     "goal": "@ability:a-unit",
+     "reply": null,
+     "skill": "ability_builder",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/ability nope"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Choose an installed ability by its exact name, or use /abilities to open the library.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/ability"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Choose an installed ability by its exact name, or use /abilities to open the library.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/build a pomodoro timer"
+   ],
+   "out": {
+    "ok": {
+     "goal": "a pomodoro timer",
+     "reply": null,
+     "skill": "ability_builder",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/abilities"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": null,
+     "skill": "ability_builder",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/deploy list"
+   ],
+   "out": {
+    "ok": {
+     "goal": "list",
+     "reply": null,
+     "skill": "deploy",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/workspace notes"
+   ],
+   "out": {
+    "ok": {
+     "goal": "workspace notes",
+     "reply": null,
+     "skill": "workspace",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/workspace"
+   ],
+   "out": {
+    "ok": {
+     "goal": "workspace",
+     "reply": null,
+     "skill": "workspace",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/hacker"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /hacker --authorized <local-project-path> or /hacker tools",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/hacker --authorized ~/proj"
+   ],
+   "out": {
+    "ok": {
+     "goal": "--authorized ~/proj",
+     "reply": null,
+     "skill": "hacker",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/agents"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /agents [--count 2–4] <task>. Parallel text specialists followed by a reviewer.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/agents --count 3 compare db engines"
+   ],
+   "out": {
+    "ok": {
+     "goal": "--count 3 compare db engines",
+     "reply": null,
+     "skill": "agents",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/task"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /task <title>",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/task Buy @tasks milk"
+   ],
+   "out": {
+    "ok": {
+     "goal": "add task Buy @tasks milk",
+     "reply": null,
+     "skill": "tasks",
+     "mode": null,
+     "references": [],
+     "literal_title": "Buy @tasks milk",
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/focus 8"
+   ],
+   "out": {
+    "ok": {
+     "goal": "focus task 8",
+     "reply": null,
+     "skill": "tasks",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/focus #8"
+   ],
+   "out": {
+    "ok": {
+     "goal": "focus task 8",
+     "reply": null,
+     "skill": "tasks",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/focus x"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /focus <task ID>, for example /focus 8",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/done 3"
+   ],
+   "out": {
+    "ok": {
+     "goal": "complete task 3",
+     "reply": null,
+     "skill": "tasks",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/timer"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /timer <1–240 minutes> [label]",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/timer 25"
+   ],
+   "out": {
+    "ok": {
+     "goal": "timer 25 min",
+     "reply": null,
+     "skill": "timer",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": [
+      1500,
+      null
+     ],
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/timer 25 deep work"
+   ],
+   "out": {
+    "ok": {
+     "goal": "timer 25 min for deep work",
+     "reply": null,
+     "skill": "timer",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": [
+      1500,
+      "deep work"
+     ],
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/timer 0"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /timer <1–240 minutes> [label]",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/timer 241"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /timer <1–240 minutes> [label]",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/timer 1000"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /timer <1–240 minutes> [label]",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/new"
+   ],
+   "out": {
+    "ok": {
+     "goal": "new conversation",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/new now"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "/new takes no arguments.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/stop"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Stopped. You have control.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/report"
+   ],
+   "out": {
+    "ok": {
+     "goal": "show my week report",
+     "reply": null,
+     "skill": "time_report",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/tasks"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Active tasks\n#4 · Study rust [todo]\n#2 · Ship site [doing]\n#1 · Write report [todo]",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/tasks all"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "/tasks takes no arguments.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/runs"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Recent activity\n#6 · failed · goal 6\nsummary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary \n\n#5 · done · goal 5\nsummary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary \n\n#4 · failed · goal 4\nsummary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su\n\n#3 · done · goal 3\nsummary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su\n\n#2 · failed · goal 2\nsummary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/research"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Usage: /research <question>",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/research rust async"
+   ],
+   "out": {
+    "ok": {
+     "goal": "Research rust async",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "research",
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/teach @tasks lifetimes"
+   ],
+   "out": {
+    "ok": {
+     "goal": "Teach me lifetimes",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "teach",
+     "references": [
+      {
+       "tag": "@tasks",
+       "data": [
+        {
+         "id": 4,
+         "title": "Study rust",
+         "status": "todo",
+         "priority": "normal",
+         "due": null
+        },
+        {
+         "id": 2,
+         "title": "Ship site",
+         "status": "doing",
+         "priority": "normal",
+         "due": null
+        },
+        {
+         "id": 1,
+         "title": "Write report",
+         "status": "todo",
+         "priority": "normal",
+         "due": null
+        }
+       ]
+      }
+     ],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/analyze @screen what is this"
+   ],
+   "out": {
+    "ok": {
+     "goal": "Analyze what is this",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "analyze",
+     "references": [
+      {
+       "tag": "@screen",
+       "data": "Use the fresh screenshot of the current screen."
+      }
+     ],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/do open firefox"
+   ],
+   "out": {
+    "ok": {
+     "goal": "open firefox",
+     "reply": null,
+     "skill": "desktop",
+     "mode": "execute",
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/paper"
+   ],
+   "out": {
+    "ok": {
+     "goal": "Paper trade using Simora on trade.padre.gg. Compare setups and run a bounded paper session, then review it.",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "paper",
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/paper scalp btc"
+   ],
+   "out": {
+    "ok": {
+     "goal": "Paper trade using Simora on trade.padre.gg. scalp btc",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "paper",
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "build me something"
+   ],
+   "out": {
+    "ok": {
+     "goal": "build me something",
+     "reply": null,
+     "skill": "ability_builder",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "make me a habit tracker app"
+   ],
+   "out": {
+    "ok": {
+     "goal": "make me a habit tracker app",
+     "reply": null,
+     "skill": "ability_builder",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "please create a simple todo app"
+   ],
+   "out": {
+    "ok": {
+     "goal": "please create a simple todo app",
+     "reply": null,
+     "skill": "ability_builder",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "make me laugh"
+   ],
+   "out": {
+    "ok": {
+     "goal": "make me laugh",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "create a task to run the command"
+   ],
+   "out": {
+    "ok": {
+     "goal": "create a task to run the command",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "can you build me a dashboard for sales"
+   ],
+   "out": {
+    "ok": {
+     "goal": "can you build me a dashboard for sales",
+     "reply": null,
+     "skill": "ability_builder",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "open Habit Tracker"
+   ],
+   "out": {
+    "ok": {
+     "goal": "@generated:g1",
+     "reply": null,
+     "skill": "generated",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "open my habit tracker"
+   ],
+   "out": {
+    "ok": {
+     "goal": "@generated:g1",
+     "reply": null,
+     "skill": "generated",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "show my unit converter"
+   ],
+   "out": {
+    "ok": {
+     "goal": "@generated:g2",
+     "reply": null,
+     "skill": "generated",
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "run Hidden Ability"
+   ],
+   "out": {
+    "ok": {
+     "goal": "run Hidden Ability",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "open firefox"
+   ],
+   "out": {
+    "ok": {
+     "goal": "open firefox",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@tasks what should I do first"
+   ],
+   "out": {
+    "ok": {
+     "goal": "what should I do first",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "analyze",
+     "references": [
+      {
+       "tag": "@tasks",
+       "data": [
+        {
+         "id": 4,
+         "title": "Study rust",
+         "status": "todo",
+         "priority": "normal",
+         "due": null
+        },
+        {
+         "id": 2,
+         "title": "Ship site",
+         "status": "doing",
+         "priority": "normal",
+         "due": null
+        },
+        {
+         "id": 1,
+         "title": "Write report",
+         "status": "todo",
+         "priority": "normal",
+         "due": null
+        }
+       ]
+      }
+     ],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@screen"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Add a question after the tag, for example @tasks What should I work on first?",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@task:1 summarize"
+   ],
+   "out": {
+    "ok": {
+     "goal": "summarize",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "analyze",
+     "references": [
+      {
+       "tag": "@task:1",
+       "data": {
+        "id": 1,
+        "title": "Write report",
+        "status": "todo",
+        "priority": "normal",
+        "due": null
+       }
+      }
+     ],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@task:999 go"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Task #999 was not found. Use /tasks to see available IDs.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@task:x go"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Use @task:<ID>, for example @task:8.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "what about @task:"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Use @task:<ID>, for example @task:8.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "email me@site.com"
+   ],
+   "out": {
+    "ok": {
+     "goal": "email me@site.com",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@tasks @tasks @activity hi"
+   ],
+   "out": {
+    "ok": {
+     "goal": "hi",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "analyze",
+     "references": [
+      {
+       "tag": "@tasks",
+       "data": [
+        {
+         "id": 4,
+         "title": "Study rust",
+         "status": "todo",
+         "priority": "normal",
+         "due": null
+        },
+        {
+         "id": 2,
+         "title": "Ship site",
+         "status": "doing",
+         "priority": "normal",
+         "due": null
+        },
+        {
+         "id": 1,
+         "title": "Write report",
+         "status": "todo",
+         "priority": "normal",
+         "due": null
+        }
+       ]
+      },
+      {
+       "tag": "@activity",
+       "data": [
+        {
+         "id": 6,
+         "goal": "goal 6",
+         "status": "failed",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary "
+        },
+        {
+         "id": 5,
+         "goal": "goal 5",
+         "status": "done",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary "
+        },
+        {
+         "id": 4,
+         "goal": "goal 4",
+         "status": "failed",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su"
+        },
+        {
+         "id": 3,
+         "goal": "goal 3",
+         "status": "done",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su"
+        },
+        {
+         "id": 2,
+         "goal": "goal 2",
+         "status": "failed",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su"
+        }
+       ]
+      }
+     ],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@screen @tasks @activity @task:1 @task:2 @task:3 too many"
+   ],
+   "out": {
+    "ok": {
+     "goal": "",
+     "reply": "Attach at most five context tags per request.",
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@SCREEN explain"
+   ],
+   "out": {
+    "ok": {
+     "goal": "explain",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "analyze",
+     "references": [
+      {
+       "tag": "@screen",
+       "data": "Use the fresh screenshot of the current screen."
+      }
+     ],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "a@screen nope"
+   ],
+   "out": {
+    "ok": {
+     "goal": "a@screen nope",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "@screen.png file"
+   ],
+   "out": {
+    "ok": {
+     "goal": "@screen.png file",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "/research @activity what changed"
+   ],
+   "out": {
+    "ok": {
+     "goal": "Research what changed",
+     "reply": null,
+     "skill": "workflow",
+     "mode": "research",
+     "references": [
+      {
+       "tag": "@activity",
+       "data": [
+        {
+         "id": 6,
+         "goal": "goal 6",
+         "status": "failed",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary "
+        },
+        {
+         "id": 5,
+         "goal": "goal 5",
+         "status": "done",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary "
+        },
+        {
+         "id": 4,
+         "goal": "goal 4",
+         "status": "failed",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su"
+        },
+        {
+         "id": 3,
+         "goal": "goal 3",
+         "status": "done",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su"
+        },
+        {
+         "id": 2,
+         "goal": "goal 2",
+         "status": "failed",
+         "summary": "summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary summary su"
+        }
+       ]
+      }
+     ],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "plain request"
+   ],
+   "out": {
+    "ok": {
+     "goal": "plain request",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  },
+  {
+   "args": [
+    "timer 10 min"
+   ],
+   "out": {
+    "ok": {
+     "goal": "timer 10 min",
+     "reply": null,
+     "skill": null,
+     "mode": null,
+     "references": [],
+     "literal_title": null,
+     "timer": null,
+     "settings_command": null
+    }
+   }
+  }
+ ],
+ "suggestions": [
+  {
+   "args": [
+    "/",
+    null
+   ],
+   "out": [
+    [
+     0,
+     1
+    ],
+    [
+     [
+      "/build",
+      "Build anything as a new /command · <what you want>"
+     ],
+     [
+      "/abilities",
+      "Open your installed abilities"
+     ],
+     [
+      "/ability",
+      "Open an installed ability by name · <name>"
+     ],
+     [
+      "/hacker",
+      "Audit an authorized local project · --authorized <path> | tools"
+     ],
+     [
+      "/agents",
+      "Collaborate with parallel specialists · [--count 2–4] <task>"
+     ],
+     [
+      "/deploy",
+      "Deploy a web app to Vercel · <ability name | folder> | list"
+     ],
+     [
+      "/workspace",
+      "Open Ultron Workspace: chat, research, docs, email, notes, calendar · [notes|calendar|email|tasks|memory|gallery|cookbook|library|status|restart|stop]"
+     ],
+     [
+      "/model",
+      "Choose the desktop or routing model · [desktop|router] [haiku|sonnet|opus]"
+     ],
+     [
+      "/effort",
+      "Set desktop reasoning effort · [low|medium|high]"
+     ],
+     [
+      "/speed",
+      "Apply a speed and reasoning preset · [fast|balanced|thorough]"
+     ],
+     [
+      "/settings",
+      "Show active models and effort"
+     ],
+     [
+      "/voice",
+      "Start or end a voice conversation"
+     ],
+     [
+      "/commands",
+      "Show commands and context tags"
+     ],
+     [
+      "/today",
+      "Today's quests from THE SYSTEM"
+     ],
+     [
+      "/quest",
+      "Add a quest for today in THE SYSTEM · <objective>"
+     ],
+     [
+      "/plan",
+      "Plan a quest for tomorrow · <objective>"
+     ],
+     [
+      "/did",
+      "Mark a quest in THE SYSTEM done · <quest name>"
+     ],
+     [
+      "/log",
+      "Log sleep, study, quran, money, weight or water · <kind> <values>"
+     ],
+     [
+      "/dua",
+      "A supplication / adhkar (UmmahAPI) · [morning|evening]"
+     ],
+     [
+      "/ayah",
+      "A Qur’an verse (UmmahAPI)"
+     ],
+     [
+      "/task",
+      "Add a task · <title>"
+     ],
+     [
+      "/tasks",
+      "List your active tasks"
+     ],
+     [
+      "/focus",
+      "Focus on a task for 25 minutes · <task ID>"
+     ],
+     [
+      "/done",
+      "Complete a task · <task ID>"
+     ],
+     [
+      "/timer",
+      "Start a focus timer · <minutes> [label]"
+     ],
+     [
+      "/research",
+      "Research with source links · <question>"
+     ],
+     [
+      "/teach",
+      "Learn one step at a time · <goal>"
+     ],
+     [
+      "/analyze",
+      "Analyze the screen or attached context · <question>"
+     ],
+     [
+      "/do",
+      "Carry out a desktop task · <goal>"
+     ],
+     [
+      "/paper",
+      "Start a bounded Simora paper session · [goal]"
+     ],
+     [
+      "/report",
+      "Open your time and task report"
+     ],
+     [
+      "/runs",
+      "Summarize recent runs"
+     ],
+     [
+      "/new",
+      "Clear conversation context"
+     ],
+     [
+      "/stop",
+      "Stop the current task"
+     ],
+     [
+      "/habits",
+      "Track daily habits · [add|list] <habit>"
+     ],
+     [
+      "/convert",
+      "Convert units"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "/ti",
+    null
+   ],
+   "out": [
+    [
+     0,
+     3
+    ],
+    [
+     [
+      "/timer",
+      "Start a focus timer · <minutes> [label]"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "/model ",
+    null
+   ],
+   "out": [
+    [
+     7,
+     7
+    ],
+    [
+     [
+      "haiku",
+      "Fast, light tasks"
+     ],
+     [
+      "sonnet",
+      "Balanced desktop reasoning"
+     ],
+     [
+      "opus",
+      "Complex reasoning"
+     ],
+     [
+      "router",
+      "Choose the fallback routing model"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "/model r",
+    null
+   ],
+   "out": [
+    [
+     7,
+     8
+    ],
+    [
+     [
+      "router",
+      "Choose the fallback routing model"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "/model router o",
+    null
+   ],
+   "out": [
+    [
+     14,
+     15
+    ],
+    [
+     [
+      "opus",
+      "Fallback routing model"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "/speed f",
+    null
+   ],
+   "out": [
+    [
+     7,
+     8
+    ],
+    [
+     [
+      "fast",
+      "Desktop: haiku · effort low"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "@",
+    null
+   ],
+   "out": [
+    [
+     0,
+     1
+    ],
+    [
+     [
+      "@screen",
+      "Use the current screen"
+     ],
+     [
+      "@tasks",
+      "Attach up to 20 active tasks"
+     ],
+     [
+      "@activity",
+      "Attach the last five run summaries"
+     ],
+     [
+      "@task:",
+      "Attach one task by ID"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "@ta",
+    null
+   ],
+   "out": [
+    [
+     0,
+     3
+    ],
+    [
+     [
+      "@tasks",
+      "Attach up to 20 active tasks"
+     ],
+     [
+      "@task:",
+      "Attach one task by ID"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "@task:",
+    null
+   ],
+   "out": [
+    [
+     0,
+     6
+    ],
+    [
+     [
+      "@task:4",
+      "Study rust"
+     ],
+     [
+      "@task:2",
+      "Ship site"
+     ],
+     [
+      "@task:1",
+      "Write report"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "hello /ti",
+    null
+   ],
+   "out": [
+    null,
+    []
+   ]
+  },
+  {
+   "args": [
+    "/hab",
+    null
+   ],
+   "out": [
+    [
+     0,
+     4
+    ],
+    [
+     [
+      "/habits",
+      "Track daily habits · [add|list] <habit>"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "plain",
+    null
+   ],
+   "out": [
+    null,
+    []
+   ]
+  },
+  {
+   "args": [
+    "/effort h",
+    null
+   ],
+   "out": [
+    [
+     8,
+     9
+    ],
+    [
+     [
+      "high",
+      "More reasoning, potentially slower"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "/model desktop ",
+    null
+   ],
+   "out": [
+    [
+     15,
+     15
+    ],
+    [
+     [
+      "haiku",
+      "Desktop planning model"
+     ],
+     [
+      "sonnet",
+      "Desktop planning model"
+     ],
+     [
+      "opus",
+      "Desktop planning model"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "/ti and more",
+    3
+   ],
+   "out": [
+    [
+     0,
+     3
+    ],
+    [
+     [
+      "/timer",
+      "Start a focus timer · <minutes> [label]"
+     ]
+    ]
+   ]
+  },
+  {
+   "args": [
+    "ask @scr",
+    null
+   ],
+   "out": [
+    [
+     4,
+     8
+    ],
+    [
+     [
+      "@screen",
+      "Use the current screen"
+     ]
+    ]
+   ]
+  }
+ ],
+ "handle": [
+  {
+   "args": [
+    "/help"
+   ],
+   "out": [
+    "Commands\n/build <what you want> — Build anything as a new /command\n/abilities — Open your installed abilities\n/ability <name> — Open an installed ability by name\n/hacker --authorized <path> | tools — Audit an authorized local project\n/agents [--count 2–4] <task> — Collaborate with parallel specialists\n/deploy <ability name | folder> | list — Deploy a web app to Vercel\n/workspace [notes|calendar|email|tasks|memory|gallery|cookbook|library|status|restart|stop] — Open Ultron Workspace: chat, research, docs, email, notes, calendar\n/model [desktop|router] [haiku|sonnet|opus] — Choose the desktop or routing model\n/effort [low|medium|high] — Set desktop reasoning effort\n/speed [fast|balanced|thorough] — Apply a speed and reasoning preset\n/settings — Show active models and effort\n/voice — Start or end a voice conversation\n/commands — Show commands and context tags\n/today — Today's quests from THE SYSTEM\n/quest <objective> — Add a quest for today in THE SYSTEM\n/plan <objective> — Plan a quest for tomorrow\n/did <quest name> — Mark a quest in THE SYSTEM done\n/log <kind> <values> — Log sleep, study, quran, money, weight or water\n/dua [morning|evening] — A supplication / adhkar (UmmahAPI)\n/ayah — A Qur’an verse (UmmahAPI)\n/task <title> — Add a task\n/tasks — List your active tasks\n/focus <task ID> — Focus on a task for 25 minutes\n/done <task ID> — Complete a task\n/timer <minutes> [label] — Start a focus timer\n/research <question> — Research with source links\n/teach <goal> — Learn one step at a time\n/analyze <question> — Analyze the screen or attached context\n/do <goal> — Carry out a desktop task\n/paper [goal] — Start a bounded Simora paper session\n/report — Open your time and task report\n/runs — Summarize recent runs\n/new — Clear conversation context\n/stop — Stop the current task\n\nYour abilities\n/habits [add|list] <habit> — Track daily habits\n/convert — Convert units\n\nContext tags\n@screen — Use the current screen\n@tasks — Attach up to 20 active tasks\n@activity — Attach the last five run summaries\n@task: — Attach one task by ID\n\nExample: /analyze @tasks What should I work on first?",
+    "commands",
+    1.0
+   ],
+   "ctx": {
+    "request": "",
+    "mode": null,
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": null
+  },
+  {
+   "args": [
+    "/timer 25 deep work"
+   ],
+   "out": [
+    "timer ran: timer 25 min for deep work",
+    "timer",
+    1.0
+   ],
+   "ctx": {
+    "request": "timer 25 min for deep work",
+    "mode": null,
+    "literal_title": null,
+    "timer": [
+     1500,
+     "deep work"
+    ],
+    "references": []
+   },
+   "last": [
+    "timer 25 min for deep work",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "/task Buy milk"
+   ],
+   "out": [
+    "tasks ran: add task Buy milk",
+    "tasks",
+    1.0
+   ],
+   "ctx": {
+    "request": "add task Buy milk",
+    "mode": null,
+    "literal_title": "Buy milk",
+    "timer": null,
+    "references": []
+   },
+   "last": [
+    "add task Buy milk",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "/model opus"
+   ],
+   "out": [
+    "Would update: model=opus",
+    "commands",
+    1.0
+   ],
+   "ctx": {
+    "request": "",
+    "mode": null,
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": [
+    "add task Buy milk",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "/settings"
+   ],
+   "out": [
+    "Desktop: sonnet\nEffort: low\nRouting fallback: haiku\nVoice: gemini-3.8-live\nLaya: local routing, 2-second request limit.\nUse /model, /effort, /speed fast|balanced|thorough. Changes apply to the next task.",
+    "commands",
+    1.0
+   ],
+   "ctx": {
+    "request": "",
+    "mode": null,
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": [
+    "add task Buy milk",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "/stop"
+   ],
+   "out": [
+    "Stopped. You have control.",
+    "commands",
+    1.0
+   ],
+   "ctx": {
+    "request": "",
+    "mode": null,
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": [
+    "add task Buy milk",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "open firefox"
+   ],
+   "out": [
+    "open_app ran: open firefox",
+    "open_app",
+    1.0
+   ],
+   "ctx": {
+    "request": "open firefox",
+    "mode": null,
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": [
+    "open firefox",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "no, i meant open chromium"
+   ],
+   "out": [
+    "open_app ran: open chromium Got it, I'll do that next time.",
+    "open_app",
+    1.0
+   ],
+   "ctx": {
+    "request": "no, i meant open chromium",
+    "mode": null,
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": null
+  },
+  {
+   "args": [
+    "/research rust UNCLEAR"
+   ],
+   "out": [
+    "workflow could not make sense of it",
+    "workflow",
+    1.0
+   ],
+   "ctx": {
+    "request": "Research rust UNCLEAR",
+    "mode": "research",
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": [
+    "Research rust UNCLEAR",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "something with no rule"
+   ],
+   "out": [
+    "none ran: something with no rule",
+    "none",
+    0.0
+   ],
+   "ctx": {
+    "request": "something with no rule",
+    "mode": null,
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": [
+    "something with no rule",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "/unknown"
+   ],
+   "out": [
+    "Unknown command /unknown. Type /help for the available commands.",
+    "commands",
+    1.0
+   ],
+   "ctx": {
+    "request": "",
+    "mode": null,
+    "literal_title": null,
+    "timer": null,
+    "references": []
+   },
+   "last": [
+    "something with no rule",
+    7000.0
+   ]
+  },
+  {
+   "args": [
+    "@tasks plan my day"
+   ],
+   "out": [
+    "workflow ran: plan my day",
+    "workflow",
+    1.0
+   ],
+   "ctx": {
+    "request": "plan my day",
+    "mode": "analyze",
+    "literal_title": null,
+    "timer": null,
+    "references": [
+     {
+      "tag": "@tasks",
+      "data": [
+       {
+        "id": 4,
+        "title": "Study rust",
+        "status": "todo",
+        "priority": "normal",
+        "due": null
+       },
+       {
+        "id": 2,
+        "title": "Ship site",
+        "status": "doing",
+        "priority": "normal",
+        "due": null
+       },
+       {
+        "id": 1,
+        "title": "Write report",
+        "status": "todo",
+        "priority": "normal",
+        "due": null
+       }
+      ]
+     }
+    ]
+   },
+   "last": [
+    "plan my day",
+    7000.0
+   ]
+  }
+ ],
+ "requests": [
+  [
+   "timer 25 min for deep work",
+   "command",
+   0.0
+  ],
+  [
+   "add task Buy milk",
+   "command",
+   0.0
+  ],
+  [
+   "open firefox",
+   "rule",
+   0.0
+  ],
+  [
+   "no, i meant open chromium",
+   "correction",
+   0.0
+  ],
+  [
+   "Research rust UNCLEAR",
+   "command",
+   0.0
+  ],
+  [
+   "something with no rule",
+   "laya",
+   0.0
+  ],
+  [
+   "plan my day",
+   "command",
+   0.0
+  ]
+ ],
+ "generated": [
+  {
+   "id": "g1",
+   "name": "Habit Tracker",
+   "command": "/habits",
+   "usage": "[add|list] <habit>",
+   "description": "Track daily habits"
+  },
+  {
+   "id": "g2",
+   "name": "Unit Converter",
+   "command": "/convert",
+   "usage": "",
+   "description": "Convert units"
+  }
+ ]
+}
