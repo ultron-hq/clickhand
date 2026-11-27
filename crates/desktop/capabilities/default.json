@@ -1,6 +1,13 @@
 {
   "identifier": "default",
   "description": "The island and the prompt bar",
-  "windows": ["island", "bar"],
-  "permissions": ["core:default", "core:window:allow-start-dragging"]
+  "windows": [
+    "island",
+    "bar",
+    "welcome"
+  ],
+  "permissions": [
+    "core:default",
+    "core:window:allow-start-dragging"
+  ]
 }

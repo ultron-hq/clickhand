@@ -1,0 +1,100 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>Welcome to Ultron</title>
+<style>
+  html, body { background: var(--ink); overflow-y: auto; user-select: text; }
+  main { padding: 34px 34px 28px; display: grid; gap: 22px; }
+  header { display: flex; gap: 14px; align-items: center; }
+  header img { width: 46px; height: 46px; }
+  h1 { font: 700 24px/1.15 var(--sans); letter-spacing: -0.02em; }
+  header p { color: var(--text-2); font-size: 14px; margin-top: 4px; }
+  ol { list-style: none; padding: 0; display: grid; gap: 12px; }
+  li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--card); }
+  li.done { opacity: 0.6; }
+  .n { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 600 13px/1 var(--mono); background: var(--raised); color: var(--ember); }
+  li.done .n { background: rgba(255,122,47,0.18); }
+  h2 { font: 600 15px/1.3 var(--sans); }
+  li p { color: var(--text-2); font-size: 13.5px; line-height: 20px; margin-top: 4px; }
+  .acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  button { font: 600 13px/1 var(--sans); padding: 9px 14px; border-radius: 8px; border: 1px solid var(--line); background: var(--raised); color: var(--text); cursor: pointer; }
+  button:hover { border-color: rgba(255,122,47,0.5); }
+  button.primary { background: linear-gradient(100deg, #ff4a3a, #ff7a2f 55%, #ffb056); color: #1c0805; border: 0; }
+  kbd { font: 600 12px/1 var(--mono); padding: 4px 7px; border-radius: 6px; background: var(--raised); border: 1px solid var(--line); color: var(--text); }
+  pre { margin-top: 10px; white-space: pre-wrap; font: 12px/18px var(--mono); color: var(--text-2); background: var(--ink); border: 1px solid var(--line); border-radius: 8px; padding: 10px; }
+  pre:empty { display: none; }
+  label { display: flex; gap: 8px; align-items: center; font-size: 13.5px; color: var(--text-2); margin-top: 8px; cursor: pointer; }
+  footer { display: flex; justify-content: space-between; align-items: center; }
+  footer span { color: var(--muted); font-size: 12.5px; }
+  [hidden] { display: none !important; }
+</style></head>
+<body><main>
+  <header><img src="logo.png" alt=""><div><h1>Welcome to Ultron</h1><p>A few steps and your AI can use this computer, or teach you how.</p></div></header>
+  <ol>
+    <li id="s-move" hidden><span class="n">1</span><div>
+      <h2>Move Ultron to Applications</h2>
+      <p>You're running it from the download. Ultron needs to live in Applications so it keeps working and macOS remembers its permissions.</p>
+      <div class="acts"><button class="primary" id="move">Move to Applications</button></div>
+      <pre id="move-out"></pre>
+    </div></li>
+    <li id="s-key"><span class="n">·</span><div>
+      <h2>Your shortcut: <kbd id="key">Ctrl+Space</kbd></h2>
+      <p>Press it anywhere to ask Ultron. Try “start a 25 minute timer”. The flip clock at the top of your screen shows it, and clicking the clock opens the bar too.</p>
+    </div></li>
+    <li id="s-agents"><span class="n">·</span><div>
+      <h2>Connect your AI</h2>
+      <p id="agents-text">Ultron Hands lets Claude Code, Codex, Cursor and others see your screen and use the mouse and keyboard. One click connects every one it finds, with the Teach and Post skills.</p>
+      <div class="acts"><button class="primary" id="connect">Connect my AI apps</button></div>
+      <pre id="connect-out"></pre>
+    </div></li>
+    <li id="s-perm" hidden><span class="n">·</span><div>
+      <h2>Allow screen and control</h2>
+      <p>macOS asks once. Turn on <b>Ultron</b> (and your terminal or AI app) in both lists, then come back.</p>
+      <div class="acts"><button id="screen">Open Screen Recording</button><button id="access">Open Accessibility</button></div>
+    </div></li>
+    <li id="s-login"><span class="n">·</span><div>
+      <h2>Start with your computer</h2>
+      <label><input type="checkbox" id="autostart"> Open Ultron when I log in</label>
+    </div></li>
+  </ol>
+  <footer><span>You can open this again from the Ultron menu in the tray.</span><button class="primary" id="done">Start using Ultron</button></footer>
+</main>
+<script>
+const { invoke } = window.__TAURI__.core;
+const $ = (id) => document.getElementById(id);
+function number() {
+  let i = 1;
+  document.querySelectorAll("ol > li:not([hidden]) .n").forEach((n) => (n.textContent = i++));
+}
+async function load() {
+  const s = await invoke("onboard_state");
+  $("s-move").hidden = !s.needs_move;
+  $("s-perm").hidden = s.os !== "macos";
+  if (s.shortcut) $("key").textContent = s.shortcut;
+  $("autostart").checked = s.autostart;
+  if (!s.claude && !s.codex) {
+    $("agents-text").innerHTML = "No AI app found yet. Install <b>Claude Code</b> (claude.com/claude-code) or <b>Codex</b>, then press the button. Timers work without one.";
+  }
+  if (!s.hands) $("connect").disabled = true;
+  number();
+}
+$("move").onclick = async () => {
+  $("move-out").textContent = "Copying…";
+  try { await invoke("move_to_applications"); } catch (e) { $("move-out").textContent = String(e); }
+};
+$("connect").onclick = async () => {
+  $("connect").disabled = true;
+  $("connect-out").textContent = "Connecting…";
+  try {
+    $("connect-out").textContent = await invoke("connect_agents");
+    $("s-agents").classList.add("done");
+  } catch (e) { $("connect-out").textContent = String(e); }
+  $("connect").disabled = false;
+};
+$("screen").onclick = () => invoke("open_settings", { pane: "screen" });
+$("access").onclick = () => invoke("open_settings", { pane: "accessibility" });
+$("autostart").onchange = async (e) => {
+  try { e.target.checked = await invoke("set_autostart", { on: e.target.checked }); } catch { e.target.checked = !e.target.checked; }
+};
+$("done").onclick = () => invoke("finish_onboarding");
+load();
+</script>
+</body></html>

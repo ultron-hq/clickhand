@@ -5,6 +5,14 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.5] - 2026-11-27
+
+### Added
+- **The Ultron app** (start of wave 3), for Windows, macOS and Linux: a flip-clock island at the top of the screen, a Ctrl+Space prompt bar and a tray icon. Timers, stopwatch, pause, resume and stop are answered instantly and logged to the sessions database; anything else goes to Claude Code or Codex with Ultron Hands.
+- First-run welcome: on macOS it offers to move Ultron into Applications (and clears the download quarantine), then shows the shortcut, connects your AI apps with the bundled Ultron Hands in one click, opens the Screen Recording and Accessibility settings, and can start Ultron at login. Reopen it from the tray.
+- Installers on every release: a drag-to-Applications `.dmg` for Apple silicon and Intel Macs, a Windows setup `.exe`, and a Linux `.AppImage` and `.deb`, each with Ultron Hands inside.
+- Teach highlights and the "AI is using your mouse" overlay on macOS.
+
 ## [0.1.4] - 2026-11-27
 
 ### Added

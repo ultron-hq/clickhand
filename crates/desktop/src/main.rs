@@ -5,6 +5,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod intent;
+mod onboard;
 
 use std::sync::Mutex;
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -43,10 +44,10 @@ impl Clock {
 
 type SessionTracker = Tracker<fn() -> f64, fn() -> f64>;
 
-struct App {
+pub struct App {
     clock: Mutex<Clock>,
     tracker: Mutex<SessionTracker>,
-    shortcut: Mutex<String>,
+    pub shortcut: Mutex<String>,
 }
 
 #[tauri::command]
@@ -249,6 +250,10 @@ fn pretty(key: &str) -> String {
 fn main() {
     let tracker: SessionTracker = Tracker::system(None);
     tauri::Builder::default()
+        .plugin(tauri_plugin_autostart::init(
+            tauri_plugin_autostart::MacosLauncher::LaunchAgent,
+            None,
+        ))
         .plugin(
             tauri_plugin_global_shortcut::Builder::new()
                 .with_handler(|app, _shortcut, event| {
@@ -263,7 +268,19 @@ fn main() {
             tracker: Mutex::new(tracker),
             shortcut: Mutex::new(String::new()),
         })
-        .invoke_handler(tauri::generate_handler![clock, ask, hide_bar, toggle_bar, shortcut])
+        .invoke_handler(tauri::generate_handler![
+            clock,
+            ask,
+            hide_bar,
+            toggle_bar,
+            shortcut,
+            onboard::onboard_state,
+            onboard::move_to_applications,
+            onboard::connect_agents,
+            onboard::open_settings,
+            onboard::set_autostart,
+            onboard::finish_onboarding
+        ])
         .on_window_event(|w, e| {
             if w.label() == "bar" {
                 if let WindowEvent::Focused(false) = e {
@@ -296,13 +313,15 @@ fn main() {
             *app.state::<App>().shortcut.lock().unwrap() = hint.clone();
 
             let ask_item = MenuItem::with_id(app, "bar", format!("Ask Ultron ({hint})"), true, None::<&str>)?;
+            let welcome = MenuItem::with_id(app, "welcome", "Set up Ultron…", true, None::<&str>)?;
             let quit = MenuItem::with_id(app, "quit", "Quit Ultron", true, None::<&str>)?;
-            let menu = Menu::with_items(app, &[&ask_item, &quit])?;
+            let menu = Menu::with_items(app, &[&ask_item, &welcome, &quit])?;
             let mut tray = TrayIconBuilder::new()
                 .menu(&menu)
                 .tooltip("Ultron")
                 .on_menu_event(|app, ev| match ev.id().as_ref() {
                     "bar" => toggle(app),
+                    "welcome" => onboard::show(app),
                     "quit" => app.exit(0),
                     _ => {}
                 });
@@ -310,6 +329,12 @@ fn main() {
                 tray = tray.icon(icon.clone());
             }
             tray.build(app)?;
+            // macOS: no Dock icon; Ultron lives in the menu bar and the island.
+            #[cfg(target_os = "macos")]
+            app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+            if onboard::first_run() {
+                onboard::show(app.handle());
+            }
             Ok(())
         })
         .run(tauri::generate_context!())
