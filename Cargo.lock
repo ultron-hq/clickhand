@@ -2387,14 +2387,14 @@ dependencies = [
 
 [[package]]
 name = "ultron"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "ultron-core",
 ]
 
 [[package]]
 name = "ultron-core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "chrono",
  "chrono-tz",
@@ -2412,7 +2412,7 @@ dependencies = [
 
 [[package]]
 name = "ultron-hands"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "base64",
  "dirs 6.0.0",

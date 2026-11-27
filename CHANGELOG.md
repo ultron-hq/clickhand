@@ -5,6 +5,13 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-27
+
+### Fixed
+- Setup now connects Codex when `CODEX_HOME` points to a folder that doesn't exist yet.
+
+## [0.1.0] - 2026-11-27
+
 ### Added
 - One-line install for Ultron Hands: `curl -fsSL https://getultron.vercel.app/install.sh | sh` (macOS, Linux) and `irm https://getultron.vercel.app/install.ps1 | iex` (Windows). It verifies the SHA-256 of the download and adds the binary to your PATH.
 - Prebuilt `ultron-hands` binaries for Linux (x86_64, arm64), macOS (Apple silicon, Intel) and Windows, published by a release workflow on every `v*` tag.

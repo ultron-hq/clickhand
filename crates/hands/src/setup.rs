@@ -331,6 +331,10 @@ impl Agent {
             }
             Kind::Codex => {
                 let bin = which("codex").ok_or("`codex` is not on PATH")?;
+                // Codex refuses to write its config into a CODEX_HOME that doesn't exist yet.
+                if let Some(dir) = codex_config().parent() {
+                    let _ = std::fs::create_dir_all(dir);
+                }
                 let _ = cli(&bin, &["mcp", "remove", NAME], false);
                 cli(&bin, &["mcp", "add", NAME, "--", &me], true)?;
                 if approve {
