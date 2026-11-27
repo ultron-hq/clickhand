@@ -10,6 +10,17 @@ fn enigo() -> Result<Enigo, HandsError> {
     Enigo::new(&Settings::default()).map_err(|e| HandsError::new(format!("Input is unavailable ({e}). The screen may be locked.")))
 }
 
+/// Stop mid-action when the kill switch is turned on (the check before an action isn't
+/// enough: typing a long text or scrolling takes a while).
+fn halted(done: &str) -> Result<(), HandsError> {
+    if crate::log::stop_path().exists() {
+        return Err(HandsError::new(format!(
+            "Kill switch turned on mid-action; stopped {done}. The user stopped the hands; do not retry — ask them."
+        )));
+    }
+    Ok(())
+}
+
 fn fail(e: impl std::fmt::Display) -> HandsError {
     HandsError::new(format!("Input failed ({e}). The screen may be locked or the window gone."))
 }
@@ -81,6 +92,7 @@ pub fn click(x: i32, y: i32, b: Button, count: u32) -> Result<(), HandsError> {
     for i in 0..count {
         if i > 0 {
             sleep(Duration::from_millis(90));
+            halted(&format!("after {i} of {count} clicks"))?;
         }
         e.button(b, Direction::Click).map_err(fail)?;
     }
@@ -94,6 +106,10 @@ pub fn drag(from: (i32, i32), to: (i32, i32)) -> Result<(), HandsError> {
     e.button(Button::Left, Direction::Press).map_err(fail)?;
     let mut result = Ok(());
     for i in 1..=8 {
+        if let Err(err) = halted("partway through the drag (the button was released)") {
+            result = Err(err);
+            break;
+        }
         let (x, y) = (from.0 + (to.0 - from.0) * i / 8, from.1 + (to.1 - from.1) * i / 8);
         #[cfg(target_os = "macos")]
         warp(x, y);
@@ -116,7 +132,8 @@ pub fn scroll(direction: &str, amount: i32) -> Result<(), HandsError> {
         _ => return Err(HandsError::new("direction must be up/down/left/right and amount 1-15.")),
     };
     let mut e = enigo()?;
-    for _ in 0..amount {
+    for i in 0..amount {
+        halted(&format!("after {i} of {amount} scroll steps"))?;
         e.scroll(sign, axis).map_err(fail)?;
         sleep(Duration::from_millis(40));
     }
@@ -238,24 +255,27 @@ pub fn chord(keys: &[Key]) -> Result<(), HandsError> {
 
 /// Type text; newlines press Enter, tabs become four spaces. With `delay_ms`, one
 /// character at a time with that pause (some sites drop or reorder fast input).
+/// The kill switch is checked between pieces, so `openhud stop` halts it within a few
+/// characters.
 pub fn type_text(text: &str, delay_ms: u64) -> Result<(), HandsError> {
     let mut e = enigo()?;
+    let total = text.chars().count();
+    let mut typed = 0;
+    let stop_at = |typed: usize| halted(&format!("after typing {typed} of {total} characters"));
     for (i, line) in text.split('\n').enumerate() {
         if i > 0 {
+            stop_at(typed)?;
             e.key(Key::Return, Direction::Click).map_err(fail)?;
+            typed += 1;
         }
         let line = line.replace('\t', "    ");
         let chars: Vec<char> = line.chars().collect();
-        if delay_ms > 0 {
-            for c in &chars {
-                e.text(&c.to_string()).map_err(fail)?;
-                sleep(Duration::from_millis(delay_ms));
-            }
-            continue;
-        }
-        for chunk in chars.chunks(32) {
+        let piece = if delay_ms > 0 { 1 } else { 8 };
+        for chunk in chars.chunks(piece) {
+            stop_at(typed)?;
             e.text(&chunk.iter().collect::<String>()).map_err(fail)?;
-            sleep(Duration::from_millis(8));
+            typed += chunk.len();
+            sleep(Duration::from_millis(delay_ms.max(8)));
         }
     }
     Ok(())

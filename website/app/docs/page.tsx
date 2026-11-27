@@ -107,7 +107,7 @@ export default async function Docs() {
             <p>Running <code>openhud</code> in a terminal walks you through three steps:</p>
             <ol>
               <li><b>Checks this computer:</b> it can find the screen, take screenshots and move the mouse. On a Mac, install the app (<code>mac.sh</code>): its welcome window asks macOS for Screen Recording and Accessibility once, for OpenHUD, and every AI app then works through it instead of each needing its own permission</li>
-              <li><b>Connects your agents:</b> every one it finds below. It merges into your existing config, keeps a one-time <code>.bak</code>, and never replaces another server named <code>openhud</code> without asking. It also asks once whether agents may act without confirming each step; the kill switch stops them either way</li>
+              <li><b>Connects your agents:</b> every one it finds below. It merges into your existing config, keeps a one-time <code>.bak</code>, and never replaces another server named <code>openhud</code> without asking. Agents confirm each step unless you say otherwise: answer “y” when setup asks, or run <code>openhud setup --approve</code>. The kill switch stops them either way, even in the middle of typing</li>
               <li><b>Tells you what to ask first</b>, and installs the three skills into Claude Code and Codex</li>
             </ol>
             <div className="docs-table">

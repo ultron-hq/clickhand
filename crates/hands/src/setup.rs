@@ -67,6 +67,21 @@ fn heading(s: &str) {
     println!("\n{}", paint("1", s));
 }
 
+/// Whether agents may act without asking before each action. Only an explicit choice
+/// turns it on: `--approve`, or answering "y". `--yes` and setups without a terminal
+/// (the app, scripts) leave it off.
+fn ask_approval(question: &str, yes: bool) -> bool {
+    if std::env::args().any(|a| a == "--approve") {
+        println!("  {question} yes (--approve)");
+        return true;
+    }
+    if yes || !std::io::stdin().is_terminal() {
+        println!("  {question} no (run `openhud setup --approve` to allow it)");
+        return false;
+    }
+    ask(question, false, false)
+}
+
 /// Ask a yes/no question. Without a terminal, or with `--yes`, the default is the answer.
 fn ask(question: &str, default_yes: bool, yes: bool) -> bool {
     let choices = if default_yes { "[Y/n]" } else { "[y/N]" };
@@ -263,15 +278,27 @@ fn read_json(file: &Path) -> Result<Map<String, Value>, String> {
     }
 }
 
+/// Keep a one-time copy of the user's original config next to it (`config.toml.bak`,
+/// `mcp.json.bak`) before the first change we make.
+fn backup_once(file: &Path) {
+    let mut name = file.file_name().unwrap_or_default().to_os_string();
+    name.push(".bak");
+    let bak = file.with_file_name(name);
+    if file.exists() && !bak.exists() {
+        let _ = std::fs::copy(file, &bak);
+    }
+}
+
+fn claude_config() -> PathBuf {
+    home().join(".claude.json")
+}
+
 /// Write JSON through a temp file, keeping a one-time `.bak` of the user's original.
 fn write_json(file: &Path, value: &Map<String, Value>) -> Result<(), String> {
     if let Some(dir) = file.parent() {
         std::fs::create_dir_all(dir).map_err(|e| e.to_string())?;
     }
-    let bak = file.with_extension("json.bak");
-    if file.exists() && !bak.exists() {
-        let _ = std::fs::copy(file, &bak);
-    }
+    backup_once(file);
     let text = serde_json::to_string_pretty(&Value::Object(value.clone())).map_err(|e| e.to_string())? + "\n";
     let tmp = file.with_extension("json.tmp");
     std::fs::write(&tmp, text).map_err(|e| e.to_string())?;
@@ -356,6 +383,7 @@ impl Agent {
                     .filter_map(|l| l.trim().strip_prefix("Command:"))
                     .any(|c| legacy_ours(old, c.trim()))
                 {
+                    backup_once(&claude_config());
                     let _ = cli(&bin, &["mcp", "remove", "-s", "user", old], false);
                 }
             }
@@ -372,6 +400,7 @@ impl Agent {
                     .filter_map(|l| toml_string(l, "command"))
                     .any(|c| legacy_ours(old, &c));
                 if let (true, Some(bin)) = (ours, which("codex")) {
+                    backup_once(&codex_config());
                     let _ = cli(&bin, &["mcp", "remove", old], false);
                 }
             }
@@ -399,6 +428,7 @@ impl Agent {
         match &self.kind {
             Kind::ClaudeCode => {
                 let bin = which("claude").ok_or("`claude` is not on PATH")?;
+                backup_once(&claude_config());
                 let _ = cli(&bin, &["mcp", "remove", "-s", "user", NAME], false);
                 cli(&bin, &["mcp", "add", "-s", "user", NAME, "--", &me], true)?;
                 if approve {
@@ -412,6 +442,7 @@ impl Agent {
                 if let Some(dir) = codex_config().parent() {
                     let _ = std::fs::create_dir_all(dir);
                 }
+                backup_once(&codex_config());
                 let _ = cli(&bin, &["mcp", "remove", NAME], false);
                 cli(&bin, &["mcp", "add", NAME, "--", &me], true)?;
                 if approve {
@@ -443,11 +474,13 @@ impl Agent {
         match &self.kind {
             Kind::ClaudeCode => {
                 let bin = which("claude").ok_or("`claude` is not on PATH")?;
+                backup_once(&claude_config());
                 cli(&bin, &["mcp", "remove", "-s", "user", NAME], true)?;
                 allow_in_claude(false)
             }
             Kind::Codex => {
                 let bin = which("codex").ok_or("`codex` is not on PATH")?;
+                backup_once(&codex_config());
                 cli(&bin, &["mcp", "remove", NAME], true).map(|_| ())
             }
             Kind::Json { file, style } => {
@@ -487,6 +520,7 @@ fn allow_in_claude(on: bool) -> Result<(), String> {
 
 /// Set `default_tools_approval_mode = "approve"` in Codex's section for Hands.
 fn codex_approve(file: &Path) -> std::io::Result<()> {
+    backup_once(file);
     let text = std::fs::read_to_string(file)?;
     let mut lines: Vec<&str> = text.lines().collect();
     let Some((s, e)) = codex_section(&lines) else {
@@ -727,9 +761,8 @@ pub fn setup(yes: bool) -> i32 {
     let approve = todo
         .iter()
         .any(|(a, _)| matches!(a.kind, Kind::ClaudeCode | Kind::Codex | Kind::Json { style: Style::Gemini, .. }))
-        && ask(
+        && ask_approval(
             "Let agents use Hands without asking you before each action? (the kill switch still stops them)",
-            true,
             yes,
         );
     let mut connected = 0;
@@ -827,7 +860,7 @@ pub fn connect(id: Option<&str>, on: bool, yes: bool) -> i32 {
             return 1;
         }
     }
-    let approve = ask("Let it use Hands without asking before each action?", true, yes);
+    let approve = ask_approval("Let it use Hands without asking before each action?", yes);
     match agent.connect(approve) {
         Ok(how) => {
             good(&format!("{}: {how}", agent.name));
@@ -890,6 +923,7 @@ Usage: openhud [command]
 
   (no command)        in a terminal: guided setup; started by an agent: the MCP server
   setup [--yes]       check this computer and connect every agent found
+        [--approve]   also let agents act without asking before each action
   doctor              check the screen, input and permissions
   agents              list the agents on this computer and whether they're connected
   connect <agent>     connect one agent: claude-code, codex, cursor, vscode,
@@ -983,6 +1017,26 @@ mod tests {
             assert_eq!(e["type"] == json!("stdio"), style == Style::VsCode);
             assert_eq!(e["trust"] == json!(true), style == Style::Gemini);
         }
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn approval_is_never_assumed() {
+        // `--yes` (and no terminal, as in tests and the app) must not turn it on.
+        assert!(!ask_approval("Let agents act without asking?", true));
+        assert!(!ask_approval("Let agents act without asking?", false));
+    }
+
+    #[test]
+    fn backup_once_keeps_the_original() {
+        let dir = std::env::temp_dir().join(format!("openhud-bak-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        let file = dir.join("config.toml");
+        std::fs::write(&file, "original").unwrap();
+        backup_once(&file);
+        std::fs::write(&file, "changed").unwrap();
+        backup_once(&file);
+        assert_eq!(std::fs::read_to_string(dir.join("config.toml.bak")).unwrap(), "original");
         let _ = std::fs::remove_dir_all(&dir);
     }
 }

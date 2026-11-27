@@ -5,6 +5,17 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-11-27
+
+### Fixed
+- The kill switch interrupts an action already running: typing stops within a few characters (it used to finish the whole text), and drags, scrolls and multi-clicks stop too.
+- Setup no longer turns on "act without asking" by itself: `--yes`, the app and setups without a terminal leave it off. Opt in by answering "y" or with `openhud setup --approve`.
+- Windows installer: a reinstall now fixes the current terminal's PATH even when the saved PATH was already right.
+- Codex's `config.toml` (and Claude Code's `~/.claude.json`) get a one-time `.bak` before any change, like the JSON configs.
+
+### Added
+- Discord: https://discord.gg/32uFQ8PUQB
+
 ## [0.3.0] - 2026-11-27
 
 ### Changed

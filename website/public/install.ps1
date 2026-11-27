@@ -42,12 +42,21 @@ $bin = Join-Path $dir 'openhud.exe'
 Copy-Item $bin (Join-Path $dir 'clickhand.exe') -Force -ErrorAction SilentlyContinue
 Write-Host "Installed $(& $bin --version) to $bin"
 
+# The saved user PATH (new terminals) and this window's PATH are fixed separately, so a
+# reinstall also repairs a terminal that was opened before the first install.
+function Test-OnPath([string]$list, [string]$d) {
+    $want = $d.TrimEnd('\')
+    foreach ($p in ($list -split ';')) { if ($p -and $p.TrimEnd('\') -ieq $want) { return $true } }
+    return $false
+}
 $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
 if (-not $userPath) { $userPath = '' }
-if (($userPath -split ';') -notcontains $dir) {
+if (-not (Test-OnPath $userPath $dir)) {
     [Environment]::SetEnvironmentVariable('Path', ($userPath.TrimEnd(';') + ";$dir").TrimStart(';'), 'User')
-    $env:Path += ";$dir"
     Write-Host "Added $dir to your PATH (new terminals will see it)"
+}
+if (-not (Test-OnPath $env:Path $dir)) {
+    $env:Path = ($env:Path.TrimEnd(';') + ";$dir").TrimStart(';')
 }
 
 if ($env:OPENHUD_NO_SETUP) {

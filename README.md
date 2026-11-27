@@ -60,6 +60,9 @@ action, then another look to check it worked.
    server without asking,
 3. adds the three skills to Claude Code and Codex and tells you what to ask first.
 
+Agents confirm each action unless you opt in (answer "y" in setup, or `openhud setup --approve`).
+Every config is backed up once (`.bak`) before the first change.
+
 **On a Mac**, the OpenHUD app runs Hands for every agent, so macOS asks for Screen Recording and
 Accessibility once, for OpenHUD, instead of once for Terminal, iTerm, Cursor, Claude and the rest.
 

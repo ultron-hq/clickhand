@@ -191,6 +191,18 @@ def main():
     err, text, _ = s.call("move_mouse", x=12, y=12)
     check("resume allows input again", not err, text)
 
+    # The kill switch must interrupt an action already running, not only the next one.
+    import threading
+    long_text = "x" * 120
+    threading.Timer(0.8, lambda: subprocess.run([BIN, "stop"], capture_output=True)).start()
+    t0 = time.time()
+    err, text, _ = s.call("type_text", text=long_text, delay_ms=40, look=False)
+    took = time.time() - t0
+    m = re.search(r"after typing (\d+) of 120", text or "")
+    check("kill switch interrupts typing", err and m is not None and int(m.group(1)) < 120 and took < 4,
+          f"{text[:120]} ({took:.1f}s)")
+    subprocess.run([BIN, "resume"], capture_output=True)
+
     s.close()
     log = subprocess.run([BIN, "log", "5"], capture_output=True, text=True)
     check("log lists the actions", "type_text" in log.stdout or "move_mouse" in log.stdout, log.stdout.strip()[-200:])
