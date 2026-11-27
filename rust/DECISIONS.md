@@ -75,3 +75,9 @@ Status: accepted (2026-11-27)
 Context: The original's command layer includes the founder's own integrations: THE SYSTEM (/today /quest /plan /did /log), deen (/dua /ayah) and Simora paper trading on padre.gg (/paper). They make no sense for other users of an open-source product.
 Decision: They are ported faithfully (and recorded like everything else) but marked `personal`; `commands::Context.personal` is false in the public build, which makes them unknown commands and drops them from /help and autocomplete.
 Consequences: The founder's build turns them on. Their skills (system, deen) follow the same rule when they are ported in wave 2.
+
+## ADR-015: Ship Hands first
+Status: accepted (2026-11-27)
+Context: The business plan's wedge is Hands for developers' agents (an open-source local MCP server, with cloud desktops later). The founder chose to build it before finishing wave 1.
+Decision: Hands moves ahead of the remaining wave-1 units. `crates/hands` is a standalone `ultron-hands` binary: MCP over stdio, the original's 17 tool names, arguments, defaults and messages, the same `hands.log.jsonl` and `hands.stop`. Input is enigo on all three OSes; capture is pure-Rust X11 on Linux and xcap on Windows/macOS; Linux window listing/focus keep using xdotool as the original does. `a11y_snapshot` (AT-SPI / UI Automation / AX) and window focus on Windows/macOS follow.
+Consequences: The Python Hands stays registered until the founder switches. Wave 1 resumes after Hands ships (app index, workflows).

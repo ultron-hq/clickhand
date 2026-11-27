@@ -14,7 +14,10 @@ How to re-record a unit:
 
 - Wave 1, unit 6: commands + `Router::handle`. Recorded by `rust/record/commands.py` (108 cases), replayed by `tests/commands.rs`; ADR-014 puts the founder's integrations behind `personal`.
 
+- Hands (ADR-015): `crates/hands`, the `ultron-hands` MCP server. Verified over a real stdio MCP session on X11: 17 tools listed, screenshot (83 ms, same note as Python), mouse mapping ×1.5, off-screen refusal, kill switch, read-only, report. Test with a throwaway XDG_CACHE_HOME so the real kill switch/log stay untouched.
+
 Next:
+0. Hands: a11y_snapshot (atspi crate on Linux), focus on Windows/macOS, release binaries.
 1. App index + fuzzy open_app (replaces Laya, ADR-002).
 2. Workflow selection (workflows.py, paper.py), annotations, identity — then wave 1 is done.
 3. Reports HTML dashboard once tasks/runs/abilities are ported.

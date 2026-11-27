@@ -2,7 +2,7 @@
 
 **Goal:** one Rust app (Tauri) that does what Python Ultron does, on Windows, macOS and Linux. The Python original is the reference (kept locally in `reference/`, not published) and is never edited; it stays the daily driver until cutover (ADR-004).
 
-Decisions: [DECISIONS.md](DECISIONS.md) — ADR-001 Tauri · 012 open source · 013 own recorder per unit · 014 personal integrations off ·  · 002 drop Laya · 003 whisper-rs + Gemini · 004 side by side · 005 same data formats · 006 pluggable LLMs · 007 native control per OS · 008 WASM abilities · 009 three platforms · 010 equivalence bar · 011 hands MCP in Rust.
+Decisions: [DECISIONS.md](DECISIONS.md) — ADR-001 Tauri · 012 open source · 013 own recorder per unit · 014 personal integrations off · 015 Hands first ·  · 002 drop Laya · 003 whisper-rs + Gemini · 004 side by side · 005 same data formats · 006 pluggable LLMs · 007 native control per OS · 008 WASM abilities · 009 three platforms · 010 equivalence bar · 011 hands MCP in Rust.
 Terms: [GLOSSARY.md](GLOSSARY.md). Next session: read this, then HANDOFF.md.
 
 States: `open` · `claimed by <session> <date>` · `done (gate, replay)`.
@@ -49,7 +49,7 @@ States: `open` · `claimed by <session> <date>` · `done (gate, replay)`.
 | --- | --- |
 | `control` crate: enigo + xcap + A11y trait (AT-SPI / UIA / AX) | open |
 | Desktop task loop (observe → act → verify) | open |
-| hands MCP server (rmcp), same tool names | open |
+| hands MCP server, same tool names | in progress (2026-11-27, ADR-015): `crates/hands` ships 17 of 18 tools on all OSes; verified on X11 (capture 83 ms, mapping, kill switch, read-only). Next: `a11y_snapshot`, focus on Windows/macOS, release binaries |
 
 ## Wave 5 — voice
 | Unit | State |

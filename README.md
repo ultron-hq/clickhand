@@ -45,7 +45,7 @@ can drive the desktop. It is Python + Qt and tied to X11. The rewrite keeps all 
 | Memory: facts, your own phrases, plans learned from the model | wave 1 |
 | Pluggable models: Claude Code CLI, Codex CLI, Ollama / OpenAI-compatible, any API key | wave 2 |
 | Desktop control: mouse, keyboard, screenshots, accessibility tree per OS | wave 4 |
-| **Hands**: an MCP server so your coding agent can see and use your desktop | wave 4 |
+| **Hands**: an MCP server so your coding agent can see and use your desktop | preview |
 | Voice: local Whisper transcription, Gemini Live conversations | wave 5 |
 | Abilities Ultron writes for itself, sandboxed in WebAssembly | wave 6 |
 
@@ -56,13 +56,19 @@ mouse and keyboard: an [MCP](https://modelcontextprotocol.io) server that lets a
 screen, click, scroll and type, so you can ask it for anything that needs a person at the computer.
 
 ```sh
-claude mcp add ultron-hands -- ultron-hands     # Claude Code
-codex mcp add ultron-hands -- ultron-hands      # Codex
+cargo install --git https://github.com/ultron-hq/ultron ultron-hands
+claude mcp add -s user ultron-hands -- ultron-hands     # Claude Code
+codex mcp add ultron-hands -- ultron-hands              # Codex
 ```
 
-It works in a loop (screenshot, act, look again to verify), with the safety rules below: a kill
-switch, actions only on your requests, no typed passwords, and a local log of every action.
-Status: running in the original app, being ported in [wave 4](ROADMAP.md).
+It works in a loop (screenshot with the cursor marked by a red ring, act, look again to verify),
+with the safety rules below: a kill switch (`touch ~/.cache/ultron/hands.stop` on Linux), a
+read-only mode (`ULTRON_HANDS_READONLY=1`), a rate limit, no shell tool, and a local log of every
+action in which typed text is stored only as its length.
+
+Status: 17 of the original's 18 tools, built for Windows, macOS and Linux and tested on Linux (X11).
+Coming next: the accessibility tree (`a11y_snapshot`), window focus on Windows and macOS, and
+prebuilt binaries.
 
 ## Quick start
 
