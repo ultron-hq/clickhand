@@ -537,3 +537,18 @@ main.docs { max-width: var(--page); margin: 0 auto; padding: 56px 32px 120px; di
   .docs-table td, .docs-table th { padding: 10px 12px; }
 }
 .docs-table td > code { white-space: nowrap; overflow-wrap: normal; }
+
+/* ── hero clip: the real Teach recording, rising out of the hero ── */
+main > section.hero .hero-inner { padding-bottom: 150px; }
+.hero-clip { position: relative; z-index: 2; max-width: var(--page); margin: -110px auto 0; padding: 0 32px; display: grid; gap: 14px; }
+.clip-frame {
+  border-radius: 14px; overflow: hidden; background: var(--deep);
+  border: 1px solid rgba(255, 122, 47, 0.35);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 30px 80px -20px rgba(255, 90, 50, 0.35), 0 40px 120px rgba(0, 0, 0, 0.6);
+}
+.clip-bar { display: flex; align-items: center; gap: 7px; height: 38px; padding: 0 14px; background: var(--card); border-bottom: 1px solid var(--line); }
+.clip-bar span { width: 10px; height: 10px; border-radius: 50%; background: var(--raised); border: 1px solid var(--line-2); }
+.clip-bar p { margin-left: 10px; font: 400 12.5px/1 var(--mono); color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.clip-frame video { display: block; width: 100%; aspect-ratio: 1280 / 650; object-fit: cover; background: var(--deep); }
+.hero-clip figcaption { font-size: 14px; line-height: 20px; color: var(--muted); text-align: center; }
+@media (max-width: 760px) { .hero-clip { margin-top: -48px; padding: 0 16px; } main > section.hero .hero-inner { padding-bottom: 72px; } }

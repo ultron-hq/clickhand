@@ -6,6 +6,7 @@ import { LoopDiagram } from "@/components/LoopDiagram";
 import { LiveTimer } from "@/components/LiveTimer";
 import { KillSwitch } from "@/components/KillSwitch";
 import { InstallBox } from "@/components/InstallBox";
+import { HeroClip } from "@/components/HeroClip";
 import { Footer } from "@/components/Footer";
 import { REPO, getStars } from "@/lib/site";
 
@@ -94,6 +95,8 @@ export default async function Home() {
             </div>
           </div>
         </section>
+
+        <HeroClip />
 
         <section className="demo" id="demo">
           <div className="section-head">
