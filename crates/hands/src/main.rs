@@ -464,11 +464,41 @@ fn handle(msg: &Value, tools: &[Tool]) -> Option<Value> {
     }
 }
 
+/// MCP clients often start servers with a scrubbed environment (Codex drops $DISPLAY).
+/// On Linux, fall back to the local display and the session's X cookie so a plain
+/// `codex mcp add ultron-hands -- ultron-hands` just works.
+#[cfg(target_os = "linux")]
+fn find_display() {
+    let unset = |k: &str| std::env::var_os(k).is_none_or(|v| v.is_empty());
+    if unset("DISPLAY") && unset("WAYLAND_DISPLAY") {
+        std::env::set_var("DISPLAY", ":0");
+    }
+    if unset("XAUTHORITY") {
+        let uid = std::fs::read_to_string("/proc/self/status")
+            .ok()
+            .and_then(|s| {
+                s.lines()
+                    .find_map(|l| l.strip_prefix("Uid:").and_then(|r| r.split_whitespace().next().map(str::to_string)))
+            })
+            .unwrap_or_default();
+        let runtime = std::env::var_os("XDG_RUNTIME_DIR")
+            .map(std::path::PathBuf::from)
+            .unwrap_or_else(|| format!("/run/user/{uid}").into());
+        let home = dirs::home_dir().unwrap_or_default();
+        let candidates = [runtime.join("gdm/Xauthority"), home.join(".Xauthority"), runtime.join("Xauthority")];
+        if let Some(found) = candidates.iter().find(|p| p.exists()) {
+            std::env::set_var("XAUTHORITY", found);
+        }
+    }
+}
+
 fn main() {
     if std::env::args().any(|a| a == "--version" || a == "-V") {
         println!("ultron-hands {}", env!("CARGO_PKG_VERSION"));
         return;
     }
+    #[cfg(target_os = "linux")]
+    find_display();
     let tools = tools();
     let stdin = std::io::stdin();
     let mut stdout = std::io::stdout();

@@ -61,6 +61,9 @@ claude mcp add -s user ultron-hands -- ultron-hands     # Claude Code
 codex mcp add ultron-hands -- ultron-hands              # Codex
 ```
 
+Codex asks before every MCP tool call. To let it use Hands without asking each time, start it with
+`codex -c 'mcp_servers.ultron-hands.default_tools_approval_mode="approve"'`; the kill switch still stops it at any moment.
+
 It works in a loop (screenshot with the cursor marked by a red ring, act, look again to verify),
 with the safety rules below: a kill switch (`touch ~/.cache/ultron/hands.stop` on Linux), a
 read-only mode (`ULTRON_HANDS_READONLY=1`), a rate limit, no shell tool, and a local log of every
