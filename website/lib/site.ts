@@ -14,3 +14,4 @@ export async function getStars(): Promise<number | null> {
     return null;
   }
 }
+export const DISCORD = "https://discord.gg/32uFQ8PUQB";

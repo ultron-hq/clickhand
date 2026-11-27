@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { DiscordIcon } from "@/components/DiscordIcon";
+import { DISCORD } from "@/lib/site";
 import { usePathname } from "next/navigation";
 import { Menu, X, Star } from "lucide-react";
 
@@ -67,6 +69,10 @@ export function Header({ repo, stars }: { repo: string; stars: number | null }) 
           <a href="/docs" aria-current={path.startsWith("/docs") ? "page" : undefined} onClick={() => setOpen(false)}>Docs</a>
         </nav>
         <div className="nav-end">
+          <a className="btn btn-quiet btn-sm nav-discord" href={DISCORD} aria-label="Join the OpenHUD Discord">
+            <DiscordIcon size={16} />
+            <span className="nav-discord-label">Discord</span>
+          </a>
           <a className="btn btn-quiet btn-sm" href={repo}>
             GitHub
             {stars !== null && stars > 0 && (

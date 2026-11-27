@@ -15,7 +15,7 @@ so it can do anything that needs a person at the computer, or teach you how whil
   <a href="#license"><img src="https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-555" alt="MIT OR Apache-2.0"></a>
 </p>
 
-<p align="center"><a href="https://openhud.vercel.app">Website</a> · <a href="https://openhud.vercel.app/docs">Docs</a> · <a href="#install">Install</a> · <a href="ROADMAP.md">Roadmap</a> · <a href="CONTRIBUTING.md">Contributing</a></p>
+<p align="center"><a href="https://openhud.vercel.app">Website</a> · <a href="https://openhud.vercel.app/docs">Docs</a> · <a href="https://discord.gg/32uFQ8PUQB">Discord</a> · <a href="#install">Install</a> · <a href="ROADMAP.md">Roadmap</a> · <a href="CONTRIBUTING.md">Contributing</a></p>
 
 ## Install
 
@@ -155,6 +155,8 @@ OpenHUD can move your mouse and type. Every change must keep these rules:
 Found a security problem? See [SECURITY.md](SECURITY.md).
 
 ## Contributing
+
+Come say hi and see what's coming on [Discord](https://discord.gg/32uFQ8PUQB).
 
 Contributions are welcome, from a typo to a whole platform backend. Start with
 [CONTRIBUTING.md](CONTRIBUTING.md), pick an `open` unit in [rust/MAP.md](rust/MAP.md) or an issue

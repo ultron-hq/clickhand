@@ -1,4 +1,4 @@
-import { REPO } from "@/lib/site";
+import { DISCORD, REPO } from "@/lib/site";
 
 export function Footer() {
   return (
@@ -8,6 +8,7 @@ export function Footer() {
         <nav aria-label="Footer">
           <a href="/docs">Docs</a>
           <a href={REPO}>GitHub</a>
+          <a href={DISCORD}>Discord</a>
           <a href={`${REPO}/releases`}>Releases</a>
           <a href={`${REPO}/discussions`}>Discussions</a>
           <a href={`${REPO}/blob/main/SECURITY.md`}>Security</a>

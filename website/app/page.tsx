@@ -8,7 +8,8 @@ import { KillSwitch } from "@/components/KillSwitch";
 import { InstallBox } from "@/components/InstallBox";
 import { HeroClip } from "@/components/HeroClip";
 import { Footer } from "@/components/Footer";
-import { REPO, getStars } from "@/lib/site";
+import { DiscordIcon } from "@/components/DiscordIcon";
+import { REPO, getStars, DISCORD } from "@/lib/site";
 
 
 function Keys({ keys }: { keys: string[] }) {
@@ -86,6 +87,7 @@ export default async function Home() {
               <div className="actions">
                 <a className="btn btn-quiet" href="#demo">See it work</a>
                 <a className="btn btn-quiet" href={REPO}>View on GitHub</a>
+                <a className="btn btn-quiet" href={DISCORD}><DiscordIcon size={16} />Discord</a>
               </div>
               <ul className="facts">
                 <li><Scale size={16} strokeWidth={1.5} aria-hidden="true" />Open source, MIT or Apache-2.0</li>
@@ -205,7 +207,9 @@ export default async function Home() {
             <div className="actions">
               <a className="btn btn-primary" href={`${REPO}/issues`}>Pick an issue</a>
               <a className="btn btn-quiet" href={`${REPO}/blob/main/CONTRIBUTING.md`}>Contributing guide</a>
+              <a className="btn btn-quiet" href={DISCORD}><DiscordIcon size={16} />Join the Discord</a>
             </div>
+            <p className="build-note">On Discord: what's coming next, early builds, and help setting it up</p>
           </div>
         </section>
       </main>
