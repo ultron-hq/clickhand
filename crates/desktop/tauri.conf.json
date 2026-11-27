@@ -47,7 +47,7 @@
         "url": "welcome.html",
         "title": "Welcome to Clickhand",
         "width": 580,
-        "height": 720,
+        "height": 620,
         "resizable": true,
         "visible": false,
         "center": true

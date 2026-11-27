@@ -64,8 +64,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: macos-latest, target: aarch64-apple-darwin, bundles: dmg }
-          - { os: macos-15-intel, target: x86_64-apple-darwin, bundles: dmg }
+          - { os: macos-latest, target: aarch64-apple-darwin, bundles: app }
+          - { os: macos-15-intel, target: x86_64-apple-darwin, bundles: app }
           - { os: windows-latest, target: x86_64-pc-windows-msvc, bundles: nsis }
           - { os: ubuntu-22.04, target: x86_64-unknown-linux-gnu, bundles: "appimage,deb" }
     runs-on: ${{ matrix.os }}
@@ -101,8 +101,13 @@ jobs:
           b="target/${{ matrix.target }}/release/bundle"
           v="${GITHUB_REF_NAME#v}"
           case "${{ matrix.target }}" in
-            aarch64-apple-darwin) cp "$b"/dmg/*.dmg "dist/Clickhand-mac-apple-silicon.dmg" ;;
-            x86_64-apple-darwin)  cp "$b"/dmg/*.dmg "dist/Clickhand-mac-intel.dmg" ;;
+            aarch64-apple-darwin|x86_64-apple-darwin)
+              # dmgbuild lays out the window itself (Finder scripting fails on CI)
+              pip3 install --quiet --break-system-packages dmgbuild 2>/dev/null || pip3 install --quiet dmgbuild
+              [ "${{ matrix.target }}" = aarch64-apple-darwin ] && name=apple-silicon || name=intel
+              dmgbuild -s crates/desktop/dmg/settings.py \
+                -D app="$b/macos/Clickhand.app" -D background=crates/desktop/icons/dmg-background.png \
+                "Clickhand" "dist/Clickhand-mac-$name.dmg" ;;
             x86_64-pc-windows-msvc) cp "$b"/nsis/*.exe "dist/Clickhand-windows-setup.exe" ;;
             *) cp "$b"/appimage/*.AppImage "dist/Clickhand-linux.AppImage"; cp "$b"/deb/*.deb "dist/Clickhand-linux.deb" ;;
           esac

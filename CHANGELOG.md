@@ -5,6 +5,13 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-27
+
+### Changed
+- The new Clickhand icon in the app (Dock, tray, window) and the disk image.
+- The Mac disk image opens to a laid-out window: Clickhand, an arrow, and Applications, over "Drag Clickhand into Applications" (built with dmgbuild, which works on CI).
+- The welcome window fits small Mac screens.
+
 ## [0.1.5] - 2026-11-27
 
 ### Added
