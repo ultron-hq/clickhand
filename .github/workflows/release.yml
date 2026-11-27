@@ -55,7 +55,7 @@ jobs:
         run: target/${{ matrix.target }}/release/clickhand --version
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ matrix.target }}
+          name: hands-${{ matrix.target }}
           path: dist/*
 
   app:
@@ -113,11 +113,12 @@ jobs:
           path: dist/*
 
   publish:
-    needs: [build, app]
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
         with:
+          pattern: hands-*
           path: dist
           merge-multiple: true
       - name: Publish the release
@@ -139,3 +140,21 @@ jobs:
           else
             gh release create "$TAG" dist/* --title "Clickhand $TAG" --notes "$notes" -R "$GITHUB_REPOSITORY"
           fi
+
+  publish-app:
+    # Separate, so a failed app build never holds back the Clickhand downloads.
+    needs: [app, publish]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: app-*
+          path: dist
+          merge-multiple: true
+      - name: Attach the app installers
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          ls -la dist
+          gh release upload "$TAG" dist/* --clobber -R "$GITHUB_REPOSITORY"
