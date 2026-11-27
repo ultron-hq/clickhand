@@ -55,23 +55,57 @@ Claude Code, Codex and other agents can edit files but can't click. **Ultron Han
 mouse and keyboard: an [MCP](https://modelcontextprotocol.io) server that lets any agent see the
 screen, click, scroll and type, so you can ask it for anything that needs a person at the computer.
 
+**Install** (one line, no Rust needed):
+
+```sh
+curl -fsSL https://getultron.vercel.app/install.sh | sh          # macOS, Linux
+```
+
+```powershell
+irm https://getultron.vercel.app/install.ps1 | iex               # Windows (PowerShell)
+```
+
+The installer checks the download, then starts a short setup that:
+
+1. checks this computer can be seen and controlled (and on macOS opens the Screen Recording and
+   Accessibility settings if they're off),
+2. finds your agents and connects every one: **Claude Code, Codex, Cursor, VS Code, Windsurf,
+   Claude Desktop and Gemini CLI**. It never replaces another server without asking,
+3. tells you what to ask first.
+
+Then open your agent and ask, for example: *"Use ultron-hands to open getultron.vercel.app and press
+the big red button."*
+
+| Command | What it does |
+| --- | --- |
+| `ultron-hands` | Setup again (connects agents you installed since) |
+| `ultron-hands stop` / `resume` | Kill switch: every click and keystroke is refused until you resume |
+| `ultron-hands log` | What it did, most recent last |
+| `ultron-hands doctor` | Check the screen, input and permissions |
+| `ultron-hands agents` | Which agents are connected |
+| `ultron-hands connect <agent>` / `disconnect <agent>` | One agent at a time |
+
+<details>
+<summary>Manual setup, or building from source</summary>
+
 ```sh
 cargo install --git https://github.com/ultron-hq/ultron ultron-hands
 claude mcp add -s user ultron-hands -- ultron-hands     # Claude Code
 codex mcp add ultron-hands -- ultron-hands              # Codex
 ```
 
-Codex asks before every MCP tool call. To let it use Hands without asking each time, start it with
-`codex -c 'mcp_servers.ultron-hands.default_tools_approval_mode="approve"'`; the kill switch still stops it at any moment.
+For any other MCP app, add a stdio server whose command is the path of `ultron-hands`.
+</details>
 
 It works in a loop (screenshot with the cursor marked by a red ring, act, look again to verify),
-with the safety rules below: a kill switch (`touch ~/.cache/ultron/hands.stop` on Linux), a
-read-only mode (`ULTRON_HANDS_READONLY=1`), a rate limit, no shell tool, and a local log of every
-action in which typed text is stored only as its length.
+with these safety rules: the kill switch, a read-only mode (`ULTRON_HANDS_READONLY=1`), a rate
+limit, no shell tool, and a local log of every action in which typed text is stored only as its
+length. During setup you choose whether agents may act without asking before each action; the
+kill switch stops them either way.
 
-Status: 17 of the original's 18 tools, built for Windows, macOS and Linux and tested on Linux (X11).
-Coming next: the accessibility tree (`a11y_snapshot`), window focus on Windows and macOS, and
-prebuilt binaries.
+Status: 17 of the original's 18 tools, built for Windows, macOS and Linux (X11) and tested on Linux.
+Coming next: the accessibility tree (`a11y_snapshot`), window focus on Windows and macOS, and a
+stop hotkey.
 
 ## Quick start
 

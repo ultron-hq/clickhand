@@ -5,6 +5,7 @@ import { Workstation } from "@/components/Workstation";
 import { LoopDiagram } from "@/components/LoopDiagram";
 import { LiveTimer } from "@/components/LiveTimer";
 import { KillSwitch } from "@/components/KillSwitch";
+import { InstallBox } from "@/components/InstallBox";
 
 const REPO = "https://github.com/ultron-hq/ultron";
 
@@ -73,9 +74,10 @@ export default async function Home() {
               <p className="lede">
                 Ultron is an open-source desktop agent. Press <Keys keys={["Ctrl", "Space"]} /> and ask, or give Claude Code, Codex and any MCP agent the mouse and keyboard
               </p>
+              <InstallBox />
               <div className="actions">
-                <a className="btn btn-primary" href={REPO}>View on GitHub</a>
                 <a className="btn btn-quiet" href="#demo">See it work</a>
+                <a className="btn btn-quiet" href={REPO}>View on GitHub</a>
               </div>
               <ul className="facts">
                 <li><Scale size={16} strokeWidth={1.5} aria-hidden="true" />Open source, MIT or Apache-2.0</li>
@@ -101,8 +103,8 @@ export default async function Home() {
             <p>
               Coding agents read and write files, but they can’t click. Ultron Hands is an <a href="https://modelcontextprotocol.io">MCP</a> server that lets them see the screen, move the mouse, click, scroll and type, so anything that needs a person at the computer can be handed off
             </p>
-            <pre><code><span className="c"># Claude Code</span>{"\n"}claude mcp add ultron-hands -- ultron-hands{"\n"}<span className="c"># Codex</span>{"\n"}codex mcp add ultron-hands -- ultron-hands</code></pre>
-            <p className="note">Hands runs in the original Ultron today and arrives in the Rust app with <a href={`${REPO}/blob/main/ROADMAP.md`}>wave 4</a></p>
+            <pre><code><span className="c"># 1. install, then answer the setup</span>{"\n"}curl -fsSL https://getultron.vercel.app/install.sh | sh{"\n"}<span className="c"># 2. ask your agent</span>{"\n"}"Use ultron-hands to book the 7pm table on OpenTable"{"\n"}<span className="c"># stop it any time</span>{"\n"}ultron-hands stop</code></pre>
+            <p className="note">One Rust binary for Windows, macOS and Linux. Setup finds Claude Code, Codex, Cursor, VS Code, Windsurf, Claude Desktop and Gemini CLI and connects each one</p>
           </div>
           <LoopDiagram />
           <ol className="steps">
@@ -160,7 +162,7 @@ export default async function Home() {
                 <li key={s.title}><b>{s.title}</b><p>{s.body}</p></li>
               ))}
             </ul>
-            <pre className="stop-cmd"><code><span className="c"># the real kill switch</span>{"\n"}touch ~/.cache/ultron/hands.stop</code></pre>
+            <pre className="stop-cmd"><code><span className="c"># the real kill switch</span>{"\n"}ultron-hands stop{"\n"}<span className="c"># and what it did</span>{"\n"}ultron-hands log</code></pre>
           </div>
         </section>
 

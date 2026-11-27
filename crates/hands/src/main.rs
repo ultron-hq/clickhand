@@ -16,6 +16,7 @@ mod desktop;
 mod input;
 mod log;
 mod screen;
+mod setup;
 
 use std::io::{BufRead, Write};
 use std::time::{Duration, Instant};
@@ -492,13 +493,8 @@ fn find_display() {
     }
 }
 
-fn main() {
-    if std::env::args().any(|a| a == "--version" || a == "-V") {
-        println!("ultron-hands {}", env!("CARGO_PKG_VERSION"));
-        return;
-    }
-    #[cfg(target_os = "linux")]
-    find_display();
+/// The MCP server: newline-delimited JSON-RPC on stdin/stdout.
+fn serve() {
     let tools = tools();
     let stdin = std::io::stdin();
     let mut stdout = std::io::stdout();
@@ -516,6 +512,52 @@ fn main() {
             let _ = stdout.flush();
         }
     }
+}
+
+fn main() {
+    use std::io::IsTerminal;
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    let yes = args.iter().any(|a| a == "--yes" || a == "-y");
+    let first = args
+        .iter()
+        .find(|a| !a.starts_with('-') || *a == "--version" || *a == "-V" || *a == "--help" || *a == "-h");
+    match first.map(String::as_str) {
+        Some("--version" | "-V" | "version") => {
+            println!("ultron-hands {}", env!("CARGO_PKG_VERSION"));
+            return;
+        }
+        Some("--help" | "-h" | "help") => {
+            println!("{}", setup::HELP);
+            return;
+        }
+        _ => {}
+    }
+    #[cfg(target_os = "linux")]
+    find_display();
+    let rest = |i: usize| args.iter().filter(|a| !a.starts_with('-')).nth(i).map(String::as_str);
+    let code = match first.map(String::as_str) {
+        None if std::io::stdin().is_terminal() => setup::setup(yes),
+        None | Some("serve") => {
+            serve();
+            0
+        }
+        Some("setup") => setup::setup(yes),
+        Some("doctor") => i32::from(setup::doctor() > 0),
+        Some("agents") => {
+            setup::status_list();
+            0
+        }
+        Some("connect") => setup::connect(rest(1), true, yes),
+        Some("disconnect") => setup::connect(rest(1), false, yes),
+        Some("stop") => setup::stop(true),
+        Some("resume") => setup::stop(false),
+        Some("log") => setup::show_log(rest(1).and_then(|n| n.parse().ok()).unwrap_or(20)),
+        Some(other) => {
+            eprintln!("Unknown command `{other}`.\n\n{}", setup::HELP);
+            2
+        }
+    };
+    std::process::exit(code);
 }
 
 #[cfg(test)]

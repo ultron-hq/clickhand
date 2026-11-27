@@ -446,3 +446,37 @@ main > section.build { max-width: none; padding: 0; border-top: 1px solid var(--
 .paper-total dt, .paper-total dd { color: #1d2027; font-weight: 600; }
 @media (max-width: 720px) { .pdf { display: none; } }
 .safety { overflow-x: clip; }
+
+/* ── install ── */
+.install { margin-top: 28px; max-width: 34rem; }
+.install-tabs { display: flex; gap: 4px; margin-bottom: 8px; }
+.install-tabs button {
+  height: 28px; padding: 0 10px; border-radius: 7px; border: 1px solid transparent;
+  background: none; color: var(--text-2); font: 500 13px/1 var(--sans, inherit); cursor: pointer;
+}
+.install-tabs button:hover { color: var(--text); }
+.install-tabs button.on { color: var(--text); background: var(--raised); border-color: var(--line); }
+.install-line {
+  display: flex; align-items: center; gap: 10px; padding: 6px 6px 6px 14px;
+  background: rgba(7, 8, 13, 0.82); backdrop-filter: blur(8px);
+  border: 1px solid var(--line-2); border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.install-prompt { font: 400 14px/1 var(--mono); color: var(--ember); user-select: none; }
+.install-line code {
+  flex: 1; min-width: 0; overflow-x: auto; white-space: nowrap; scrollbar-width: none;
+  font: 400 12.5px/36px var(--mono); color: var(--text); letter-spacing: -0.01em;
+}
+.install-line code::-webkit-scrollbar { display: none; }
+.install-copy {
+  flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 7px;
+  border: 1px solid var(--line); background: var(--raised); color: var(--text-2); cursor: pointer;
+}
+.install-copy:hover { color: var(--text); border-color: var(--line-2); }
+.install-copy:focus-visible, .install-tabs button:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+.install-note { margin-top: 10px; font-size: 13px; line-height: 20px; color: var(--muted); }
+.hero .install + .actions { margin-top: 20px; }
+.hero-copy, .install { min-width: 0; }
+@media (max-width: 640px) {
+  .install-line code { white-space: normal; overflow-wrap: anywhere; line-height: 20px; padding: 8px 0; }
+}
