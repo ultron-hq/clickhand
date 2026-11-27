@@ -2,7 +2,7 @@
 //! agent is using Hands, a tag beside the pointer whenever it moves the mouse or types,
 //! and captioned boxes for teaching ("click here"). Every overlay is click-through and
 //! hidden while a screenshot is taken, so the agent never sees or hits it.
-//! Linux (X11) for now; on other systems these calls do nothing yet.
+//! Linux (X11) and Windows; on macOS these calls do nothing yet.
 //! Set ULTRON_HANDS_OVERLAY=0 to turn it off.
 use std::time::Duration;
 
@@ -15,20 +15,22 @@ pub fn enabled() -> bool {
     std::env::var("ULTRON_HANDS_OVERLAY").as_deref() != Ok("0")
 }
 
+#[cfg(windows)]
+pub use win::{activity, clear, hidden, highlight};
 #[cfg(target_os = "linux")]
 pub use x::{activity, clear, hidden, highlight};
 
-#[cfg(not(target_os = "linux"))]
+#[cfg(not(any(target_os = "linux", windows)))]
 pub fn activity(_input: bool) {}
-#[cfg(not(target_os = "linux"))]
+#[cfg(not(any(target_os = "linux", windows)))]
 pub fn hidden<T>(f: impl FnOnce() -> T) -> T {
     f()
 }
-#[cfg(not(target_os = "linux"))]
+#[cfg(not(any(target_os = "linux", windows)))]
 pub fn highlight(_x: i32, _y: i32, _w: i32, _h: i32, _caption: &str, _secs: f64) -> bool {
     false
 }
-#[cfg(not(target_os = "linux"))]
+#[cfg(not(any(target_os = "linux", windows)))]
 pub fn clear() {}
 
 /// Split a caption into lines of at most `width` characters (ASCII; others become '?').
@@ -365,6 +367,333 @@ mod x {
         if let Some(o) = OVERLAY.as_ref() {
             o.state().box_until = None;
         }
+    }
+}
+
+/// Windows: topmost, layered, click-through (WS_EX_TRANSPARENT) tool windows on their own
+/// thread. They are excluded from screen capture (WDA_EXCLUDEFROMCAPTURE, Windows 10 2004+),
+/// so the agent's screenshots never contain them; older Windows hides them instead.
+#[cfg(windows)]
+mod win {
+    use std::sync::{LazyLock, Mutex, MutexGuard};
+    use std::time::{Duration, Instant};
+
+    use windows_sys::Win32::Foundation::{HWND, LPARAM, LRESULT, POINT, RECT, SIZE, WPARAM};
+    use windows_sys::Win32::Graphics::Gdi::*;
+    use windows_sys::Win32::System::LibraryLoader::GetModuleHandleW;
+    use windows_sys::Win32::UI::WindowsAndMessaging::*;
+
+    use super::{wrap, FRAME_FOR, TAG_FOR};
+
+    /// COLORREF is 0x00BBGGRR.
+    const EMBER: u32 = 0x002f_7aff;
+    const INK: u32 = 0x0009_0b16;
+    const TEXT: u32 = 0x00e8_f1ff;
+    const EDGE: i32 = 4;
+    const LINE: i32 = 18;
+    const TAG: &str = "Ultron is using your mouse";
+
+    type Rect = (i32, i32, i32, i32);
+
+    #[derive(Default)]
+    struct State {
+        frame_until: Option<Instant>,
+        tag_until: Option<Instant>,
+        box_until: Option<Instant>,
+        caption: Vec<String>,
+        /// frame and caption rectangles (x, y, w, h), placed by the next tick
+        boxes: Option<(Rect, Rect)>,
+        hidden: bool,
+        excluded: bool,
+        /// edge ring, tag, frame, caption (HWNDs as isize so the state is Send)
+        wins: [isize; 4],
+        shown: [bool; 4],
+        font: isize,
+        tag_w: i32,
+    }
+
+    static STATE: LazyLock<Mutex<State>> = LazyLock::new(|| Mutex::new(State::default()));
+    static READY: LazyLock<bool> = LazyLock::new(|| {
+        if !super::enabled() {
+            return false;
+        }
+        let (tx, rx) = std::sync::mpsc::channel();
+        std::thread::spawn(move || unsafe { run(tx) });
+        rx.recv_timeout(Duration::from_secs(3)).unwrap_or(false)
+    });
+
+    fn state() -> MutexGuard<'static, State> {
+        STATE.lock().unwrap_or_else(|e| e.into_inner())
+    }
+
+    fn wide(s: &str) -> Vec<u16> {
+        s.encode_utf16().chain([0]).collect()
+    }
+
+    fn hwnd(v: isize) -> HWND {
+        v as HWND
+    }
+
+    unsafe fn text_width(font: isize, s: &str) -> i32 {
+        let dc = GetDC(std::ptr::null_mut());
+        let old = SelectObject(dc, font as HGDIOBJ);
+        let w: Vec<u16> = s.encode_utf16().collect();
+        let mut size = SIZE { cx: 0, cy: 0 };
+        GetTextExtentPoint32W(dc, w.as_ptr(), w.len() as i32, &mut size);
+        SelectObject(dc, old);
+        ReleaseDC(std::ptr::null_mut(), dc);
+        size.cx
+    }
+
+    /// A window-shaped ring: the rectangle minus its inside, `t` pixels thick.
+    unsafe fn ring(h: HWND, w: i32, hh: i32, t: i32) {
+        let outer = CreateRectRgn(0, 0, w, hh);
+        let inner = CreateRectRgn(t, t, w - t, hh - t);
+        let r = CreateRectRgn(0, 0, 0, 0);
+        CombineRgn(r, outer, inner, RGN_DIFF);
+        DeleteObject(outer as HGDIOBJ);
+        DeleteObject(inner as HGDIOBJ);
+        SetWindowRgn(h, r, 1);
+    }
+
+    unsafe fn place(h: HWND, x: i32, y: i32, w: i32, hh: i32) {
+        SetWindowPos(h, HWND_TOPMOST, x, y, w, hh, SWP_NOACTIVATE | SWP_SHOWWINDOW);
+    }
+
+    unsafe extern "system" fn proc(h: HWND, msg: u32, wp: WPARAM, lp: LPARAM) -> LRESULT {
+        match msg {
+            WM_NCHITTEST => HTTRANSPARENT as LRESULT,
+            WM_TIMER => {
+                tick();
+                0
+            }
+            WM_PAINT => {
+                let mut ps: PAINTSTRUCT = std::mem::zeroed();
+                let dc = BeginPaint(h, &mut ps);
+                let mut rc: RECT = std::mem::zeroed();
+                GetClientRect(h, &mut rc);
+                let (lines, font, dark) = {
+                    let st = state();
+                    let v = h as isize;
+                    if v == st.wins[1] {
+                        (vec![TAG.to_string()], st.font, true)
+                    } else if v == st.wins[3] {
+                        (st.caption.clone(), st.font, true)
+                    } else {
+                        (vec![], st.font, false)
+                    }
+                };
+                let brush = CreateSolidBrush(if dark { INK } else { EMBER });
+                FillRect(dc, &rc, brush);
+                DeleteObject(brush as HGDIOBJ);
+                if dark {
+                    let edge = CreateSolidBrush(EMBER);
+                    FrameRect(dc, &rc, edge);
+                    DeleteObject(edge as HGDIOBJ);
+                    SelectObject(dc, font as HGDIOBJ);
+                    SetBkMode(dc, TRANSPARENT as _);
+                    SetTextColor(dc, TEXT);
+                    for (i, l) in lines.iter().enumerate() {
+                        let w: Vec<u16> = l.encode_utf16().collect();
+                        TextOutW(dc, 9, 3 + i as i32 * LINE, w.as_ptr(), w.len() as i32);
+                    }
+                }
+                EndPaint(h, &ps);
+                0
+            }
+            _ => DefWindowProcW(h, msg, wp, lp),
+        }
+    }
+
+    unsafe fn run(ready: std::sync::mpsc::Sender<bool>) {
+        let inst = GetModuleHandleW(std::ptr::null());
+        let class = wide("UltronHandsOverlay");
+        let wc = WNDCLASSW {
+            style: 0,
+            lpfnWndProc: Some(proc),
+            cbClsExtra: 0,
+            cbWndExtra: 0,
+            hInstance: inst,
+            hIcon: std::ptr::null_mut(),
+            hCursor: std::ptr::null_mut(),
+            hbrBackground: std::ptr::null_mut(),
+            lpszMenuName: std::ptr::null(),
+            lpszClassName: class.as_ptr(),
+        };
+        RegisterClassW(&wc);
+        let title = wide("ultron-hands overlay");
+        let ex = WS_EX_LAYERED | WS_EX_TRANSPARENT | WS_EX_TOPMOST | WS_EX_TOOLWINDOW | WS_EX_NOACTIVATE;
+        let mut wins = [0isize; 4];
+        let mut excluded = true;
+        for w in wins.iter_mut() {
+            let h = CreateWindowExW(
+                ex,
+                class.as_ptr(),
+                title.as_ptr(),
+                WS_POPUP,
+                0,
+                0,
+                1,
+                1,
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+                inst,
+                std::ptr::null(),
+            );
+            if h.is_null() {
+                let _ = ready.send(false);
+                return;
+            }
+            SetLayeredWindowAttributes(h, 0, 245, LWA_ALPHA);
+            excluded &= SetWindowDisplayAffinity(h, WDA_EXCLUDEFROMCAPTURE) != 0;
+            *w = h as isize;
+        }
+        let face = wide("Segoe UI");
+        let font = CreateFontW(
+            -15,
+            0,
+            0,
+            0,
+            FW_SEMIBOLD as i32,
+            0,
+            0,
+            0,
+            DEFAULT_CHARSET as u32,
+            OUT_DEFAULT_PRECIS as u32,
+            CLIP_DEFAULT_PRECIS as u32,
+            CLEARTYPE_QUALITY as u32,
+            DEFAULT_PITCH as u32,
+            face.as_ptr(),
+        ) as isize;
+        let (sw, sh) = (GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+        ring(hwnd(wins[0]), sw, sh, EDGE);
+        SetWindowPos(hwnd(wins[0]), HWND_TOPMOST, 0, 0, sw, sh, SWP_NOACTIVATE | SWP_HIDEWINDOW);
+        {
+            let mut st = state();
+            st.wins = wins;
+            st.excluded = excluded;
+            st.font = font;
+            st.tag_w = text_width(font, TAG) + 20;
+        }
+        SetTimer(hwnd(wins[0]), 1, 33, None);
+        let _ = ready.send(true);
+        let mut msg: MSG = std::mem::zeroed();
+        while GetMessageW(&mut msg, std::ptr::null_mut(), 0, 0) > 0 {
+            TranslateMessage(&msg);
+            DispatchMessageW(&msg);
+        }
+    }
+
+    unsafe fn show(st: &mut State, i: usize, on: bool) {
+        let h = hwnd(st.wins[i]);
+        if on && !st.shown[i] {
+            SetWindowPos(
+                h,
+                HWND_TOPMOST,
+                0,
+                0,
+                0,
+                0,
+                SWP_NOACTIVATE | SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW,
+            );
+        } else if !on && st.shown[i] {
+            ShowWindow(h, SW_HIDE);
+        }
+        st.shown[i] = on;
+    }
+
+    unsafe fn tick() {
+        let now = Instant::now();
+        let mut st = state();
+        let live = |t: Option<Instant>| !st.hidden && t.is_some_and(|t| now < t);
+        let (frame_on, tag_on, box_on) = (live(st.frame_until), live(st.tag_until), live(st.box_until));
+        if let Some(((fx, fy, fw, fh), (cx, cy, cw, ch))) = st.boxes.take() {
+            ring(hwnd(st.wins[2]), fw, fh, 3);
+            place(hwnd(st.wins[2]), fx, fy, fw, fh);
+            place(hwnd(st.wins[3]), cx, cy, cw, ch);
+            st.shown[2] = true;
+            st.shown[3] = true;
+            InvalidateRect(hwnd(st.wins[3]), std::ptr::null(), 1);
+        }
+        if tag_on {
+            let mut p = POINT { x: 0, y: 0 };
+            GetCursorPos(&mut p);
+            let (sw, sh) = (GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN));
+            let w = st.tag_w;
+            let mut x = p.x + 20;
+            let mut y = p.y + 22;
+            if x + w > sw - 8 {
+                x = p.x - w - 12;
+            }
+            if y + 26 > sh - 8 {
+                y = p.y - 36;
+            }
+            place(hwnd(st.wins[1]), x, y, w, 24);
+            st.shown[1] = true;
+        }
+        show(&mut st, 0, frame_on || tag_on);
+        show(&mut st, 1, tag_on);
+        show(&mut st, 2, box_on);
+        let has_caption = !st.caption.is_empty();
+        show(&mut st, 3, box_on && has_caption);
+    }
+
+    pub fn activity(input: bool) {
+        if !*READY {
+            return;
+        }
+        let now = Instant::now();
+        let mut st = state();
+        st.frame_until = Some(now + FRAME_FOR);
+        if input {
+            st.tag_until = Some(now + TAG_FOR);
+        }
+    }
+
+    pub fn hidden<T>(f: impl FnOnce() -> T) -> T {
+        if !*READY || state().excluded {
+            return f();
+        }
+        {
+            let mut st = state();
+            st.hidden = true;
+            for i in 0..4 {
+                unsafe { ShowWindow(hwnd(st.wins[i]), SW_HIDE) };
+                st.shown[i] = false;
+            }
+        }
+        std::thread::sleep(Duration::from_millis(60));
+        let out = f();
+        state().hidden = false;
+        out
+    }
+
+    pub fn highlight(x: i32, y: i32, w: i32, h: i32, caption: &str, secs: f64) -> bool {
+        if !*READY {
+            return false;
+        }
+        let (t, pad) = (3, 4);
+        let frame = (x - pad - t, y - pad - t, w + 2 * (pad + t), h + 2 * (pad + t));
+        let lines = wrap(caption, 52, 5);
+        let mut st = state();
+        let font = st.font;
+        let cw = lines.iter().map(|l| unsafe { text_width(font, l) }).max().unwrap_or(0) + 20;
+        let ch = lines.len() as i32 * LINE + 8;
+        let (sw, sh) = unsafe { (GetSystemMetrics(SM_CXSCREEN), GetSystemMetrics(SM_CYSCREEN)) };
+        let cx = frame.0.clamp(8, (sw - cw - 8).max(8));
+        let cy = if frame.1 + frame.3 + 6 + ch < sh - 8 {
+            frame.1 + frame.3 + 6
+        } else {
+            (frame.1 - ch - 6).max(8)
+        };
+        st.caption = lines;
+        st.boxes = Some((frame, (cx, cy, cw, ch)));
+        st.box_until = Some(Instant::now() + Duration::from_secs_f64(secs.clamp(0.0, 120.0)));
+        true
+    }
+
+    pub fn clear() {
+        state().box_until = None;
     }
 }
 

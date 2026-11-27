@@ -68,6 +68,13 @@ class Server:
         self.p.wait(timeout=10)
 
 
+def _cls(u, h):
+    import ctypes
+    buf = ctypes.create_unicode_buffer(64)
+    u.GetClassNameW(h, buf, 64)
+    return buf.value
+
+
 shots = 0
 
 
@@ -155,6 +162,25 @@ def main():
         time.sleep(0.5)
     got = open(out_file).read() if os.path.exists(out_file) else None
     check("the window received exactly the typed text", got == TEXT, repr(got))
+
+    # Teach overlay: a captioned box the person sees but the agent's screenshots don't.
+    if sys.platform in ("linux", "win32"):
+        err, text, _ = s.call("screenshot")
+        err, text, _ = s.call("highlight", x0=200, y0=200, x1=420, y1=260, caption="Click here", seconds=8)
+        check("highlight shows a box", not err and "Showing a box" in text, text[:150])
+        time.sleep(0.5)
+        if sys.platform == "win32":
+            import ctypes
+            u = ctypes.windll.user32
+            found = []
+            proc = ctypes.WINFUNCTYPE(ctypes.c_bool, ctypes.c_void_p, ctypes.c_void_p)(
+                lambda h, _: found.append(h) or True if u.IsWindowVisible(h) and _cls(u, h) == "UltronHandsOverlay" else True)
+            u.EnumWindows(proc, 0)
+            check("overlay windows are on screen", len(found) >= 2, f"{len(found)} visible")
+        err, text, imgs = s.call("screenshot")
+        save(imgs, "agent-view-with-highlight")
+        err, text, _ = s.call("highlight", x0=0, y0=0, x1=1, y1=1, seconds=0)
+        check("highlight clears", not err, text[:80])
 
     subprocess.run([BIN, "stop"], capture_output=True)
     err, text, _ = s.call("move_mouse", x=10, y=10)
