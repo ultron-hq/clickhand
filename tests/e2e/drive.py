@@ -150,7 +150,7 @@ def main():
         err, text, imgs = s.call("click", x=x, y=y)
         check("click into the window", not err, text)
         save(imgs, "clicked")
-    err, text, _ = s.call("type_text", text=TEXT, look=False)
+    err, text, _ = s.call("type_text", text=TEXT, delay_ms=15, look=False)
     check("type_text", not err, text)
     err, text, imgs = s.call("screenshot")
     save(imgs, "typed")

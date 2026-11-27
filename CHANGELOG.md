@@ -5,6 +5,13 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.4] - 2026-11-27
+
+### Added
+- The screen frame, pointer tag and Teach highlights now work on Windows too, kept out of the agent's screenshots by Windows itself (WDA_EXCLUDEFROMCAPTURE).
+- `ultron-post` skill: write and publish posts, replies and threads on X, LinkedIn, Threads and Bluesky from your own logged-in browser. It drafts first, checks the length, attaches media before typing, verifies the post went up, and posts only when you asked.
+- `type_text` takes `delay_ms` to type one character at a time, for sites that drop fast keystrokes.
+
 ## [0.1.3] - 2026-11-27
 
 ### Added

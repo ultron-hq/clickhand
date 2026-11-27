@@ -431,6 +431,7 @@ fn codex_approve(file: &Path) -> std::io::Result<()> {
 const SKILLS: &[(&str, &str)] = &[
     ("ultron-hands", include_str!("../skills/ultron-hands/SKILL.md")),
     ("ultron-teach", include_str!("../skills/ultron-teach/SKILL.md")),
+    ("ultron-post", include_str!("../skills/ultron-post/SKILL.md")),
 ];
 const MANAGED: &str = "Installed by ultron-hands setup.";
 
@@ -472,7 +473,10 @@ pub fn skills() -> i32 {
     let mut code = 0;
     for (agent, dir) in dirs {
         match install_skills(&dir) {
-            Ok(_) => good(&format!("{agent}: skills ultron-hands and ultron-teach in {}", dir.display())),
+            Ok(_) => good(&format!(
+                "{agent}: skills ultron-hands, ultron-teach and ultron-post in {}",
+                dir.display()
+            )),
             Err(e) => {
                 bad(&format!("{agent}: {e}"));
                 code = 1;
@@ -669,7 +673,7 @@ pub fn setup(yes: bool) -> i32 {
 
     for (agent, dir) in skill_dirs() {
         match install_skills(&dir) {
-            Ok(_) => good(&format!("{agent}: skills /ultron-hands and /ultron-teach")),
+            Ok(_) => good(&format!("{agent}: skills /ultron-hands, /ultron-teach and /ultron-post")),
             Err(e) => warn(&format!("{agent}: couldn't add the skills ({e})")),
         }
     }
@@ -805,7 +809,7 @@ Usage: ultron-hands [command]
   stop                kill switch: refuse every action until `resume`
   resume              turn the kill switch off
   log [n]             the last n actions (default 20)
-  skills              (re)install the ultron-hands and ultron-teach agent skills
+  skills              (re)install the ultron-hands, ultron-teach and ultron-post skills
   serve               run the MCP server on stdin/stdout (what agents start)
   --version           print the version
 
@@ -818,7 +822,7 @@ mod tests {
     #[test]
     fn skills_install_and_respect_edits() {
         let dir = std::env::temp_dir().join(format!("uh-skills-{}", std::process::id()));
-        assert_eq!(install_skills(&dir).unwrap(), 2);
+        assert_eq!(install_skills(&dir).unwrap(), 3);
         assert_eq!(install_skills(&dir).unwrap(), 0, "unchanged copies are left alone");
         let teach = dir.join("ultron-teach/SKILL.md");
         assert!(std::fs::read_to_string(&teach).unwrap().starts_with("---\nname: ultron-teach\n"));

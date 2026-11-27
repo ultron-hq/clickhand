@@ -143,7 +143,7 @@ fn tools() -> Vec<Tool> {
         Tool { name: "scroll", input: true, description: "Scroll the wheel (up/down/left/right) 1-15 notches, optionally over (x,y).",
             params: vec![opt("direction", "string", json!("down")), opt("amount", "integer", json!(3)), maybe("x", "integer"), maybe("y", "integer"), look(true)] },
         Tool { name: "key", input: true, description: "Press one chord: 'ctrl+l', 'alt+f4', 'enter', 'ctrl+shift+t', 'pagedown', 'f5'.\nFor several keys in sequence, call repeatedly.", params: vec![req("keys", "string"), look(true)] },
-        Tool { name: "type_text", input: true, description: "Type text into the focused control (newlines press Enter). Never type passwords or\nsecrets. Click the target field first and verify focus in the screenshot.", params: vec![req("text", "string"), look(true)] },
+        Tool { name: "type_text", input: true, description: "Type text into the focused control (newlines press Enter). Never type passwords or\nsecrets. Click the target field first and verify focus in the screenshot. delay_ms types\none character at a time with that pause (use ~30 on sites that drop fast keystrokes).", params: vec![req("text", "string"), opt("delay_ms", "integer", json!(0)), look(true)] },
         Tool { name: "focus_window", input: true, description: "Bring a window to the front by id (from list_windows) or a title substring. Verifies\nfocus really changed (falls back to raise + focus, then checks the active window).",
             params: vec![maybe("window_id", "integer"), maybe("title", "string"), look(true)] },
         Tool { name: "list_apps", input: false, description: "Installed GUI applications (names accepted by open_app), optionally filtered.", params: vec![opt("query", "string", json!(""))] },
@@ -334,7 +334,7 @@ fn call(name: &str, a: &Args) -> Out {
             if text.chars().any(|c| ((c as u32) < 32 && c != '\n' && c != '\t') || c as u32 == 127) {
                 return Err(HandsError::new("Text contains control characters; use key() for those."));
             }
-            input::type_text(&text)?;
+            input::type_text(&text, a.opt_int("delay_ms").unwrap_or(0).clamp(0, 500) as u64)?;
             after(format!("typed {} characters", text.chars().count()), a.bool("look"))
         }
         "focus_window" => {

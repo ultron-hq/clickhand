@@ -236,8 +236,9 @@ pub fn chord(keys: &[Key]) -> Result<(), HandsError> {
     result
 }
 
-/// Type text; newlines press Enter, tabs become four spaces.
-pub fn type_text(text: &str) -> Result<(), HandsError> {
+/// Type text; newlines press Enter, tabs become four spaces. With `delay_ms`, one
+/// character at a time with that pause (some sites drop or reorder fast input).
+pub fn type_text(text: &str, delay_ms: u64) -> Result<(), HandsError> {
     let mut e = enigo()?;
     for (i, line) in text.split('\n').enumerate() {
         if i > 0 {
@@ -245,6 +246,13 @@ pub fn type_text(text: &str) -> Result<(), HandsError> {
         }
         let line = line.replace('\t', "    ");
         let chars: Vec<char> = line.chars().collect();
+        if delay_ms > 0 {
+            for c in &chars {
+                e.text(&c.to_string()).map_err(fail)?;
+                sleep(Duration::from_millis(delay_ms));
+            }
+            continue;
+        }
         for chunk in chars.chunks(32) {
             e.text(&chunk.iter().collect::<String>()).map_err(fail)?;
             sleep(Duration::from_millis(8));
