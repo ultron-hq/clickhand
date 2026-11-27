@@ -1,0 +1,38 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>Ultron</title></head>
+<body>
+<div class="island" id="island" title="Click or press Ctrl+Space to ask Ultron">
+  <img src="logo.png" alt="">
+  <div class="flip" id="flip"></div>
+  <div class="meta"><span id="label"></span><small id="hint">Ctrl+Space</small></div>
+</div>
+<script>
+const { invoke } = window.__TAURI__.core;
+const flip = document.getElementById("flip"), label = document.getElementById("label"), hint = document.getElementById("hint"), island = document.getElementById("island");
+const two = (n) => String(n).padStart(2, "0");
+function draw(a, b) {
+  flip.innerHTML = `<b>${a[0]}</b><b>${a[1]}</b><i>:</i><b>${b[0]}</b><b>${b[1]}</b>`;
+}
+async function tick() {
+  let c;
+  try { c = await invoke("clock"); } catch { return; }
+  const now = Date.now() / 1000;
+  island.classList.toggle("paused", c.paused_at != null);
+  if (!c.kind) {
+    const d = new Date();
+    draw(two(d.getHours()), two(d.getMinutes()));
+    label.textContent = "";
+    return;
+  }
+  const end = c.paused_at ?? now;
+  const elapsed = Math.max(0, end - c.started - c.paused_total);
+  let s = c.kind === "timer" ? Math.max(0, Math.ceil(c.planned - elapsed)) : Math.floor(elapsed);
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  if (h > 0) draw(two(h), two(m)); else draw(two(m), two(sec));
+  label.textContent = c.label || (c.kind === "timer" ? "timer" : "stopwatch");
+}
+invoke("shortcut").then((k) => { if (k) hint.textContent = k; });
+island.addEventListener("click", () => invoke("toggle_bar"));
+tick(); setInterval(tick, 500);
+</script>
+</body></html>
