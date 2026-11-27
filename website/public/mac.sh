@@ -36,8 +36,14 @@ cleanup() {
 trap cleanup EXIT INT TERM
 
 say "Downloading Clickhand for $( [ "$arch" = arm64 ] && echo 'Apple silicon' || echo 'Intel' )…"
-curl -fL --progress-bar "https://github.com/$REPO/releases/latest/download/$asset" -o "$tmp/$asset" \
-  || die "couldn't download $asset"
+# The newest release has the app a few minutes after it's published; until then, use the
+# newest release that has it.
+if ! curl -fsL "https://github.com/$REPO/releases/latest/download/$asset" -o "$tmp/$asset"; then
+  url=$(curl -fsSL "https://api.github.com/repos/$REPO/releases?per_page=10" \
+    | grep -o "\"browser_download_url\": *\"[^\"]*/$asset\"" | head -1 | sed 's/.*"\(https[^"]*\)"/\1/')
+  [ -n "$url" ] || die "couldn't find $asset in the releases"
+  curl -fL --progress-bar "$url" -o "$tmp/$asset" || die "couldn't download $asset"
+fi
 
 hdiutil attach "$tmp/$asset" -nobrowse -noautoopen -quiet -mountpoint "$mnt" || die "couldn't open the disk image"
 app=$(find "$mnt" -maxdepth 1 -name "*.app" | head -1)

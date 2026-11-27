@@ -22,12 +22,12 @@ function Keys({ keys }: { keys: string[] }) {
 }
 
 const APP = [
-  { icon: Keyboard, title: "Prompt bar", body: <>Opens in the middle of the screen on <Keys keys={["Ctrl", "Space"]} />, or beside your cursor with Shift</> },
-  { icon: Timer, title: "Timers and focus time", body: "Start a timer by asking. Every session is logged, so you can ask how much you worked this week" },
-  { icon: BookMarked, title: "Memory", body: "Tell it a fact or a phrase once. It keeps the plans that worked and takes corrections like “no, I meant…”" },
-  { icon: Cpu, title: "Your choice of model", body: "Claude Code, Codex, a local model through Ollama, or an API key from any provider, one per job" },
-  { icon: Mic, title: "Voice", body: "Push to talk with Whisper on your machine, or a live conversation with Gemini" },
-  { icon: Puzzle, title: "Abilities it writes", body: "Ask for a tool it lacks and it builds one, sandboxed in WebAssembly with only the permissions you grant" },
+  { icon: Keyboard, title: "Prompt bar", body: <>Opens in the middle of the screen on <Keys keys={["Ctrl", "Space"]} />, or click the clock</> },
+  { icon: Timer, title: "Timers and focus time", body: "Start a timer or stopwatch by asking. The clock counts it down and every session is logged" },
+  { icon: Cpu, title: "Your AI does the rest", body: "Anything else goes to Claude Code or Codex, which can use the computer through Clickhand" },
+  { icon: BookMarked, title: "Memory", body: "Tell it a fact or a phrase once. It keeps the plans that worked and takes corrections like “no, I meant…”", soon: true },
+  { icon: Mic, title: "Voice", body: "Push to talk with Whisper on your machine, or a live conversation with Gemini", soon: true },
+  { icon: Puzzle, title: "Abilities it writes", body: "Ask for a tool it lacks and it builds one, sandboxed in WebAssembly with only the permissions you grant", soon: true },
 ];
 
 const SKILLS = [
@@ -61,8 +61,8 @@ const SAFETY = [
 const MODELS = [
   ["Claude Code CLI", "Your Claude plan, no key", "Default"],
   ["Codex CLI", "Your ChatGPT plan", ""],
-  ["Ollama, LM Studio, llama.cpp", "Runs on your machine", "Offline"],
-  ["Anthropic, OpenAI, Gemini, OpenRouter", "An API key in your OS keychain", ""],
+  ["Ollama, LM Studio, llama.cpp", "Runs on your machine", "Coming"],
+  ["Anthropic, OpenAI, Gemini, OpenRouter", "An API key in your OS keychain", "Coming"],
 ];
 
 export const revalidate = 3600;
@@ -158,10 +158,10 @@ export default async function Home() {
             <h2>Clickhand, the app</h2>
             <p className="intro">A flip clock that lives at the top of your screen and answers when you talk to it</p>
             <ul className="rows">
-              {APP.map(({ icon: Icon, title, body }) => (
+              {APP.map(({ icon: Icon, title, body, soon }) => (
                 <li key={title}>
                   <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
-                  <div><b>{title}</b><p>{body}</p></div>
+                  <div><b>{title}{soon && <em className="soon">Coming</em>}</b><p>{body}</p></div>
                 </li>
               ))}
             </ul>
@@ -171,7 +171,7 @@ export default async function Home() {
         <section className="models">
           <div className="models-head">
             <h2>Bring the model you already pay for</h2>
-            <p className="intro">One model for routing, another for desktop tasks, a third for research. Mix them freely</p>
+            <p className="intro">Clickhand works with the AI apps you already have. Claude Code and Codex today, local models and API keys next</p>
           </div>
           <ul className="providers">
             {MODELS.map(([p, n, tag]) => (
@@ -201,7 +201,7 @@ export default async function Home() {
           <div className="build-inner">
             <h2>Build it with us</h2>
             <p>MIT or Apache-2.0, written in Rust with a Tauri interface. Every piece of the rewrite is checked against the original app before it ships, and the open pieces are listed as issues</p>
-            <pre><code>git clone {REPO}{"\n"}cd ultron && cargo build --release{"\n"}./target/release/ultron-rs --help</code></pre>
+            <pre><code>git clone {REPO}{"\n"}cd clickhand && cargo build --release{"\n"}./target/release/clickhand doctor</code></pre>
             <div className="actions">
               <a className="btn btn-primary" href={`${REPO}/issues`}>Pick an issue</a>
               <a className="btn btn-quiet" href={`${REPO}/blob/main/CONTRIBUTING.md`}>Contributing guide</a>

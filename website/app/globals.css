@@ -552,3 +552,4 @@ main > section.hero .hero-inner { padding-bottom: 150px; }
 .clip-frame video { display: block; width: 100%; aspect-ratio: 1280 / 650; object-fit: cover; background: var(--deep); }
 .hero-clip figcaption { font-size: 14px; line-height: 20px; color: var(--muted); text-align: center; }
 @media (max-width: 760px) { .hero-clip { margin-top: -48px; padding: 0 16px; } main > section.hero .hero-inner { padding-bottom: 72px; } }
+.rows em.soon { margin-left: 8px; padding: 2px 7px; border-radius: 999px; font: 500 11px/1.4 var(--mono); font-style: normal; color: var(--muted); border: 1px solid var(--line-2); vertical-align: 2px; }

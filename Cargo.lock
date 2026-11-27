@@ -621,6 +621,7 @@ dependencies = [
 name = "clickhand-app"
 version = "0.2.1"
 dependencies = [
+ "gtk",
  "regex",
  "serde",
  "tauri",

@@ -169,6 +169,23 @@ fn toggle(app: &AppHandle) {
 /// Place a window horizontally centred on the primary monitor, `top` logical px down.
 fn place(app: &AppHandle, label: &str, top: f64) {
     let Some(w) = app.get_webview_window(label) else { return };
+    // Some window managers grow small undecorated windows; the island must stay its own
+    // size, or its invisible part would block clicks on whatever is under it.
+    if label == "island" {
+        let _ = w.set_size(tauri::LogicalSize::new(236.0, 52.0));
+        // GTK gives the webview a 200 px minimum height; ask for the island's own size.
+        #[cfg(target_os = "linux")]
+        {
+            use gtk::prelude::{GtkWindowExt, WidgetExt};
+            if let Ok(gw) = w.gtk_window() {
+                gw.set_size_request(236, 52);
+                gw.resize(236, 52);
+            }
+            if let Ok(vbox) = w.default_vbox() {
+                vbox.set_size_request(236, 52);
+            }
+        }
+    }
     let Ok(Some(m)) = w.primary_monitor() else { return };
     let (size, pos, scale) = (m.size(), m.position(), m.scale_factor());
     let Ok(ws) = w.outer_size() else { return };

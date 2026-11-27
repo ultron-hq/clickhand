@@ -106,7 +106,7 @@ export default async function Docs() {
             <h2>Setup and agents</h2>
             <p>Running <code>clickhand</code> in a terminal walks you through three steps:</p>
             <ol>
-              <li><b>Checks this computer:</b> it can find the screen, take screenshots and move the mouse. On macOS it opens the Screen Recording and Accessibility settings when they are off</li>
+              <li><b>Checks this computer:</b> it can find the screen, take screenshots and move the mouse. On a Mac, install the app (<code>mac.sh</code>): its welcome window asks macOS for Screen Recording and Accessibility once, for Clickhand, and every AI app then works through it instead of each needing its own permission</li>
               <li><b>Connects your agents:</b> every one it finds below. It merges into your existing config, keeps a one-time <code>.bak</code>, and never replaces another server named <code>clickhand</code> without asking. It also asks once whether agents may act without confirming each step; the kill switch stops them either way</li>
               <li><b>Tells you what to ask first</b>, and installs the three skills into Claude Code and Codex</li>
             </ol>
@@ -210,10 +210,12 @@ export default async function Docs() {
                 <thead><tr><th></th><th>Linux (X11)</th><th>Windows</th><th>macOS</th></tr></thead>
                 <tbody>
                   <tr><td>See, click, type, scroll, keys</td><td>Yes</td><td>Yes</td><td>Yes (Apple silicon and Intel)</td></tr>
-                  <tr><td>Screen frame and pointer tag</td><td>Yes</td><td>Yes</td><td>Coming</td></tr>
-                  <tr><td>Teach highlights</td><td>Yes</td><td>Yes</td><td>Coming</td></tr>
+                  <tr><td>Screen frame and pointer tag</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                  <tr><td>Teach highlights</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                   <tr><td>List windows</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                   <tr><td>Focus a window</td><td>Yes</td><td>Coming</td><td>Coming</td></tr>
+                  <tr><td>The desktop app (island, Ctrl+Space)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                  <tr><td>Permissions asked once, for Clickhand</td><td>n/a</td><td>n/a</td><td>Yes, with the app</td></tr>
                 </tbody>
               </table>
             </div>
