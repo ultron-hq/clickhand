@@ -1,10 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Menu, X, Star } from "lucide-react";
 
 const LINKS = [
   { id: "demo", label: "Demo" },
+  { id: "skills", label: "Skills" },
   { id: "hands", label: "Hands" },
   { id: "app", label: "The app" },
   { id: "safety", label: "Safety" },
@@ -15,6 +17,7 @@ export function Header({ repo, stars }: { repo: string; stars: number | null }) 
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const bar = useRef<HTMLSpanElement>(null);
+  const path = usePathname();
 
   useEffect(() => {
     // which section is on screen
@@ -57,11 +60,11 @@ export function Header({ repo, stars }: { repo: string; stars: number | null }) 
         </a>
         <nav className="nav-links" aria-label="Main">
           {LINKS.map(({ id, label }) => (
-            <a key={id} href={`#${id}`} aria-current={active === id ? "true" : undefined} onClick={() => setOpen(false)}>
+            <a key={id} href={path === "/" ? `#${id}` : `/#${id}`} aria-current={active === id ? "true" : undefined} onClick={() => setOpen(false)}>
               {label}
             </a>
           ))}
-          <a href={`${repo}/blob/main/ROADMAP.md`} onClick={() => setOpen(false)}>Roadmap</a>
+          <a href="/docs" aria-current={path.startsWith("/docs") ? "page" : undefined} onClick={() => setOpen(false)}>Docs</a>
         </nav>
         <div className="nav-end">
           <a className="btn btn-quiet btn-sm" href={repo}>

@@ -6,8 +6,9 @@ import { LoopDiagram } from "@/components/LoopDiagram";
 import { LiveTimer } from "@/components/LiveTimer";
 import { KillSwitch } from "@/components/KillSwitch";
 import { InstallBox } from "@/components/InstallBox";
+import { Footer } from "@/components/Footer";
+import { REPO, getStars } from "@/lib/site";
 
-const REPO = "https://github.com/ultron-hq/ultron";
 
 function Keys({ keys }: { keys: string[] }) {
   return (
@@ -28,6 +29,27 @@ const APP = [
   { icon: Puzzle, title: "Abilities it writes", body: "Ask for a tool it lacks and it builds one, sandboxed in WebAssembly with only the permissions you grant" },
 ];
 
+const SKILLS = [
+  {
+    name: "teach", tag: "/ultron-teach", title: "Show me how",
+    body: "It points at each button on your screen with a glowing box and a caption, waits for you to click, then shows the next step. It never clicks for you",
+    cmd: "/ultron-teach how do I add RSI on TradingView?",
+    video: "/media/teach.mp4", poster: "/media/teach.jpg", alt: "Codex teaching how to add the RSI indicator on TradingView with on-screen highlights",
+  },
+  {
+    name: "post", tag: "/ultron-post", title: "Post it for me",
+    body: "It writes the post, attaches your video, publishes from your own logged-in browser on X or LinkedIn, then checks it went up. No API keys",
+    cmd: "/ultron-post announce v2 on X with ~/demo.mp4",
+    video: "/media/post.mp4", poster: "/media/post.jpg", alt: "Codex writing and publishing a post on X by itself",
+  },
+  {
+    name: "hands", tag: "/ultron-hands", title: "Do it for me",
+    body: "Anything that needs a person at the computer: forms, settings, apps without an API. It looks, acts, and checks every step",
+    cmd: "/ultron-hands rename these 40 files in Finder",
+    video: "/media/first-user.mp4", poster: "/media/first-user.jpg", alt: "A first user cloning Ultron and Codex pressing a button on the website by itself",
+  },
+];
+
 const SAFETY = [
   { title: "Your requests only", body: "It acts on what you asked, never on instructions it reads on a screen or a web page" },
   { title: "One command stops it", body: "A kill switch halts all desktop control at once" },
@@ -43,21 +65,6 @@ const MODELS = [
 ];
 
 export const revalidate = 3600;
-
-/** The real star count from GitHub, refreshed hourly; null if GitHub doesn't answer. */
-async function getStars(): Promise<number | null> {
-  try {
-    const res = await fetch("https://api.github.com/repos/ultron-hq/ultron", {
-      headers: { accept: "application/vnd.github+json" },
-      next: { revalidate: 3600 },
-    });
-    if (!res.ok) return null;
-    const j = (await res.json()) as { stargazers_count?: number };
-    return typeof j.stargazers_count === "number" ? j.stargazers_count : null;
-  } catch {
-    return null;
-  }
-}
 
 export default async function Home() {
   const stars = await getStars();
@@ -92,7 +99,7 @@ export default async function Home() {
           <div className="section-head">
             <h2>Your agent asks, Ultron clicks</h2>
             <p>A Claude Code session on the left, the desktop it controls on the right. Every step is a screenshot, an action and a check</p>
-            <p className="note">Early development. The Rust rewrite is under way, <a href={`${REPO}/blob/main/ROADMAP.md`}>see what works today</a></p>
+            <p className="note">Hands ships today for Windows, macOS and Linux. The full desktop app is being rewritten in Rust, <a href={`${REPO}/blob/main/ROADMAP.md`}>see the roadmap</a></p>
           </div>
           <Workstation />
         </section>
@@ -112,6 +119,27 @@ export default async function Home() {
             <li><span className="step-n">02</span><b>Act</b><p>A click, keystroke or scroll, at exact control positions from the accessibility tree when the app exposes them</p></li>
             <li><span className="step-n">03</span><b>Check</b><p>Another look. It moves on only when the screen shows the step worked</p></li>
           </ol>
+        </section>
+
+        <section className="skills" id="skills">
+          <div className="section-head">
+            <h2>Three skills, one sentence each</h2>
+            <p>Setup adds them to Claude Code and Codex. Type the slash command, say what you want, and watch it happen on your own screen</p>
+          </div>
+          <div className="skill-grid">
+            {SKILLS.map((k) => (
+              <article key={k.name} className="skill">
+                <video className="skill-video" src={k.video} poster={k.poster} controls muted playsInline preload="none" aria-label={k.alt} />
+                <div className="skill-body">
+                  <p className="skill-tag">{k.tag}</p>
+                  <h3>{k.title}</h3>
+                  <p>{k.body}</p>
+                  <code className="skill-cmd">{k.cmd}</code>
+                </div>
+              </article>
+            ))}
+          </div>
+          <p className="note">Recorded on a real desktop, sped up to fit. <a href="/docs#skills">How the skills work</a></p>
         </section>
 
         <section className="app" id="app">
@@ -179,17 +207,7 @@ export default async function Home() {
         </section>
       </main>
 
-      <footer className="foot">
-        <div className="foot-row">
-          <span className="brand brand-sm"><img src="/logo.svg" alt="" width={18} height={18} />Ultron, open source</span>
-          <nav aria-label="Footer">
-            <a href={REPO}>GitHub</a>
-            <a href={`${REPO}/discussions`}>Discussions</a>
-            <a href={`${REPO}/blob/main/SECURITY.md`}>Security</a>
-          </nav>
-        </div>
-        <p className="wordmark" aria-hidden="true">Ultron</p>
-      </footer>
+      <Footer />
     </>
   );
 }
