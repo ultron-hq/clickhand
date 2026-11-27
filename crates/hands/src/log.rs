@@ -13,7 +13,7 @@ use crate::HandsError;
 
 pub const MAX_ACTIONS_PER_MIN: usize = 120;
 
-/// `$XDG_CACHE_HOME/ultron` (default `~/.cache/ultron`) on Linux, the platform cache dir elsewhere.
+/// `$XDG_CACHE_HOME/clickhand` (default `~/.cache/clickhand`) on Linux, the platform cache dir elsewhere.
 pub fn cache_dir() -> PathBuf {
     let base = if cfg!(target_os = "linux") {
         std::env::var_os("XDG_CACHE_HOME")
@@ -23,7 +23,7 @@ pub fn cache_dir() -> PathBuf {
     } else {
         dirs::cache_dir().unwrap_or_default()
     };
-    let dir = base.join("ultron");
+    let dir = base.join("clickhand");
     let _ = std::fs::create_dir_all(&dir);
     dir
 }
@@ -38,7 +38,7 @@ pub fn stop_path() -> PathBuf {
 }
 
 pub fn readonly() -> bool {
-    std::env::var("ULTRON_HANDS_READONLY").as_deref() == Ok("1")
+    std::env::var("CLICKHAND_READONLY").as_deref() == Ok("1")
 }
 
 pub fn now() -> f64 {
@@ -61,7 +61,7 @@ pub fn guard(input_tool: bool) -> Result<(), HandsError> {
     }
     if readonly() {
         return Err(HandsError::new(
-            "Hands are in read-only mode (ULTRON_HANDS_READONLY=1); input is disabled.",
+            "Hands are in read-only mode (CLICKHAND_READONLY=1); input is disabled.",
         ));
     }
     let stop = stop_path();
@@ -149,7 +149,7 @@ fn failed(r: &Value) -> bool {
 }
 
 /// Success rate per tool, recurring errors with fix hints, slow calls, feedback notes,
-/// and the dominant failures in Ultron's own log.
+/// and the dominant failures in Clickhand's own log.
 pub fn report(since_hours: f64) -> Value {
     let cutoff = now() - since_hours * 3600.0;
     let recs: Vec<Value> = read(5000)
@@ -189,11 +189,11 @@ pub fn report(since_hours: f64) -> Value {
             json!({"count": c, "error": msg, "hint": hint})
         })
         .collect();
-    let text = std::fs::read_to_string(cache_dir().join("ultron.log")).unwrap_or_default();
+    let text = std::fs::read_to_string(cache_dir().join("clickhand.log")).unwrap_or_default();
     let all: Vec<&str> = text.lines().collect();
     let tail = &all[all.len().saturating_sub(20000)..];
     let noisy = tail.iter().filter(|l| l.contains(" ERROR ") || l.contains(" WARNING "));
-    let ultron = top_counts(noisy.map(|l| norm(&STAMP.replace(l, ""))), 8);
+    let clickhand = top_counts(noisy.map(|l| norm(&STAMP.replace(l, ""))), 8);
     let mut slow: Vec<&&Value> = calls.iter().collect();
     slow.sort_by_key(|r| std::cmp::Reverse(r["ms"].as_i64().unwrap_or(0)));
     let feedback: Vec<&Value> = recs.iter().filter(|r| r["tool"] == "feedback").map(|r| &r["note"]).collect();
@@ -205,6 +205,6 @@ pub fn report(since_hours: f64) -> Value {
         "top_errors": top,
         "slow_calls": slow.iter().take(5).map(|r| json!({"tool": r["tool"], "ms": r["ms"]})).collect::<Vec<_>>(),
         "feedback": feedback[feedback.len().saturating_sub(10)..].to_vec(),
-        "ultron_log_top": ultron.into_iter().map(|(m, c)| json!({"count": c, "line": m})).collect::<Vec<_>>(),
+        "clickhand_log_top": clickhand.into_iter().map(|(m, c)| json!({"count": c, "line": m})).collect::<Vec<_>>(),
     })
 }

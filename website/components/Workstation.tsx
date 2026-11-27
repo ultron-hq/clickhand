@@ -185,7 +185,7 @@ export function Workstation() {
             <header className="win-bar">
               <span className="dots" aria-hidden="true"><i /><i /><i /></span>
               <span>claude</span>
-              <span className="muted">ultron-hands connected</span>
+              <span className="muted">clickhand connected</span>
             </header>
             <div className="term-body">
               {lines.map((l, i) => (

@@ -1,6 +1,6 @@
 [package]
-name = "ultron-desktop"
-description = "Ultron, the desktop app: a flip-clock island, a Ctrl+Space prompt bar and a tray icon."
+name = "clickhand-app"
+description = "Clickhand, the desktop app: a flip-clock island, a Ctrl+Space prompt bar and a tray icon."
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -8,7 +8,7 @@ repository.workspace = true
 rust-version.workspace = true
 
 [[bin]]
-name = "ultron"
+name = "clickhand-app"
 path = "src/main.rs"
 
 [build-dependencies]

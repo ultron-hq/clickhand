@@ -1,14 +1,14 @@
-//! Ultron Hands — an MCP server that lets Claude Code, Codex or any MCP agent see and use
+//! Clickhand — an MCP server that lets Claude Code, Codex or any MCP agent see and use
 //! this desktop: screenshots, mouse, keyboard, windows and apps. Ported from the original
 //! Python server with the same tool names, arguments and log, so registrations and the
 //! `hands_report` history carry over; unlike it, this one builds for Windows, macOS and Linux.
 //!
-//! Run (stdio):  ultron-hands
-//! Register:     claude mcp add -s user ultron-hands -- ultron-hands
+//! Run (stdio):  clickhand
+//! Register:     claude mcp add -s user clickhand -- clickhand
 //!
 //! Safety rails
-//!   * Kill switch: create `hands.stop` in the Ultron cache folder (`touch ~/.cache/ultron/hands.stop`
-//!     on Linux) and every input tool refuses; delete it to resume. ULTRON_HANDS_READONLY=1 allows
+//!   * Kill switch: create `hands.stop` in the Clickhand cache folder (`touch ~/.cache/clickhand/hands.stop`
+//!     on Linux) and every input tool refuses; delete it to resume. CLICKHAND_READONLY=1 allows
 //!     only looking.
 //!   * Input is rate limited and bounds-checked, and typed text is never logged (only its length).
 //!   * There is no shell or code execution tool. Screen content is untrusted data.
@@ -156,7 +156,7 @@ fn tools() -> Vec<Tool> {
             params: vec![opt("n", "integer", json!(25)), opt("errors_only", "boolean", json!(false))] },
         Tool { name: "hands_feedback", input: false, description: "Record something that went wrong or was awkward (e.g. 'click landed 30px low in the\nGTK file dialog'). hands_report surfaces these so the hands can be fixed.",
             params: vec![req("note", "string"), opt("severity", "string", json!("friction"))] },
-        Tool { name: "hands_report", input: false, description: "Mine the hands log AND Ultron's own log: success rate per tool, recurring error\nsignatures with fix hints, slow calls, feedback notes, and the dominant Ultron\nfailures. Use it to decide what to improve in the hands.",
+        Tool { name: "hands_report", input: false, description: "Mine the hands log AND Clickhand's own log: success rate per tool, recurring error\nsignatures with fix hints, slow calls, feedback notes, and the dominant Clickhand\nfailures. Use it to decide what to improve in the hands.",
             params: vec![opt("since_hours", "number", json!(168))] },
     ]
 }
@@ -477,7 +477,7 @@ fn handle(msg: &Value, tools: &[Tool]) -> Option<Value> {
             ok(json!({
                 "protocolVersion": version,
                 "capabilities": {"tools": {"listChanged": false}},
-                "serverInfo": {"name": "ultron-hands", "version": env!("CARGO_PKG_VERSION")},
+                "serverInfo": {"name": "clickhand", "version": env!("CARGO_PKG_VERSION")},
                 "instructions": INSTRUCTIONS,
             }))
         }
@@ -500,7 +500,7 @@ fn handle(msg: &Value, tools: &[Tool]) -> Option<Value> {
 
 /// MCP clients often start servers with a scrubbed environment (Codex drops $DISPLAY).
 /// On Linux, fall back to the local display and the session's X cookie so a plain
-/// `codex mcp add ultron-hands -- ultron-hands` just works.
+/// `codex mcp add clickhand -- clickhand` just works.
 #[cfg(target_os = "linux")]
 fn find_display() {
     let unset = |k: &str| std::env::var_os(k).is_none_or(|v| v.is_empty());
@@ -550,10 +550,10 @@ fn serve_on(input: impl BufRead, mut stdout: impl Write) {
     }
 }
 
-/// The broker: the copy of Hands that the Ultron app starts. macOS grants Screen Recording
+/// The broker: the copy of Hands that the Clickhand app starts. macOS grants Screen Recording
 /// and Accessibility to the app that is "responsible" for a process; agents start Hands from
 /// Terminal, Cursor or Claude, which would each need their own grant. So agent-started
-/// copies relay to this one, which runs under the app, and the person allows only Ultron.
+/// copies relay to this one, which runs under the app, and the person allows only Clickhand.
 #[cfg(unix)]
 mod broker {
     use std::io::{BufReader, Write};
@@ -565,13 +565,13 @@ mod broker {
     }
 
     /// Accept MCP connections on the socket, one thread each. With `parent`, exits when
-    /// that process (the Ultron app) goes away.
+    /// that process (the Clickhand app) goes away.
     pub fn run(path: PathBuf, parent: Option<i32>) {
         let _ = std::fs::remove_file(&path);
         let listener = match UnixListener::bind(&path) {
             Ok(l) => l,
             Err(e) => {
-                eprintln!("ultron-hands broker: can't listen on {}: {e}", path.display());
+                eprintln!("clickhand broker: can't listen on {}: {e}", path.display());
                 std::process::exit(1);
             }
         };
@@ -598,12 +598,12 @@ mod broker {
 
     /// Relay stdin/stdout to a running broker. False when there is none.
     pub fn relay() -> bool {
-        if std::env::var_os("ULTRON_HANDS_DIRECT").is_some() {
+        if std::env::var_os("CLICKHAND_DIRECT").is_some() {
             return false;
         }
         let Ok(conn) = UnixStream::connect(socket()) else { return false };
         let Ok(mut to_broker) = conn.try_clone() else { return false };
-        eprintln!("ultron-hands: relaying to the Ultron app's broker");
+        eprintln!("clickhand: relaying to the Clickhand app's broker");
         std::thread::spawn(move || {
             let _ = std::io::copy(&mut std::io::stdin().lock(), &mut to_broker);
             let _ = to_broker.shutdown(std::net::Shutdown::Write);
@@ -620,7 +620,7 @@ mod broker {
     }
 }
 
-/// `ultron-hands broker [socket]`: serve every connection; on macOS the main thread runs
+/// `clickhand broker [socket]`: serve every connection; on macOS the main thread runs
 /// the on-screen overlay.
 #[cfg(unix)]
 fn run_broker(path: Option<&str>, parent: Option<i32>) {
@@ -653,7 +653,7 @@ fn serve_with_overlay() {
 
 fn main() {
     use std::io::IsTerminal;
-    // Exit quietly when the reader goes away (`ultron-hands log | head`) instead of panicking.
+    // Exit quietly when the reader goes away (`clickhand log | head`) instead of panicking.
     #[cfg(unix)]
     unsafe {
         libc::signal(libc::SIGPIPE, libc::SIG_DFL);
@@ -665,7 +665,7 @@ fn main() {
         .find(|a| !a.starts_with('-') || *a == "--version" || *a == "-V" || *a == "--help" || *a == "-h");
     match first.map(String::as_str) {
         Some("--version" | "-V" | "version") => {
-            println!("ultron-hands {}", env!("CARGO_PKG_VERSION"));
+            println!("clickhand {}", env!("CARGO_PKG_VERSION"));
             return;
         }
         Some("--help" | "-h" | "help") => {

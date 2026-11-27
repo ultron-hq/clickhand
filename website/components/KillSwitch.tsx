@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { setStopped } from "./stop";
 
-// pixelfx "scifi/emp-blast" in Ultron's ember palette, baked to a sprite sheet
+// pixelfx "scifi/emp-blast" in Clickhand's ember palette, baked to a sprite sheet
 // (pixelfx by Patch, MIT, https://github.com/patch-gg/pixelfx).
 const SHEET = { src: "/fx/emp-blast.png", w: 152, h: 116, cols: 9, frames: 97, fps: 30, pivot: [76, 84] as const };
 // Big on desktop, still inside the screen on a phone.

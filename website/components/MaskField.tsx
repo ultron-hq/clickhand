@@ -47,7 +47,7 @@ const EYES = [{ x: 21.5 / 64, y: 28 / 64 }, { x: 42.5 / 64, y: 28 / 64 }];
 const OUTLINE = "M18 6 27 3 32 10 37 3 46 6 54 19 51 43 41 59H23L13 43 10 19Z";
 
 /**
- * The hero: the Ultron mask in points, lit by its own red light, with lines of light
+ * The hero: the Clickhand mask in points, lit by its own red light, with lines of light
  * sweeping in from the edge of the page and converging on its eyes. The dots fly in
  * and lock into the face on load; the eyes then follow the pointer and the dots part
  * around it. Still when reduced motion is on.
@@ -270,5 +270,5 @@ export function MaskField() {
     };
   }, []);
 
-  return <canvas ref={canvas} className="maskfield" role="img" aria-label="The Ultron mask, drawn in points and lit red, with lines of light running into its eyes" />;
+  return <canvas ref={canvas} className="maskfield" role="img" aria-label="The Clickhand mask, drawn in points and lit red, with lines of light running into its eyes" />;
 }

@@ -1,5 +1,5 @@
 //! First run: move to Applications (macOS), show the shortcut, connect the AI agents with
-//! the bundled Ultron Hands, open the privacy settings it needs, and start at login.
+//! the bundled Clickhand, open the privacy settings it needs, and start at login.
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -35,17 +35,17 @@ pub fn which(bin: &str) -> Option<PathBuf> {
     std::env::split_paths(&path).find_map(|d| exts.iter().map(|e| d.join(format!("{bin}{e}"))).find(|p| p.is_file()))
 }
 
-/// The Ultron Hands bundled next to this app (a sidecar), else one on PATH.
+/// The Clickhand bundled next to this app (a sidecar), else one on PATH.
 pub fn hands() -> Option<PathBuf> {
-    let name = if cfg!(windows) { "ultron-hands.exe" } else { "ultron-hands" };
+    let name = if cfg!(windows) { "clickhand-mcp.exe" } else { "clickhand-mcp" };
     let beside = std::env::current_exe().ok()?.parent()?.join(name);
     if std::fs::metadata(&beside).is_ok_and(|m| m.len() > 0) {
         return Some(beside);
     }
-    which("ultron-hands")
+    which("clickhand")
 }
 
-/// `/…/Ultron.app` when running from a macOS app bundle.
+/// `/…/Clickhand.app` when running from a macOS app bundle.
 fn bundle() -> Option<PathBuf> {
     let exe = std::env::current_exe().ok()?;
     let app = exe.parent()?.parent()?.parent()?;
@@ -79,7 +79,7 @@ pub fn onboard_state(app: AppHandle, st: State<App>) -> Onboard {
 /// clear the download quarantine, open the copy and quit this one.
 #[tauri::command]
 pub fn move_to_applications(app: AppHandle) -> Result<(), String> {
-    let src = bundle().ok_or("Ultron isn't running from an app bundle.")?;
+    let src = bundle().ok_or("Clickhand isn't running from an app bundle.")?;
     let dest = Path::new("/Applications").join(src.file_name().ok_or("bad bundle path")?);
     let (s, d) = (src.to_string_lossy().to_string(), dest.to_string_lossy().to_string());
     let copied = Command::new("ditto").args([&s, &d]).status().is_ok_and(|st| st.success());
@@ -94,7 +94,7 @@ pub fn move_to_applications(app: AppHandle) -> Result<(), String> {
             .status()
             .is_ok_and(|st| st.success());
         if !ok {
-            return Err("Couldn't copy Ultron to Applications. Drag it there from the disk image instead.".into());
+            return Err("Couldn't copy Clickhand to Applications. Drag it there from the disk image instead.".into());
         }
     }
     let _ = Command::new("xattr").args(["-dr", "com.apple.quarantine", &d]).status();
@@ -103,12 +103,12 @@ pub fn move_to_applications(app: AppHandle) -> Result<(), String> {
     Ok(())
 }
 
-/// Run the bundled `ultron-hands setup --yes`: connects every agent it finds and
+/// Run the bundled `clickhand setup --yes`: connects every agent it finds and
 /// installs the skills. Returns its report.
 #[tauri::command]
 pub async fn connect_agents() -> Result<String, String> {
     tauri::async_runtime::spawn_blocking(|| {
-        let bin = hands().ok_or("Ultron Hands isn't bundled with this build.")?;
+        let bin = hands().ok_or("Clickhand isn't bundled with this build.")?;
         let out = Command::new(bin)
             .args(["setup", "--yes"])
             .env("NO_COLOR", "1")
@@ -215,7 +215,7 @@ mod tcc {
             CGRequestScreenCaptureAccess();
         }
     }
-    /// Shows macOS's own prompt, which also adds Ultron to the Accessibility list.
+    /// Shows macOS's own prompt, which also adds Clickhand to the Accessibility list.
     pub fn ask_accessibility() {
         unsafe {
             let keys = [kAXTrustedCheckOptionPrompt];
@@ -275,7 +275,7 @@ pub fn relaunch(app: AppHandle) {
 }
 
 /// Start the bundled Hands as this app's broker, so agent-started copies relay to it and
-/// macOS checks Ultron's permissions, not Terminal's or Cursor's.
+/// macOS checks Clickhand's permissions, not Terminal's or Cursor's.
 #[cfg(target_os = "macos")]
 pub fn start_broker() -> Option<std::process::Child> {
     let bin = hands()?;

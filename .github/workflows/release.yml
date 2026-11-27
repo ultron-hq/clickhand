@@ -1,6 +1,6 @@
 name: release
-# Push a tag like v0.1.0 to build ultron-hands for every platform and publish a release.
-# The installers (getultron.vercel.app/install.sh and install.ps1) download from here.
+# Push a tag like v0.1.0 to build clickhand for every platform and publish a release.
+# The installers (clickhand.vercel.app/install.sh and install.ps1) download from here.
 on:
   push:
     tags: ["v*"]
@@ -34,25 +34,25 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           key: ${{ matrix.target }}
-      - run: cargo build --release --locked -p ultron-hands --target ${{ matrix.target }}
+      - run: cargo build --release --locked -p clickhand --target ${{ matrix.target }}
       - name: Package
         shell: bash
         run: |
-          name=ultron-hands-${{ matrix.target }}
+          name=clickhand-${{ matrix.target }}
           dir=target/${{ matrix.target }}/release
           mkdir -p dist
           if [[ "${{ runner.os }}" == "Windows" ]]; then
-            7z a "dist/$name.zip" "./$dir/ultron-hands.exe" README.md LICENSE-MIT LICENSE-APACHE >/dev/null
+            7z a "dist/$name.zip" "./$dir/clickhand.exe" README.md LICENSE-MIT LICENSE-APACHE >/dev/null
             file="dist/$name.zip"
           else
-            tar -czf "dist/$name.tar.gz" -C "$dir" ultron-hands -C "$GITHUB_WORKSPACE" README.md LICENSE-MIT LICENSE-APACHE
+            tar -czf "dist/$name.tar.gz" -C "$dir" clickhand -C "$GITHUB_WORKSPACE" README.md LICENSE-MIT LICENSE-APACHE
             file="dist/$name.tar.gz"
           fi
           if command -v sha256sum >/dev/null; then sha256sum "$file" | cut -d' ' -f1 > "$file.sha256"
           else shasum -a 256 "$file" | cut -d' ' -f1 > "$file.sha256"; fi
       - name: Smoke test
         if: runner.os != 'Windows'
-        run: target/${{ matrix.target }}/release/ultron-hands --version
+        run: target/${{ matrix.target }}/release/clickhand --version
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.target }}
@@ -84,13 +84,13 @@ jobs:
         with:
           tool: cargo-binstall
       - run: cargo binstall -y --force tauri-cli@^2
-      - name: Bundle Ultron Hands inside the app
+      - name: Bundle Clickhand inside the app
         shell: bash
         run: |
-          cargo build --release --locked -p ultron-hands --target ${{ matrix.target }}
+          cargo build --release --locked -p clickhand --target ${{ matrix.target }}
           ext=""; [[ "${{ runner.os }}" == "Windows" ]] && ext=".exe"
           mkdir -p crates/desktop/binaries
-          cp "target/${{ matrix.target }}/release/ultron-hands$ext" "crates/desktop/binaries/ultron-hands-${{ matrix.target }}$ext"
+          cp "target/${{ matrix.target }}/release/clickhand$ext" "crates/desktop/binaries/clickhand-mcp-${{ matrix.target }}$ext"
       - name: Build the app
         working-directory: crates/desktop
         run: cargo tauri build --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
@@ -101,10 +101,10 @@ jobs:
           b="target/${{ matrix.target }}/release/bundle"
           v="${GITHUB_REF_NAME#v}"
           case "${{ matrix.target }}" in
-            aarch64-apple-darwin) cp "$b"/dmg/*.dmg "dist/Ultron-$v-mac-apple-silicon.dmg" ;;
-            x86_64-apple-darwin)  cp "$b"/dmg/*.dmg "dist/Ultron-$v-mac-intel.dmg" ;;
-            x86_64-pc-windows-msvc) cp "$b"/nsis/*.exe "dist/Ultron-$v-windows-setup.exe" ;;
-            *) cp "$b"/appimage/*.AppImage "dist/Ultron-$v-linux.AppImage"; cp "$b"/deb/*.deb "dist/Ultron-$v-linux.deb" ;;
+            aarch64-apple-darwin) cp "$b"/dmg/*.dmg "dist/Clickhand-mac-apple-silicon.dmg" ;;
+            x86_64-apple-darwin)  cp "$b"/dmg/*.dmg "dist/Clickhand-mac-intel.dmg" ;;
+            x86_64-pc-windows-msvc) cp "$b"/nsis/*.exe "dist/Clickhand-windows-setup.exe" ;;
+            *) cp "$b"/appimage/*.AppImage "dist/Clickhand-linux.AppImage"; cp "$b"/deb/*.deb "dist/Clickhand-linux.deb" ;;
           esac
           ls -la dist
       - uses: actions/upload-artifact@v4
@@ -128,14 +128,14 @@ jobs:
           ls -la dist
           notes="Install with one line:
 
-          macOS / Linux: \`curl -fsSL https://getultron.vercel.app/install.sh | sh\`
-          Windows (PowerShell): \`irm https://getultron.vercel.app/install.ps1 | iex\`
+          macOS / Linux: \`curl -fsSL https://clickhand.vercel.app/install.sh | sh\`
+          Windows (PowerShell): \`irm https://clickhand.vercel.app/install.ps1 | iex\`
 
           Then follow the setup it starts. It connects Claude Code, Codex, Cursor, VS Code, Windsurf, Claude Desktop and Gemini CLI.
 
-          The Ultron app (flip-clock island + Ctrl+Space prompt bar, with Hands built in): the .dmg for Mac (drag it into Applications), -windows-setup.exe, or the Linux .AppImage / .deb."
+          The Clickhand app (flip-clock island + Ctrl+Space prompt bar, with Hands built in): the .dmg for Mac (drag it into Applications), -windows-setup.exe, or the Linux .AppImage / .deb."
           if gh release view "$TAG" -R "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
             gh release upload "$TAG" dist/* --clobber -R "$GITHUB_REPOSITORY"
           else
-            gh release create "$TAG" dist/* --title "Ultron Hands $TAG" --notes "$notes" -R "$GITHUB_REPOSITORY"
+            gh release create "$TAG" dist/* --title "Clickhand $TAG" --notes "$notes" -R "$GITHUB_REPOSITORY"
           fi

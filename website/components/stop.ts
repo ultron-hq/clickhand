@@ -1,17 +1,17 @@
 // The page's own kill switch: pressing it freezes every moving part, like
-// `touch ~/.cache/ultron/hands.stop` freezes Ultron's hands.
+// `touch ~/.cache/clickhand/hands.stop` freezes Clickhand's hands.
 declare global {
   interface Window {
-    __ultronStopped?: boolean;
+    __clickhandStopped?: boolean;
   }
 }
 
-export const stopped = () => typeof window !== "undefined" && !!window.__ultronStopped;
+export const stopped = () => typeof window !== "undefined" && !!window.__clickhandStopped;
 
 export function setStopped(on: boolean) {
-  window.__ultronStopped = on;
+  window.__clickhandStopped = on;
   document.documentElement.classList.toggle("stopped", on);
-  window.dispatchEvent(new CustomEvent("ultron:stop", { detail: on }));
+  window.dispatchEvent(new CustomEvent("clickhand:stop", { detail: on }));
 }
 
 /** A timeout that does not count time while the page is stopped. */

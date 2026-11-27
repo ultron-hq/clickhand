@@ -1,5 +1,5 @@
 //! The command line around the server: guided setup, health checks, connecting agents,
-//! the kill switch and the log. Run with no arguments in a terminal, `ultron-hands` sets
+//! the kill switch and the log. Run with no arguments in a terminal, `clickhand` sets
 //! itself up; started by an agent (stdin is a pipe), it serves MCP.
 use std::io::{IsTerminal, Write};
 use std::path::{Path, PathBuf};
@@ -8,7 +8,25 @@ use serde_json::{json, Map, Value};
 
 use crate::{desktop, input, log, screen};
 
-pub const NAME: &str = "ultron-hands";
+pub const NAME: &str = "clickhand";
+/// The name before the rename. Entries under it that our installer made are replaced.
+const LEGACY: &str = "ultron-hands";
+
+/// Whether an old `ultron-hands` command is one of ours (not someone's own build of
+/// the original Python Hands, which keeps that name).
+fn legacy_ours(cmd: &str) -> bool {
+    let c = cmd.replace('\\', "/");
+    [
+        ".local/bin/ultron-hands",
+        ".cargo/bin/ultron-hands",
+        "/ultron/bin/ultron-hands",
+        "Ultron.app/",
+        "target/release/ultron-hands",
+        "target/debug/ultron-hands",
+    ]
+    .iter()
+    .any(|p| c.contains(p))
+}
 
 // ── output ──
 
@@ -255,7 +273,7 @@ fn write_json(file: &Path, value: &Map<String, Value>) -> Result<(), String> {
     std::fs::rename(&tmp, file).map_err(|e| e.to_string())
 }
 
-/// The `[mcp_servers.ultron-hands]` section of Codex's config, as (start, end) line indexes.
+/// The `[mcp_servers.clickhand]` section of Codex's config, as (start, end) line indexes.
 fn codex_section(lines: &[&str]) -> Option<(usize, usize)> {
     let header = format!("[mcp_servers.{NAME}]");
     let alt = format!("[mcp_servers.\"{NAME}\"]");
@@ -316,8 +334,52 @@ impl Agent {
         }
     }
 
+    /// Remove an `ultron-hands` entry from before the rename, if our installer made it.
+    fn drop_legacy(&self) {
+        match &self.kind {
+            Kind::ClaudeCode => {
+                let Some(bin) = which("claude") else { return };
+                let out = cli(&bin, &["mcp", "get", LEGACY], false).unwrap_or_default();
+                if out
+                    .lines()
+                    .filter_map(|l| l.trim().strip_prefix("Command:"))
+                    .any(|c| legacy_ours(c.trim()))
+                {
+                    let _ = cli(&bin, &["mcp", "remove", "-s", "user", LEGACY], false);
+                }
+            }
+            Kind::Codex => {
+                let text = std::fs::read_to_string(codex_config()).unwrap_or_default();
+                let lines: Vec<&str> = text.lines().collect();
+                let header = format!("[mcp_servers.{LEGACY}]");
+                let Some(start) = lines.iter().position(|l| l.trim() == header) else {
+                    return;
+                };
+                let ours = lines[start + 1..]
+                    .iter()
+                    .take_while(|l| !l.trim_start().starts_with('['))
+                    .filter_map(|l| toml_string(l, "command"))
+                    .any(|c| legacy_ours(&c));
+                if let (true, Some(bin)) = (ours, which("codex")) {
+                    let _ = cli(&bin, &["mcp", "remove", LEGACY], false);
+                }
+            }
+            Kind::Json { file, style } => {
+                let Ok(mut cfg) = read_json(file) else { return };
+                let Some(servers) = cfg.get_mut(json_key(*style)).and_then(Value::as_object_mut) else {
+                    return;
+                };
+                if servers.get(LEGACY).and_then(|e| e["command"].as_str()).is_some_and(legacy_ours) {
+                    servers.remove(LEGACY);
+                    let _ = write_json(file, &cfg);
+                }
+            }
+        }
+    }
+
     /// Point the agent at this program; `approve` lets it act without asking each time.
     fn connect(&self, approve: bool) -> Result<String, String> {
+        self.drop_legacy();
         let me = exe().to_string_lossy().to_string();
         match &self.kind {
             Kind::ClaudeCode => {
@@ -384,7 +446,7 @@ impl Agent {
     }
 }
 
-/// Add (or remove) `mcp__ultron-hands` in Claude Code's allowed tools.
+/// Add (or remove) `mcp__clickhand` in Claude Code's allowed tools.
 fn allow_in_claude(on: bool) -> Result<(), String> {
     let file = claude_settings();
     let rule = format!("mcp__{NAME}");
@@ -413,7 +475,7 @@ fn codex_approve(file: &Path) -> std::io::Result<()> {
     let text = std::fs::read_to_string(file)?;
     let mut lines: Vec<&str> = text.lines().collect();
     let Some((s, e)) = codex_section(&lines) else {
-        return Err(std::io::Error::other("no ultron-hands section"));
+        return Err(std::io::Error::other("no clickhand section"));
     };
     let setting = "default_tools_approval_mode = \"approve\"";
     match lines[s + 1..e]
@@ -429,11 +491,11 @@ fn codex_approve(file: &Path) -> std::io::Result<()> {
 // ── skills ──
 
 const SKILLS: &[(&str, &str)] = &[
-    ("ultron-hands", include_str!("../skills/ultron-hands/SKILL.md")),
-    ("ultron-teach", include_str!("../skills/ultron-teach/SKILL.md")),
-    ("ultron-post", include_str!("../skills/ultron-post/SKILL.md")),
+    ("clickhand", include_str!("../skills/clickhand/SKILL.md")),
+    ("clickhand-teach", include_str!("../skills/clickhand-teach/SKILL.md")),
+    ("clickhand-post", include_str!("../skills/clickhand-post/SKILL.md")),
 ];
-const MANAGED: &str = "Installed by ultron-hands setup.";
+const MANAGED: &str = "Installed by clickhand setup.";
 
 /// Agent skill folders on this computer (Claude Code, Codex), for agents that are installed.
 fn skill_dirs() -> Vec<(&'static str, PathBuf)> {
@@ -448,7 +510,15 @@ fn skill_dirs() -> Vec<(&'static str, PathBuf)> {
 }
 
 /// Write the skills into `dir`, leaving any copy the person edited (marker removed) alone.
+/// Also removes the pre-rename `ultron-*` skills that setup installed.
 fn install_skills(dir: &Path) -> Result<usize, String> {
+    for old in ["ultron-hands", "ultron-teach", "ultron-post"] {
+        let file = dir.join(old).join("SKILL.md");
+        if std::fs::read_to_string(&file).is_ok_and(|t| t.contains("Installed by ultron-hands setup.")) {
+            let _ = std::fs::remove_file(&file);
+            let _ = std::fs::remove_dir(dir.join(old));
+        }
+    }
     let mut n = 0;
     for (name, body) in SKILLS {
         let file = dir.join(name).join("SKILL.md");
@@ -474,7 +544,7 @@ pub fn skills() -> i32 {
     for (agent, dir) in dirs {
         match install_skills(&dir) {
             Ok(_) => good(&format!(
-                "{agent}: skills ultron-hands, ultron-teach and ultron-post in {}",
+                "{agent}: skills clickhand, clickhand-teach and clickhand-post in {}",
                 dir.display()
             )),
             Err(e) => {
@@ -581,17 +651,17 @@ pub fn doctor() -> usize {
     }
     if log::stop_path().exists() {
         warn("The kill switch is on, so Hands won't act.");
-        hint("Turn it off with: ultron-hands resume");
+        hint("Turn it off with: clickhand resume");
     }
     if log::readonly() {
-        warn("ULTRON_HANDS_READONLY=1 is set: Hands can look but not act.");
+        warn("CLICKHAND_READONLY=1 is set: Hands can look but not act.");
     }
     problems
 }
 
 // ── commands ──
 
-const TRY: &str = "Use ultron-hands to open getultron.vercel.app and press the big red button";
+const TRY: &str = "Use clickhand to open clickhand.vercel.app and press the big red button";
 
 fn label(status: &Status) -> String {
     match status {
@@ -606,7 +676,7 @@ fn label(status: &Status) -> String {
 pub fn setup(yes: bool) -> i32 {
     println!(
         "{}  {}",
-        paint("1;31", "Ultron Hands"),
+        paint("1;31", "Clickhand"),
         paint("2", concat!("v", env!("CARGO_PKG_VERSION")))
     );
     println!("Lets your AI agent see this screen, click and type, like a person at the computer.");
@@ -625,7 +695,7 @@ pub fn setup(yes: bool) -> i32 {
         .collect();
     if found.is_empty() {
         warn("No AI agents found on this computer.");
-        hint("Install Claude Code (claude.com/claude-code) or Codex, then run: ultron-hands setup");
+        hint("Install Claude Code (claude.com/claude-code) or Codex, then run: clickhand setup");
         hint(&format!(
             "Any other MCP app: add a stdio server with the command {}",
             exe().display()
@@ -673,7 +743,7 @@ pub fn setup(yes: bool) -> i32 {
 
     for (agent, dir) in skill_dirs() {
         match install_skills(&dir) {
-            Ok(_) => good(&format!("{agent}: skills /ultron-hands, /ultron-teach and /ultron-post")),
+            Ok(_) => good(&format!("{agent}: skills /clickhand, /clickhand-teach and /clickhand-post")),
             Err(e) => warn(&format!("{agent}: couldn't add the skills ({e})")),
         }
     }
@@ -683,16 +753,16 @@ pub fn setup(yes: bool) -> i32 {
         println!("  Open your agent (restart it if it was running) and ask:");
         println!("    {}", paint("36", &format!("\"{TRY}\"")));
         println!("  Or learn an app on your own screen:");
-        println!("    {}", paint("36", "\"/ultron-teach show me how to export a PNG in Figma\""));
+        println!("    {}", paint("36", "\"/clickhand-teach show me how to export a PNG in Figma\""));
     }
     println!(
-        "  Stop it at any moment:  {}    (undo: ultron-hands resume)",
-        paint("1", "ultron-hands stop")
+        "  Stop it at any moment:  {}    (undo: clickhand resume)",
+        paint("1", "clickhand stop")
     );
-    println!("  See what it did:        ultron-hands log");
-    println!("  Check again:            ultron-hands doctor");
+    println!("  See what it did:        clickhand log");
+    println!("  Check again:            clickhand doctor");
     if problems > 0 {
-        println!("\n{}", paint("33", "Fix the items marked ✗ above, then run: ultron-hands doctor"));
+        println!("\n{}", paint("33", "Fix the items marked ✗ above, then run: clickhand doctor"));
         return 1;
     }
     0
@@ -758,7 +828,7 @@ pub fn stop(on: bool) -> i32 {
             bad(&format!("Couldn't turn on the kill switch: {e}"));
             return 1;
         }
-        good("Stopped. Hands will refuse every click and keystroke until you run: ultron-hands resume");
+        good("Stopped. Hands will refuse every click and keystroke until you run: clickhand resume");
     } else {
         let _ = std::fs::remove_file(&path);
         good("Resumed. Agents can use Hands again.");
@@ -795,9 +865,9 @@ pub fn show_log(n: usize) -> i32 {
 }
 
 pub const HELP: &str = "\
-Ultron Hands: let Claude Code, Codex or any MCP agent see your screen, click and type.
+Clickhand: let Claude Code, Codex or any MCP agent see your screen, click and type.
 
-Usage: ultron-hands [command]
+Usage: clickhand [command]
 
   (no command)        in a terminal: guided setup; started by an agent: the MCP server
   setup [--yes]       check this computer and connect every agent found
@@ -809,7 +879,7 @@ Usage: ultron-hands [command]
   stop                kill switch: refuse every action until `resume`
   resume              turn the kill switch off
   log [n]             the last n actions (default 20)
-  skills              (re)install the ultron-hands, ultron-teach and ultron-post skills
+  skills              (re)install the clickhand, clickhand-teach and clickhand-post skills
   serve               run the MCP server on stdin/stdout (what agents start)
   --version           print the version
 
@@ -824,8 +894,8 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("uh-skills-{}", std::process::id()));
         assert_eq!(install_skills(&dir).unwrap(), 3);
         assert_eq!(install_skills(&dir).unwrap(), 0, "unchanged copies are left alone");
-        let teach = dir.join("ultron-teach/SKILL.md");
-        assert!(std::fs::read_to_string(&teach).unwrap().starts_with("---\nname: ultron-teach\n"));
+        let teach = dir.join("clickhand-teach/SKILL.md");
+        assert!(std::fs::read_to_string(&teach).unwrap().starts_with("---\nname: clickhand-teach\n"));
         std::fs::write(&teach, "my own version").unwrap();
         install_skills(&dir).unwrap();
         assert_eq!(std::fs::read_to_string(&teach).unwrap(), "my own version");
@@ -837,8 +907,7 @@ mod tests {
         let dir = std::env::temp_dir().join(format!("uh-codex-{}", std::process::id()));
         std::fs::create_dir_all(&dir).unwrap();
         let file = dir.join("config.toml");
-        let text =
-            "model = \"x\"\n\n[mcp_servers.ultron-hands]\ncommand = \"/bin/uh\"\nargs = []\n\n[mcp_servers.other]\ncommand = \"o\"\n";
+        let text = "model = \"x\"\n\n[mcp_servers.clickhand]\ncommand = \"/bin/uh\"\nargs = []\n\n[mcp_servers.other]\ncommand = \"o\"\n";
         std::fs::write(&file, text).unwrap();
         codex_approve(&file).unwrap();
         codex_approve(&file).unwrap(); // idempotent

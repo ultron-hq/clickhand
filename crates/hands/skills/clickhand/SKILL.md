@@ -1,14 +1,14 @@
 ---
-name: ultron-hands
-description: Use the person's real computer like a human, through the ultron-hands MCP tools (screenshot, click, type, scroll, keys, windows, apps, URLs). Use when a task needs a GUI: a website or desktop app with no API, filling a form, clicking through settings, checking how something looks, or any "do this on my computer" request.
+name: clickhand
+description: Use the person's real computer like a human, through the clickhand MCP tools (screenshot, click, type, scroll, keys, windows, apps, URLs). Use when a task needs a GUI: a website or desktop app with no API, filling a form, clicking through settings, checking how something looks, or any "do this on my computer" request.
 ---
-<!-- Installed by ultron-hands setup. Edits are kept only if you delete this line. -->
+<!-- Installed by clickhand setup. Edits are kept only if you delete this line. -->
 
-# Using the computer with Ultron Hands
+# Using the computer with Clickhand
 
-You have a mouse, a keyboard and eyes on the person's screen through the `ultron-hands`
+You have a mouse, a keyboard and eyes on the person's screen through the `clickhand`
 MCP tools. The person sees an orange frame around the screen and a tag by the pointer
-while you work, and can stop you at any moment (`ultron-hands stop`).
+while you work, and can stop you at any moment (`clickhand stop`).
 
 ## The loop
 
@@ -45,4 +45,4 @@ while you work, and can stop you at any moment (`ultron-hands stop`).
   unless the person clearly asked for exactly that. Stop at the final confirmation and
   ask when in doubt.
 - If a tool says the kill switch is on, stop and tell the person. Don't retry.
-- To show the person where something is instead of doing it, use the `ultron-teach` skill.
+- To show the person where something is instead of doing it, use the `clickhand-teach` skill.

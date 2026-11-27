@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { Check, Copy } from "lucide-react";
 
 const CMDS = {
-  unix: { label: "macOS / Linux", cmd: "curl -fsSL https://getultron.vercel.app/install.sh | sh" },
-  win: { label: "Windows", cmd: "irm https://getultron.vercel.app/install.ps1 | iex" },
+  unix: { label: "macOS / Linux", cmd: "curl -fsSL https://clickhand.vercel.app/install.sh | sh" },
+  win: { label: "Windows", cmd: "irm https://clickhand.vercel.app/install.ps1 | iex" },
 } as const;
 
 type Os = keyof typeof CMDS;

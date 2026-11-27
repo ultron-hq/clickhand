@@ -1,7 +1,7 @@
-//! Ultron, the desktop app: a flip-clock island at the top of the screen, a prompt bar on
+//! Clickhand, the desktop app: a flip-clock island at the top of the screen, a prompt bar on
 //! Ctrl+Space, and a tray icon. Timers are handled here and logged to the sessions
 //! database (so reports keep working); anything else goes to Claude Code or Codex,
-//! which can use the computer through Ultron Hands.
+//! which can use the computer through Clickhand.
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 mod intent;
@@ -187,24 +187,24 @@ mod agent {
         std::env::split_paths(&path).find_map(|d| exts.iter().map(|e| d.join(format!("{bin}{e}"))).find(|p| p.is_file()))
     }
 
-    const BRIEF: &str = "You are Ultron, a desktop assistant the person reached with Ctrl+Space. \
-        Answer in one or two short sentences. If the request needs the computer, use the ultron-hands tools.";
+    const BRIEF: &str = "You are Clickhand, a desktop assistant the person reached with Ctrl+Space. \
+        Answer in one or two short sentences. If the request needs the computer, use the clickhand tools.";
 
-    /// Hand the request to Claude Code, or Codex, with Ultron Hands available.
+    /// Hand the request to Claude Code, or Codex, with Clickhand available.
     pub fn run(text: &str) -> Result<String, String> {
         let prompt = format!("{BRIEF}\n\n{text}");
         let out = if let Some(claude) = which("claude") {
             Command::new(claude)
-                .args(["-p", &prompt, "--allowedTools", "mcp__ultron-hands"])
+                .args(["-p", &prompt, "--allowedTools", "mcp__clickhand"])
                 .output()
         } else if let Some(codex) = which("codex") {
-            let file = std::env::temp_dir().join(format!("ultron-answer-{}.txt", std::process::id()));
+            let file = std::env::temp_dir().join(format!("clickhand-answer-{}.txt", std::process::id()));
             let r = Command::new(codex)
                 .args([
                     "exec",
                     "--skip-git-repo-check",
                     "-c",
-                    "mcp_servers.ultron-hands.default_tools_approval_mode=\"approve\"",
+                    "mcp_servers.clickhand.default_tools_approval_mode=\"approve\"",
                     "-o",
                 ])
                 .arg(&file)
@@ -216,7 +216,7 @@ mod agent {
             }
             r
         } else {
-            return Err("Install Claude Code or Codex so Ultron can answer that (timers work without them).".into());
+            return Err("Install Claude Code or Codex so Clickhand can answer that (timers work without them).".into());
         };
         let out = out.map_err(|e| e.to_string())?;
         let text = String::from_utf8_lossy(&out.stdout).trim().to_string();
@@ -301,8 +301,8 @@ fn main() {
                 }
             });
 
-            // Ctrl+Space, or ULTRON_SHORTCUT; fall back if something else holds it.
-            let wanted = std::env::var("ULTRON_SHORTCUT").unwrap_or_else(|_| "ctrl+space".into());
+            // Ctrl+Space, or CLICKHAND_SHORTCUT; fall back if something else holds it.
+            let wanted = std::env::var("CLICKHAND_SHORTCUT").unwrap_or_else(|_| "ctrl+space".into());
             let mut bound = None;
             for key in [wanted.as_str(), "ctrl+alt+space"] {
                 if let Ok(s) = key.parse::<Shortcut>() {
@@ -315,13 +315,13 @@ fn main() {
             let hint = bound.clone().map(|k| pretty(&k)).unwrap_or_else(|| "click".into());
             *app.state::<App>().shortcut.lock().unwrap() = hint.clone();
 
-            let ask_item = MenuItem::with_id(app, "bar", format!("Ask Ultron ({hint})"), true, None::<&str>)?;
-            let welcome = MenuItem::with_id(app, "welcome", "Set up Ultron…", true, None::<&str>)?;
-            let quit = MenuItem::with_id(app, "quit", "Quit Ultron", true, None::<&str>)?;
+            let ask_item = MenuItem::with_id(app, "bar", format!("Ask Clickhand ({hint})"), true, None::<&str>)?;
+            let welcome = MenuItem::with_id(app, "welcome", "Set up Clickhand…", true, None::<&str>)?;
+            let quit = MenuItem::with_id(app, "quit", "Quit Clickhand", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&ask_item, &welcome, &quit])?;
             let mut tray = TrayIconBuilder::new()
                 .menu(&menu)
-                .tooltip("Ultron")
+                .tooltip("Clickhand")
                 .on_menu_event(|app, ev| match ev.id().as_ref() {
                     "bar" => toggle(app),
                     "welcome" => onboard::show(app),
@@ -332,11 +332,11 @@ fn main() {
                 tray = tray.icon(icon.clone());
             }
             tray.build(app)?;
-            // macOS: no Dock icon; Ultron lives in the menu bar and the island.
+            // macOS: no Dock icon; Clickhand lives in the menu bar and the island.
             #[cfg(target_os = "macos")]
             {
                 app.set_activation_policy(tauri::ActivationPolicy::Accessory);
-                // Hands for every agent runs under Ultron, so one permission grant covers all.
+                // Hands for every agent runs under Clickhand, so one permission grant covers all.
                 if let Some(child) = onboard::start_broker() {
                     app.manage(Mutex::new(Some(child)));
                 }
@@ -347,5 +347,5 @@ fn main() {
             Ok(())
         })
         .run(tauri::generate_context!())
-        .expect("Ultron failed to start");
+        .expect("Clickhand failed to start");
 }

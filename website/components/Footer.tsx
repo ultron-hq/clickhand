@@ -4,7 +4,7 @@ export function Footer() {
   return (
     <footer className="foot">
       <div className="foot-row">
-        <span className="brand brand-sm"><img src="/logo.svg" alt="" width={18} height={18} />Ultron, open source</span>
+        <span className="brand brand-sm"><img src="/logo.svg" alt="" width={18} height={18} />Clickhand, open source</span>
         <nav aria-label="Footer">
           <a href="/docs">Docs</a>
           <a href={REPO}>GitHub</a>
@@ -13,7 +13,7 @@ export function Footer() {
           <a href={`${REPO}/blob/main/SECURITY.md`}>Security</a>
         </nav>
       </div>
-      <p className="wordmark" aria-hidden="true">Ultron</p>
+      <p className="wordmark" aria-hidden="true">Clickhand</p>
     </footer>
   );
 }

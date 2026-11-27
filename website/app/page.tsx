@@ -32,22 +32,22 @@ const APP = [
 
 const SKILLS = [
   {
-    name: "teach", tag: "/ultron-teach", title: "Show me how",
+    name: "teach", tag: "/clickhand-teach", title: "Show me how",
     body: "It points at each button on your screen with a glowing box and a caption, waits for you to click, then shows the next step. It never clicks for you",
-    cmd: "/ultron-teach how do I add RSI on TradingView?",
+    cmd: "/clickhand-teach how do I add RSI on TradingView?",
     video: "/media/teach.mp4", poster: "/media/teach.jpg", alt: "Codex teaching how to add the RSI indicator on TradingView with on-screen highlights",
   },
   {
-    name: "post", tag: "/ultron-post", title: "Post it for me",
+    name: "post", tag: "/clickhand-post", title: "Post it for me",
     body: "It writes the post, attaches your video, publishes from your own logged-in browser on X or LinkedIn, then checks it went up. No API keys",
-    cmd: "/ultron-post announce v2 on X with ~/demo.mp4",
+    cmd: "/clickhand-post announce v2 on X with ~/demo.mp4",
     video: "/media/post.mp4", poster: "/media/post.jpg", alt: "Codex writing and publishing a post on X by itself",
   },
   {
-    name: "hands", tag: "/ultron-hands", title: "Do it for me",
+    name: "hands", tag: "/clickhand", title: "Do it for me",
     body: "Anything that needs a person at the computer: forms, settings, apps without an API. It looks, acts, and checks every step",
-    cmd: "/ultron-hands rename these 40 files in Finder",
-    video: "/media/first-user.mp4", poster: "/media/first-user.jpg", alt: "A first user cloning Ultron and Codex pressing a button on the website by itself",
+    cmd: "/clickhand rename these 40 files in Finder",
+    video: "/media/first-user.mp4", poster: "/media/first-user.jpg", alt: "A first user cloning Clickhand and Codex pressing a button on the website by itself",
   },
 ];
 
@@ -80,7 +80,7 @@ export default async function Home() {
             <div className="hero-copy">
               <h1>Let any AI agent use your PC like a human</h1>
               <p className="lede">
-                Ultron is an open-source desktop agent. Press <Keys keys={["Ctrl", "Space"]} /> and ask, or give Claude Code, Codex and any MCP agent the mouse and keyboard
+                Clickhand is an open-source desktop agent. Press <Keys keys={["Ctrl", "Space"]} /> and ask, or give Claude Code, Codex and any MCP agent the mouse and keyboard
               </p>
               <InstallBox />
               <div className="actions">
@@ -100,7 +100,7 @@ export default async function Home() {
 
         <section className="demo" id="demo">
           <div className="section-head">
-            <h2>Your agent asks, Ultron clicks</h2>
+            <h2>Your agent asks, Clickhand clicks</h2>
             <p>A Claude Code session on the left, the desktop it controls on the right. Every step is a screenshot, an action and a check</p>
             <p className="note">Hands ships today for Windows, macOS and Linux. The full desktop app is being rewritten in Rust, <a href={`${REPO}/blob/main/ROADMAP.md`}>see the roadmap</a></p>
           </div>
@@ -111,9 +111,9 @@ export default async function Home() {
           <div className="hands-copy">
             <h2>Hands for your agent</h2>
             <p>
-              Coding agents read and write files, but they can’t click. Ultron Hands is an <a href="https://modelcontextprotocol.io">MCP</a> server that lets them see the screen, move the mouse, click, scroll and type, so anything that needs a person at the computer can be handed off
+              Coding agents read and write files, but they can’t click. Clickhand is an <a href="https://modelcontextprotocol.io">MCP</a> server that lets them see the screen, move the mouse, click, scroll and type, so anything that needs a person at the computer can be handed off
             </p>
-            <pre><code><span className="c"># 1. install, then answer the setup</span>{"\n"}curl -fsSL https://getultron.vercel.app/install.sh | sh{"\n"}<span className="c"># 2. ask your agent</span>{"\n"}"Use ultron-hands to book the 7pm table on OpenTable"{"\n"}<span className="c"># stop it any time</span>{"\n"}ultron-hands stop</code></pre>
+            <pre><code><span className="c"># 1. install, then answer the setup</span>{"\n"}curl -fsSL https://clickhand.vercel.app/install.sh | sh{"\n"}<span className="c"># 2. ask your agent</span>{"\n"}"Use clickhand to book the 7pm table on OpenTable"{"\n"}<span className="c"># stop it any time</span>{"\n"}clickhand stop</code></pre>
             <p className="note">One Rust binary for Windows, macOS and Linux. Setup finds Claude Code, Codex, Cursor, VS Code, Windsurf, Claude Desktop and Gemini CLI and connects each one</p>
           </div>
           <LoopDiagram />
@@ -155,7 +155,7 @@ export default async function Home() {
             </div>
           </div>
           <div>
-            <h2>Ultron, the app</h2>
+            <h2>Clickhand, the app</h2>
             <p className="intro">A flip clock that lives at the top of your screen and answers when you talk to it</p>
             <ul className="rows">
               {APP.map(({ icon: Icon, title, body }) => (
@@ -193,7 +193,7 @@ export default async function Home() {
                 <li key={s.title}><b>{s.title}</b><p>{s.body}</p></li>
               ))}
             </ul>
-            <pre className="stop-cmd"><code><span className="c"># the real kill switch</span>{"\n"}ultron-hands stop{"\n"}<span className="c"># and what it did</span>{"\n"}ultron-hands log</code></pre>
+            <pre className="stop-cmd"><code><span className="c"># the real kill switch</span>{"\n"}clickhand stop{"\n"}<span className="c"># and what it did</span>{"\n"}clickhand log</code></pre>
           </div>
         </section>
 
