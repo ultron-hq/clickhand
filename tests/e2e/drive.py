@@ -119,17 +119,20 @@ def main():
 
     out_file = os.path.join(tempfile.mkdtemp(), "typed.txt")
     reader_window(out_file)
-    time.sleep(4)
-
-    err, text, _ = s.call("list_windows")
     win = None
-    try:
-        wins = json.loads(text)
-        if isinstance(wins, dict):
-            wins = wins.get("result", wins.get("windows", []))
-        win = next((w for w in wins if TITLE in str(w.get("title", ""))), None)
-    except ValueError:
-        pass
+    for _ in range(30):  # slow VMs take a while to open a terminal window
+        time.sleep(1)
+        err, text, _ = s.call("list_windows")
+        try:
+            wins = json.loads(text)
+            if isinstance(wins, dict):
+                wins = wins.get("result", wins.get("windows", []))
+            win = next((w for w in wins if TITLE in str(w.get("title", ""))), None)
+        except ValueError:
+            pass
+        if win:
+            time.sleep(1)
+            break
     check("list_windows finds the test window", win is not None, win or text[:200])
 
     err, text, imgs = s.call("screenshot")
