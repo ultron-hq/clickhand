@@ -22,8 +22,48 @@ pub fn location() -> Result<(i32, i32), HandsError> {
     enigo()?.location().map_err(fail)
 }
 
+/// On macOS, synthetic "mouse moved" events don't always move the cursor (seen in macOS
+/// VMs), and clicks are posted wherever the cursor is. Warp it there first.
+#[cfg(target_os = "macos")]
+fn warp(x: i32, y: i32) {
+    #[repr(C)]
+    struct CGPoint {
+        x: f64,
+        y: f64,
+    }
+    #[link(name = "CoreGraphics", kind = "framework")]
+    unsafe extern "C" {
+        fn CGWarpMouseCursorPosition(p: CGPoint) -> i32;
+        fn CGAssociateMouseAndMouseCursorPosition(connected: u32) -> i32;
+    }
+    unsafe {
+        CGWarpMouseCursorPosition(CGPoint { x: x as f64, y: y as f64 });
+        CGAssociateMouseAndMouseCursorPosition(1);
+    }
+}
+
+/// Move the pointer and confirm it got there, so a click can never land somewhere else.
+fn go(e: &mut Enigo, x: i32, y: i32) -> Result<(), HandsError> {
+    #[cfg(target_os = "macos")]
+    warp(x, y);
+    e.move_mouse(x, y, Coordinate::Abs).map_err(fail)?;
+    let mut at = (x, y);
+    for _ in 0..25 {
+        match e.location() {
+            Ok(p) if (p.0 - x).abs() <= 2 && (p.1 - y).abs() <= 2 => return Ok(()),
+            Ok(p) => at = p,
+            Err(_) => return Ok(()), // can't read the pointer here; trust the move
+        }
+        sleep(Duration::from_millis(8));
+    }
+    Err(HandsError::new(format!(
+        "The pointer didn't reach ({x},{y}) (it is at ({},{})), so nothing was clicked. Take a fresh screenshot and try again.",
+        at.0, at.1
+    )))
+}
+
 pub fn move_to(x: i32, y: i32) -> Result<(), HandsError> {
-    enigo()?.move_mouse(x, y, Coordinate::Abs).map_err(fail)
+    go(&mut enigo()?, x, y)
 }
 
 pub fn button(name: &str) -> Result<Button, HandsError> {
@@ -37,7 +77,7 @@ pub fn button(name: &str) -> Result<Button, HandsError> {
 
 pub fn click(x: i32, y: i32, b: Button, count: u32) -> Result<(), HandsError> {
     let mut e = enigo()?;
-    e.move_mouse(x, y, Coordinate::Abs).map_err(fail)?;
+    go(&mut e, x, y)?;
     for i in 0..count {
         if i > 0 {
             sleep(Duration::from_millis(90));
@@ -50,11 +90,13 @@ pub fn click(x: i32, y: i32, b: Button, count: u32) -> Result<(), HandsError> {
 /// Press at the start, glide in 8 steps, and always release.
 pub fn drag(from: (i32, i32), to: (i32, i32)) -> Result<(), HandsError> {
     let mut e = enigo()?;
-    e.move_mouse(from.0, from.1, Coordinate::Abs).map_err(fail)?;
+    go(&mut e, from.0, from.1)?;
     e.button(Button::Left, Direction::Press).map_err(fail)?;
     let mut result = Ok(());
     for i in 1..=8 {
         let (x, y) = (from.0 + (to.0 - from.0) * i / 8, from.1 + (to.1 - from.1) * i / 8);
+        #[cfg(target_os = "macos")]
+        warp(x, y);
         if let Err(err) = e.move_mouse(x, y, Coordinate::Abs) {
             result = Err(fail(err));
             break;
