@@ -164,7 +164,7 @@ def main():
     check("the window received exactly the typed text", got == TEXT, repr(got))
 
     # Teach overlay: a captioned box the person sees but the agent's screenshots don't.
-    if sys.platform in ("linux", "win32"):
+    if sys.platform in ("linux", "win32", "darwin"):
         err, text, _ = s.call("screenshot")
         err, text, _ = s.call("highlight", x0=200, y0=200, x1=420, y1=260, caption="Click here", seconds=8)
         check("highlight shows a box", not err and "Showing a box" in text, text[:150])
@@ -177,6 +177,8 @@ def main():
                 lambda h, _: found.append(h) or True if u.IsWindowVisible(h) and _cls(u, h) == "UltronHandsOverlay" else True)
             u.EnumWindows(proc, 0)
             check("overlay windows are on screen", len(found) >= 2, f"{len(found)} visible")
+        if sys.platform == "darwin":
+            subprocess.run(["screencapture", "-x", os.path.join(OUT, "person-view-with-highlight.png")])
         err, text, imgs = s.call("screenshot")
         save(imgs, "agent-view-with-highlight")
         err, text, _ = s.call("highlight", x0=0, y0=0, x1=1, y1=1, seconds=0)

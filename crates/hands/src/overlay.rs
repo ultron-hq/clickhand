@@ -2,7 +2,8 @@
 //! agent is using Hands, a tag beside the pointer whenever it moves the mouse or types,
 //! and captioned boxes for teaching ("click here"). Every overlay is click-through and
 //! hidden while a screenshot is taken, so the agent never sees or hits it.
-//! Linux (X11) and Windows; on macOS these calls do nothing yet.
+//! Linux (X11), Windows and macOS. On macOS AppKit needs the main thread, so the MCP
+//! server runs on a worker thread there and the main thread runs `run_main`.
 //! Set ULTRON_HANDS_OVERLAY=0 to turn it off.
 use std::time::Duration;
 
@@ -15,22 +16,24 @@ pub fn enabled() -> bool {
     std::env::var("ULTRON_HANDS_OVERLAY").as_deref() != Ok("0")
 }
 
+#[cfg(target_os = "macos")]
+pub use mac::{activity, clear, hidden, highlight, run_main};
 #[cfg(windows)]
 pub use win::{activity, clear, hidden, highlight};
 #[cfg(target_os = "linux")]
 pub use x::{activity, clear, hidden, highlight};
 
-#[cfg(not(any(target_os = "linux", windows)))]
+#[cfg(not(any(target_os = "linux", windows, target_os = "macos")))]
 pub fn activity(_input: bool) {}
-#[cfg(not(any(target_os = "linux", windows)))]
+#[cfg(not(any(target_os = "linux", windows, target_os = "macos")))]
 pub fn hidden<T>(f: impl FnOnce() -> T) -> T {
     f()
 }
-#[cfg(not(any(target_os = "linux", windows)))]
+#[cfg(not(any(target_os = "linux", windows, target_os = "macos")))]
 pub fn highlight(_x: i32, _y: i32, _w: i32, _h: i32, _caption: &str, _secs: f64) -> bool {
     false
 }
-#[cfg(not(any(target_os = "linux", windows)))]
+#[cfg(not(any(target_os = "linux", windows, target_os = "macos")))]
 pub fn clear() {}
 
 /// Split a caption into lines of at most `width` characters (ASCII; others become '?').
@@ -688,6 +691,264 @@ mod win {
         };
         st.caption = lines;
         st.boxes = Some((frame, (cx, cy, cw, ch)));
+        st.box_until = Some(Instant::now() + Duration::from_secs_f64(secs.clamp(0.0, 120.0)));
+        true
+    }
+
+    pub fn clear() {
+        state().box_until = None;
+    }
+}
+
+/// macOS: borderless, click-through windows at screen-saver level, drawn with Core
+/// Animation layers, owned by the main thread. Other threads talk to it through `STATE`;
+/// a screenshot asks the main thread to take the windows down and waits until it has.
+#[cfg(target_os = "macos")]
+mod mac {
+    use std::sync::atomic::{AtomicBool, Ordering};
+    use std::sync::{Condvar, LazyLock, Mutex, MutexGuard};
+    use std::time::{Duration, Instant};
+
+    use objc2::rc::Retained;
+    use objc2::MainThreadMarker;
+    use objc2_app_kit::{
+        NSApplication, NSApplicationActivationPolicy, NSBackingStoreType, NSColor, NSEvent, NSEventMask, NSFont, NSFontWeightSemibold,
+        NSScreen, NSScreenSaverWindowLevel, NSTextField, NSWindow, NSWindowCollectionBehavior, NSWindowStyleMask,
+    };
+    use objc2_foundation::{NSDate, NSDefaultRunLoopMode, NSPoint, NSRect, NSSize, NSString};
+
+    use super::{wrap, FRAME_FOR, TAG_FOR};
+
+    const TAG: &str = "Ultron is using your mouse";
+
+    type Rect = (i32, i32, i32, i32);
+
+    #[derive(Default)]
+    struct State {
+        frame_until: Option<Instant>,
+        tag_until: Option<Instant>,
+        box_until: Option<Instant>,
+        caption: Vec<String>,
+        /// a new box (top-left input coordinates) for the main thread to place
+        new_box: Option<Rect>,
+        /// a screenshot wants the overlay off the screen
+        hide: bool,
+        /// the main thread has taken it down
+        down: bool,
+    }
+
+    static STATE: LazyLock<Mutex<State>> = LazyLock::new(|| Mutex::new(State::default()));
+    static CHANGED: Condvar = Condvar::new();
+    static READY: AtomicBool = AtomicBool::new(false);
+
+    fn state() -> MutexGuard<'static, State> {
+        STATE.lock().unwrap_or_else(|e| e.into_inner())
+    }
+
+    fn color(r: f64, g: f64, b: f64, a: f64) -> Retained<NSColor> {
+        NSColor::colorWithSRGBRed_green_blue_alpha(r, g, b, a)
+    }
+
+    fn rect(x: f64, y: f64, w: f64, h: f64) -> NSRect {
+        NSRect::new(NSPoint::new(x, y), NSSize::new(w, h))
+    }
+
+    /// A borderless, click-through window above everything, drawn by its layer.
+    fn window(mtm: MainThreadMarker, border: f64, radius: f64, fill: bool) -> Retained<NSWindow> {
+        let w = unsafe {
+            NSWindow::initWithContentRect_styleMask_backing_defer(
+                mtm.alloc(),
+                rect(0.0, 0.0, 10.0, 10.0),
+                NSWindowStyleMask::Borderless,
+                NSBackingStoreType::Buffered,
+                false,
+            )
+        };
+        unsafe { w.setReleasedWhenClosed(false) };
+        w.setOpaque(false);
+        w.setBackgroundColor(Some(&NSColor::clearColor()));
+        w.setIgnoresMouseEvents(true);
+        w.setHasShadow(false);
+        w.setLevel(NSScreenSaverWindowLevel);
+        w.setCollectionBehavior(
+            NSWindowCollectionBehavior::CanJoinAllSpaces
+                | NSWindowCollectionBehavior::Stationary
+                | NSWindowCollectionBehavior::IgnoresCycle
+                | NSWindowCollectionBehavior::FullScreenAuxiliary,
+        );
+        if let Some(view) = w.contentView() {
+            view.setWantsLayer(true);
+            if let Some(layer) = view.layer() {
+                let ember = color(1.0, 0.478, 0.184, 1.0);
+                layer.setBorderWidth(border);
+                layer.setBorderColor(Some(&ember.CGColor()));
+                layer.setCornerRadius(radius);
+                if fill {
+                    layer.setBackgroundColor(Some(&color(0.086, 0.043, 0.035, 0.96).CGColor()));
+                }
+            }
+        }
+        w
+    }
+
+    fn label(mtm: MainThreadMarker, win: &NSWindow, text: &str) -> Retained<NSTextField> {
+        let l = NSTextField::labelWithString(&NSString::from_str(text), mtm);
+        l.setTextColor(Some(&color(1.0, 0.945, 0.91, 1.0)));
+        l.setFont(Some(&NSFont::monospacedSystemFontOfSize_weight(12.5, unsafe {
+            NSFontWeightSemibold
+        })));
+        if let Some(view) = win.contentView() {
+            view.addSubview(&l);
+        }
+        l
+    }
+
+    /// Resize a label's window to fit its text.
+    fn fit(win: &NSWindow, l: &NSTextField, x: f64, y: f64) -> (f64, f64) {
+        let size = l.fittingSize();
+        let (w, h) = (size.width + 20.0, size.height + 10.0);
+        l.setFrame(rect(10.0, 5.0, size.width, size.height));
+        win.setFrame_display(rect(x, y, w, h), true);
+        (w, h)
+    }
+
+    fn show(win: &NSWindow, shown: &mut bool, on: bool) {
+        if on && !*shown {
+            win.orderFrontRegardless();
+        } else if !on && *shown {
+            win.orderOut(None);
+        }
+        *shown = on;
+    }
+
+    /// Run the overlay on the main thread until `done` says the server has finished.
+    pub fn run_main(mtm: MainThreadMarker, done: impl Fn() -> bool) {
+        if !super::enabled() {
+            while !done() {
+                std::thread::sleep(Duration::from_millis(100));
+            }
+            return;
+        }
+        let app = NSApplication::sharedApplication(mtm);
+        app.setActivationPolicy(NSApplicationActivationPolicy::Accessory);
+        app.finishLaunching();
+        let Some(screen) = NSScreen::mainScreen(mtm) else { return };
+        let sf = screen.frame();
+        let (sw, sh) = (sf.size.width, sf.size.height);
+
+        let edge = window(mtm, 4.0, 0.0, false);
+        edge.setFrame_display(rect(sf.origin.x, sf.origin.y, sw, sh), true);
+        let tag = window(mtm, 1.0, 6.0, true);
+        let tag_label = label(mtm, &tag, TAG);
+        let (tag_w, tag_h) = fit(&tag, &tag_label, 0.0, 0.0);
+        let frame = window(mtm, 3.0, 6.0, false);
+        let cap = window(mtm, 1.0, 6.0, true);
+        let cap_label = label(mtm, &cap, "");
+        let mut shown = [false; 4];
+        READY.store(true, Ordering::SeqCst);
+
+        while !done() {
+            let until = NSDate::dateWithTimeIntervalSinceNow(0.033);
+            if let Some(ev) =
+                unsafe { app.nextEventMatchingMask_untilDate_inMode_dequeue(NSEventMask::Any, Some(&until), NSDefaultRunLoopMode, true) }
+            {
+                app.sendEvent(&ev);
+            }
+
+            let now = Instant::now();
+            let mut st = state();
+            if st.hide {
+                for (w, s) in [&edge, &tag, &frame, &cap].into_iter().zip(shown.iter_mut()) {
+                    show(w, s, false);
+                }
+                if !st.down {
+                    st.down = true;
+                    CHANGED.notify_all();
+                }
+                continue;
+            }
+            let live = |t: Option<Instant>| t.is_some_and(|t| now < t);
+            let (frame_on, tag_on, box_on) = (live(st.frame_until), live(st.tag_until), live(st.box_until));
+            if let Some((x, y, w, h)) = st.new_box.take() {
+                // input coordinates are top-left points; Cocoa's origin is bottom-left
+                let (t, pad) = (3.0, 4.0);
+                let (fx, fw, fh) = (x as f64 - pad - t, w as f64 + 2.0 * (pad + t), h as f64 + 2.0 * (pad + t));
+                let fy = sh - (y as f64 - pad - t) - fh;
+                frame.setFrame_display(rect(fx, fy, fw, fh), true);
+                cap_label.setStringValue(&NSString::from_str(&st.caption.join("\n")));
+                let size = cap_label.fittingSize();
+                let (cw, ch) = (size.width + 20.0, size.height + 10.0);
+                let cx = fx.clamp(8.0, (sw - cw - 8.0).max(8.0));
+                let cy = if fy - 6.0 - ch > 8.0 {
+                    fy - 6.0 - ch
+                } else {
+                    (fy + fh + 6.0).min(sh - ch - 8.0)
+                };
+                fit(&cap, &cap_label, cx, cy);
+                shown[2] = false;
+                shown[3] = false;
+            }
+            if tag_on {
+                let p = NSEvent::mouseLocation();
+                let mut x = p.x + 20.0;
+                let mut y = p.y - 22.0 - tag_h;
+                if x + tag_w > sw - 8.0 {
+                    x = p.x - tag_w - 12.0;
+                }
+                if y < 8.0 {
+                    y = p.y + 14.0;
+                }
+                tag.setFrameOrigin(NSPoint::new(x, y));
+            }
+            let has_caption = !st.caption.is_empty();
+            drop(st);
+            show(&edge, &mut shown[0], frame_on || tag_on);
+            show(&tag, &mut shown[1], tag_on);
+            show(&frame, &mut shown[2], box_on);
+            show(&cap, &mut shown[3], box_on && has_caption);
+        }
+        READY.store(false, Ordering::SeqCst);
+    }
+
+    pub fn activity(input: bool) {
+        if !READY.load(Ordering::SeqCst) {
+            return;
+        }
+        let now = Instant::now();
+        let mut st = state();
+        st.frame_until = Some(now + FRAME_FOR);
+        if input {
+            st.tag_until = Some(now + TAG_FOR);
+        }
+    }
+
+    pub fn hidden<T>(f: impl FnOnce() -> T) -> T {
+        if !READY.load(Ordering::SeqCst) {
+            return f();
+        }
+        {
+            let mut st = state();
+            st.hide = true;
+            st.down = false;
+            let (st2, _) = CHANGED
+                .wait_timeout_while(st, Duration::from_millis(300), |s| !s.down)
+                .unwrap_or_else(|e| e.into_inner());
+            drop(st2);
+        }
+        // let the window server repaint without them
+        std::thread::sleep(Duration::from_millis(50));
+        let out = f();
+        state().hide = false;
+        out
+    }
+
+    pub fn highlight(x: i32, y: i32, w: i32, h: i32, caption: &str, secs: f64) -> bool {
+        if !READY.load(Ordering::SeqCst) {
+            return false;
+        }
+        let mut st = state();
+        st.caption = wrap(caption, 52, 5);
+        st.new_box = Some((x, y, w, h));
         st.box_until = Some(Instant::now() + Duration::from_secs_f64(secs.clamp(0.0, 120.0)));
         true
     }

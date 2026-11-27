@@ -547,6 +547,17 @@ fn serve() {
     }
 }
 
+/// Serve MCP; on macOS the main thread runs the on-screen overlay meanwhile.
+fn serve_with_overlay() {
+    #[cfg(target_os = "macos")]
+    if let Some(mtm) = objc2::MainThreadMarker::new() {
+        let server = std::thread::spawn(serve);
+        overlay::run_main(mtm, || server.is_finished());
+        return;
+    }
+    serve();
+}
+
 fn main() {
     use std::io::IsTerminal;
     // Exit quietly when the reader goes away (`ultron-hands log | head`) instead of panicking.
@@ -576,7 +587,7 @@ fn main() {
     let code = match first.map(String::as_str) {
         None if std::io::stdin().is_terminal() => setup::setup(yes),
         None | Some("serve") => {
-            serve();
+            serve_with_overlay();
             0
         }
         Some("setup") => setup::setup(yes),
