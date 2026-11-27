@@ -5,6 +5,19 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-11-27
+
+### Fixed
+- Screenshots no longer fail at random when Hands is the X server's only client (Ubuntu 22.04, Debian 12, openSUSE with Xvfb).
+- macOS: clicks land where asked. The pointer is warped to the target, and on every OS a click only happens once the pointer is confirmed there.
+- `ultron-hands log | head` no longer panics.
+
+### Changed
+- Linux binaries are static (musl) and run on any distro, Alpine included.
+
+### Added
+- End-to-end tests: on 7 Linux distros in Docker (`tests/e2e/linux.sh`) and on real Windows, macOS (Apple silicon, Intel) and Ubuntu desktops (`e2e` workflow, also run against the live installer after every release).
+
 ## [0.1.1] - 2026-11-27
 
 ### Fixed
