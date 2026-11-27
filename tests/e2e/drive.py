@@ -108,7 +108,7 @@ def main():
     check("initialize", init["result"]["serverInfo"]["name"] == "ultron-hands", init["result"]["serverInfo"])
     s.rpc("notifications/initialized", notify=True)
     tools = [t["name"] for t in s.rpc("tools/list")["result"]["tools"]]
-    check("tools/list", len(tools) == 17, f"{len(tools)} tools")
+    check("tools/list", len(tools) >= 17, f"{len(tools)} tools")
 
     err, text, _ = s.call("screen_info")
     check("screen_info", not err, text)

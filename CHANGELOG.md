@@ -5,6 +5,13 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-11-27
+
+### Added
+- You can see when an agent is using your computer: an orange frame around the screen while it works, and an "Ultron is using your mouse" tag beside the pointer when it clicks or types. Both are click-through and hidden from the agent's screenshots (Linux/X11 first; `ULTRON_HANDS_OVERLAY=0` turns it off).
+- Ultron Teach: a `highlight` tool draws a box and caption on your screen ("Click Export here") without clicking anything, so an agent can show you how to use an app while you do the steps. Works in read-only mode.
+- Agent skills: setup installs `ultron-hands` and `ultron-teach` into Claude Code and Codex, so `/ultron-teach show me how to ... in Figma` works. `ultron-hands skills` reinstalls them; copies you edit are left alone.
+
 ## [0.1.2] - 2026-11-27
 
 ### Fixed

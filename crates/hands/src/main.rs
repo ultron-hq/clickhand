@@ -15,6 +15,7 @@
 mod desktop;
 mod input;
 mod log;
+mod overlay;
 mod screen;
 mod setup;
 
@@ -148,6 +149,8 @@ fn tools() -> Vec<Tool> {
         Tool { name: "list_apps", input: false, description: "Installed GUI applications (names accepted by open_app), optionally filtered.", params: vec![opt("query", "string", json!(""))] },
         Tool { name: "open_app", input: true, description: "Launch an installed GUI app by name (see list_apps). Exact match first, then substring.", params: vec![req("name", "string"), look(true)] },
         Tool { name: "open_url", input: true, description: "Open an http(s) URL in the default browser.", params: vec![req("url", "string"), look(true)] },
+        Tool { name: "highlight", input: false, description: "Teach mode: draw a glowing box around a region of the screen (coordinates of the last\nscreenshot) with a short caption beside it, e.g. 'Click Export here'. It clicks nothing,\nso it works in read-only mode too; the person does the step. seconds=0 clears it.\nThe box is hidden from your own screenshots.",
+            params: vec![req("x0", "integer"), req("y0", "integer"), req("x1", "integer"), req("y1", "integer"), opt("caption", "string", json!("")), opt("seconds", "number", json!(15.0))] },
         Tool { name: "wait", input: false, description: "Wait (max 30 s) for something to load, then look again.", params: vec![opt("seconds", "number", json!(1.0)), look(true)] },
         Tool { name: "hands_log", input: false, description: "The most recent hands calls (tool, args, ok, error, ms). Typed text is never stored.",
             params: vec![opt("n", "integer", json!(25)), opt("errors_only", "boolean", json!(false))] },
@@ -266,6 +269,31 @@ fn call(name: &str, a: &Args) -> Out {
             let (px, py) = screen::to_screen(x as i32, y as i32)?;
             input::click(px, py, b, count as u32)?;
             after(format!("{button} click ×{count} at ({x},{y}) → screen ({px},{py})"), a.bool("look"))
+        }
+        "highlight" => {
+            let secs = a.0.get("seconds").and_then(Value::as_f64).unwrap_or(15.0);
+            if secs <= 0.0 {
+                overlay::clear();
+                return json_out(json!({"result": "cleared"}));
+            }
+            let f = screen::frame();
+            if f.width == 0 {
+                return Err(HandsError::new("Take a screenshot first; the box uses its coordinates."));
+            }
+            let clamp = |v: i64, max: u32| (v.max(0) as i32).min(max as i32 - 1);
+            let (x0, y0) = (clamp(a.int("x0")?, f.width), clamp(a.int("y0")?, f.height));
+            let (x1, y1) = (clamp(a.int("x1")?, f.width), clamp(a.int("y1")?, f.height));
+            let (ax, ay) = screen::to_screen(x0.min(x1), y0.min(y1))?;
+            let (bx, by) = screen::to_screen(x0.max(x1), y0.max(y1))?;
+            let caption = a.opt_str("caption").unwrap_or_default();
+            if !overlay::highlight(ax, ay, (bx - ax).max(1), (by - ay).max(1), &caption, secs) {
+                return Err(HandsError::new(
+                    "On-screen highlights aren't available on this system yet (Linux/X11 only for now). Describe where to click instead.",
+                ));
+            }
+            json_out(
+                json!({"result": format!("Showing a box around ({x0},{y0})-({x1},{y1}) for {}s{}", py_float(secs), if caption.is_empty() { String::new() } else { format!(" with \"{caption}\"") })}),
+            )
         }
         "move_mouse" => {
             let (x, y) = (a.int("x")?, a.int("y")?);
@@ -401,7 +429,12 @@ fn run_tool(tool: &Tool, raw: &Map<String, Value>) -> Value {
         })
         .collect();
     let t0 = Instant::now();
-    let out = log::guard(tool.input).and_then(|()| call(tool.name, &Args(&args)));
+    let out = log::guard(tool.input).and_then(|()| {
+        if !matches!(tool.name, "hands_log" | "hands_report" | "hands_feedback") {
+            overlay::activity(tool.input);
+        }
+        call(tool.name, &Args(&args))
+    });
     let mut rec = Map::new();
     rec.insert("tool".into(), json!(tool.name));
     rec.insert("args".into(), Value::Object(shown));
@@ -556,6 +589,7 @@ fn main() {
         Some("disconnect") => setup::connect(rest(1), false, yes),
         Some("stop") => setup::stop(true),
         Some("resume") => setup::stop(false),
+        Some("skills") => setup::skills(),
         Some("log") => setup::show_log(rest(1).and_then(|n| n.parse().ok()).unwrap_or(20)),
         Some(other) => {
             eprintln!("Unknown command `{other}`.\n\n{}", setup::HELP);
@@ -585,7 +619,7 @@ mod tests {
     fn schemas_have_the_original_shape() {
         let all = tools();
         let names: Vec<&str> = all.iter().map(|t| t.name).collect();
-        assert_eq!(names.len(), 17);
+        assert_eq!(names.len(), 18);
         let click = all.iter().find(|t| t.name == "click").unwrap().schema();
         assert_eq!(click["required"], json!(["x", "y"]));
         assert_eq!(

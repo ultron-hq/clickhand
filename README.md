@@ -73,6 +73,18 @@ The installer checks the download, then starts a short setup that:
    Claude Desktop and Gemini CLI**. It never replaces another server without asking,
 3. tells you what to ask first.
 
+While an agent works you see an orange frame around the screen and an "Ultron is using your
+mouse" tag by the pointer (click-through, and hidden from the agent's own screenshots).
+
+**Ultron Teach.** Setup also adds two agent skills to Claude Code and Codex: `ultron-hands`
+(do it for me) and `ultron-teach` (show me how). Teach points at things on your screen with a
+glowing box and a caption, and you do the clicking:
+
+```
+/ultron-teach show me how to export a frame as PNG in Figma
+/ultron-teach where are the API keys in this dashboard?
+```
+
 Then open your agent and ask, for example: *"Use ultron-hands to open getultron.vercel.app and press
 the big red button."*
 
@@ -81,6 +93,7 @@ the big red button."*
 | `ultron-hands` | Setup again (connects agents you installed since) |
 | `ultron-hands stop` / `resume` | Kill switch: every click and keystroke is refused until you resume |
 | `ultron-hands log` | What it did, most recent last |
+| `ultron-hands skills` | Reinstall the `ultron-hands` and `ultron-teach` skills |
 | `ultron-hands doctor` | Check the screen, input and permissions |
 | `ultron-hands agents` | Which agents are connected |
 | `ultron-hands connect <agent>` / `disconnect <agent>` | One agent at a time |

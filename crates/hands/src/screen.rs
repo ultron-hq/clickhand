@@ -161,7 +161,7 @@ fn ring(img: &mut RgbaImage, cx: i32, cy: i32) {
 /// Take a screenshot (optionally of a region, in screen pixels) no wider than `max_width`,
 /// with the cursor ring drawn. Returns PNG bytes and remembers the frame for mapping.
 pub fn shot(max_width: u32, region: Option<(u32, u32, u32, u32)>) -> Result<Vec<u8>, HandsError> {
-    let full = capture()?;
+    let full = crate::overlay::hidden(capture)?;
     let per = input_per_pixel(full.width());
     let (mx, my) = input::location()
         .map(|(x, y)| ((x as f64 / per) as i32, (y as f64 / per) as i32))

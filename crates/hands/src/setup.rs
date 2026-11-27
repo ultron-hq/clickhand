@@ -426,6 +426,62 @@ fn codex_approve(file: &Path) -> std::io::Result<()> {
     std::fs::write(file, lines.join("\n") + "\n")
 }
 
+// ── skills ──
+
+const SKILLS: &[(&str, &str)] = &[
+    ("ultron-hands", include_str!("../skills/ultron-hands/SKILL.md")),
+    ("ultron-teach", include_str!("../skills/ultron-teach/SKILL.md")),
+];
+const MANAGED: &str = "Installed by ultron-hands setup.";
+
+/// Agent skill folders on this computer (Claude Code, Codex), for agents that are installed.
+fn skill_dirs() -> Vec<(&'static str, PathBuf)> {
+    let mut out = Vec::new();
+    if which("claude").is_some() {
+        out.push(("Claude Code", claude_settings().with_file_name("skills")));
+    }
+    if which("codex").is_some() {
+        out.push(("Codex", codex_config().with_file_name("skills")));
+    }
+    out
+}
+
+/// Write the skills into `dir`, leaving any copy the person edited (marker removed) alone.
+fn install_skills(dir: &Path) -> Result<usize, String> {
+    let mut n = 0;
+    for (name, body) in SKILLS {
+        let file = dir.join(name).join("SKILL.md");
+        if let Ok(old) = std::fs::read_to_string(&file) {
+            if !old.contains(MANAGED) || old == *body {
+                continue;
+            }
+        }
+        std::fs::create_dir_all(file.parent().unwrap_or(dir)).map_err(|e| e.to_string())?;
+        std::fs::write(&file, body).map_err(|e| format!("{}: {e}", file.display()))?;
+        n += 1;
+    }
+    Ok(n)
+}
+
+pub fn skills() -> i32 {
+    let dirs = skill_dirs();
+    if dirs.is_empty() {
+        warn("Neither Claude Code nor Codex is installed, so there's nowhere to add skills.");
+        return 1;
+    }
+    let mut code = 0;
+    for (agent, dir) in dirs {
+        match install_skills(&dir) {
+            Ok(_) => good(&format!("{agent}: skills ultron-hands and ultron-teach in {}", dir.display())),
+            Err(e) => {
+                bad(&format!("{agent}: {e}"));
+                code = 1;
+            }
+        }
+    }
+    code
+}
+
 // ── doctor ──
 
 #[cfg(target_os = "macos")]
@@ -611,10 +667,19 @@ pub fn setup(yes: bool) -> i32 {
         }
     }
 
+    for (agent, dir) in skill_dirs() {
+        match install_skills(&dir) {
+            Ok(_) => good(&format!("{agent}: skills /ultron-hands and /ultron-teach")),
+            Err(e) => warn(&format!("{agent}: couldn't add the skills ({e})")),
+        }
+    }
+
     heading("3. Try it");
     if connected > 0 {
         println!("  Open your agent (restart it if it was running) and ask:");
         println!("    {}", paint("36", &format!("\"{TRY}\"")));
+        println!("  Or learn an app on your own screen:");
+        println!("    {}", paint("36", "\"/ultron-teach show me how to export a PNG in Figma\""));
     }
     println!(
         "  Stop it at any moment:  {}    (undo: ultron-hands resume)",
@@ -740,6 +805,7 @@ Usage: ultron-hands [command]
   stop                kill switch: refuse every action until `resume`
   resume              turn the kill switch off
   log [n]             the last n actions (default 20)
+  skills              (re)install the ultron-hands and ultron-teach agent skills
   serve               run the MCP server on stdin/stdout (what agents start)
   --version           print the version
 
@@ -748,6 +814,19 @@ Docs: https://github.com/ultron-hq/ultron";
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn skills_install_and_respect_edits() {
+        let dir = std::env::temp_dir().join(format!("uh-skills-{}", std::process::id()));
+        assert_eq!(install_skills(&dir).unwrap(), 2);
+        assert_eq!(install_skills(&dir).unwrap(), 0, "unchanged copies are left alone");
+        let teach = dir.join("ultron-teach/SKILL.md");
+        assert!(std::fs::read_to_string(&teach).unwrap().starts_with("---\nname: ultron-teach\n"));
+        std::fs::write(&teach, "my own version").unwrap();
+        install_skills(&dir).unwrap();
+        assert_eq!(std::fs::read_to_string(&teach).unwrap(), "my own version");
+        let _ = std::fs::remove_dir_all(&dir);
+    }
 
     #[test]
     fn codex_section_and_approval() {
