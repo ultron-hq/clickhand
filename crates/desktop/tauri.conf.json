@@ -36,7 +36,7 @@
         "url": "bar.html",
         "title": "Ask OpenHUD",
         "width": 680,
-        "height": 360,
+        "height": 64,
         "resizable": false,
         "decorations": false,
         "transparent": true,
@@ -51,10 +51,12 @@
         "url": "welcome.html",
         "title": "Welcome to OpenHUD",
         "width": 580,
-        "height": 620,
+        "height": 640,
         "resizable": true,
         "visible": false,
-        "center": true
+        "center": true,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true
       }
     ]
   },

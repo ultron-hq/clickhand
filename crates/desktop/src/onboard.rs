@@ -19,6 +19,8 @@ pub struct Onboard {
     codex: bool,
     hands: bool,
     autostart: bool,
+    /// Linux: "wayland" or "x11" (Hands needs an Xorg session today)
+    session: String,
 }
 
 fn flag() -> PathBuf {
@@ -72,6 +74,7 @@ pub fn onboard_state(app: AppHandle, st: State<App>) -> Onboard {
         codex: which("codex").is_some(),
         hands: hands().is_some(),
         autostart: app.autolaunch().is_enabled().unwrap_or(false),
+        session: std::env::var("XDG_SESSION_TYPE").unwrap_or_default(),
     }
 }
 

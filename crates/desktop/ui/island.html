@@ -1,37 +1,72 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>OpenHUD</title></head>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>OpenHUD</title>
+<script src="os.js"></script></head>
 <body>
-<div class="island" id="island" title="Click or press Ctrl+Space to ask OpenHUD">
-  <img src="logo.png" alt="">
+<div class="island" id="island" title="Ask OpenHUD">
+  <div class="dial">
+    <svg class="ring" viewBox="0 0 38 38" aria-hidden="true"><circle class="track" cx="19" cy="19" r="17"/><circle class="fill" id="ring" cx="19" cy="19" r="17" stroke-dasharray="107" stroke-dashoffset="107"/></svg>
+    <svg class="mark" viewBox="-32 -32 64 64" aria-hidden="true">
+      <g class="mk-arcs"><path d="M-17.6 -8.8A20 20 0 0 1 -8.8 -17.6"/><path d="M8.8 -17.6A20 20 0 0 1 17.6 -8.8"/><path d="M17.6 8.8A20 20 0 0 1 8.8 17.6"/><path d="M-8.8 17.6A20 20 0 0 1 -17.6 8.8"/></g>
+      <path class="mk-ticks" d="M0 -26v6M0 20v6M-26 0h6M20 0h6"/>
+      <circle class="mk-ring" r="11"/><circle class="mk-core" r="4"/>
+    </svg>
+  </div>
   <div class="flip" id="flip"></div>
   <div class="meta"><span id="label"></span><small id="hint">Ctrl+Space</small></div>
 </div>
 <script>
 const { invoke } = window.__TAURI__.core;
-const flip = document.getElementById("flip"), label = document.getElementById("label"), hint = document.getElementById("hint"), island = document.getElementById("island");
+const { listen } = window.__TAURI__.event;
+const $ = (id) => document.getElementById(id);
+const flip = $("flip"), label = $("label"), hint = $("hint"), island = $("island"), ring = $("ring");
 const two = (n) => String(n).padStart(2, "0");
+const C = 2 * Math.PI * 17;
+let status = "", flash = 0;
+
 function draw(a, b) {
-  flip.innerHTML = `<b>${a[0]}</b><b>${a[1]}</b><i>:</i><b>${b[0]}</b><b>${b[1]}</b>`;
+  const html = `<b>${a[0]}</b><b>${a[1]}</b><i>:</i><b>${b[0]}</b><b>${b[1]}</b>`;
+  if (flip.innerHTML !== html) flip.innerHTML = html;
 }
+
+// The agent's state: working (the mark spins), then a short "answered" flash.
+function onRequest(r) {
+  status = r ? r.status : "";
+  island.classList.toggle("working", status === "running");
+  if (r && r.status === "done" && r.prompt && !/timer|stopwatch|pause|resume|stop/i.test(r.prompt)) {
+    flash = Date.now() + 4000;
+  }
+  tick();
+}
+listen("request", (e) => onRequest(e.payload));
+invoke("request").then(onRequest).catch(() => {});
+
 async function tick() {
   let c;
   try { c = await invoke("clock"); } catch { return; }
   const now = Date.now() / 1000;
+  const answered = Date.now() < flash;
+  island.classList.toggle("answered", answered && status !== "running");
   island.classList.toggle("paused", c.paused_at != null);
+  island.classList.toggle("timing", c.kind === "timer");
+  let text = "";
   if (!c.kind) {
     const d = new Date();
     draw(two(d.getHours()), two(d.getMinutes()));
-    label.textContent = "";
-    return;
+  } else {
+    const end = c.paused_at ?? now;
+    const elapsed = Math.max(0, end - c.started - c.paused_total);
+    const s = c.kind === "timer" ? Math.max(0, Math.ceil(c.planned - elapsed)) : Math.floor(elapsed);
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+    if (h > 0) draw(two(h), two(m)); else draw(two(m), two(sec));
+    text = c.paused_at != null ? "paused" : c.label || c.kind;
+    // the ring drains as the timer runs
+    if (c.kind === "timer") ring.style.strokeDashoffset = String(C * (1 - Math.max(0, c.planned - elapsed) / c.planned));
   }
-  const end = c.paused_at ?? now;
-  const elapsed = Math.max(0, end - c.started - c.paused_total);
-  let s = c.kind === "timer" ? Math.max(0, Math.ceil(c.planned - elapsed)) : Math.floor(elapsed);
-  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
-  if (h > 0) draw(two(h), two(m)); else draw(two(m), two(sec));
-  label.textContent = c.label || (c.kind === "timer" ? "timer" : "stopwatch");
+  if (status === "running") text = "working";
+  else if (answered) text = "✓ answered";
+  label.textContent = text;
 }
-invoke("shortcut").then((k) => { if (k) hint.textContent = k; });
+invoke("shortcut").then((k) => { if (k) { hint.textContent = k; island.title = `Click or press ${k} to ask OpenHUD`; } });
 island.addEventListener("click", () => invoke("toggle_bar"));
 tick(); setInterval(tick, 500);
 </script>

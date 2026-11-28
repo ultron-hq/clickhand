@@ -237,6 +237,34 @@ fn local(text: &str, app: &App) -> Result<String, String> {
     }
 }
 
+/// "macos", "windows" or "linux", so each window can follow its OS's conventions.
+#[tauri::command]
+fn platform() -> &'static str {
+    if cfg!(target_os = "macos") {
+        "macos"
+    } else if cfg!(windows) {
+        "windows"
+    } else {
+        "linux"
+    }
+}
+
+/// Which AI answers what the bar can't: shown in the bar's footer.
+#[tauri::command]
+fn agent_name() -> &'static str {
+    agent::name()
+}
+
+/// The bar's window follows its content, so no invisible part of it blocks clicks.
+#[tauri::command]
+fn fit_bar(app: AppHandle, height: f64) {
+    if let Some(w) = app.get_webview_window("bar") {
+        let _ = w.set_size(tauri::LogicalSize::new(BAR_W, height.clamp(64.0, 520.0)));
+    }
+}
+
+const BAR_W: f64 = 680.0;
+
 #[tauri::command]
 fn hide_bar(app: AppHandle) {
     if let Some(w) = app.get_webview_window("bar") {
@@ -304,6 +332,16 @@ mod agent {
         let exts: Vec<&str> = if cfg!(windows) { vec![".exe", ".cmd", ""] } else { vec![""] };
         let path = std::env::var_os("PATH")?;
         std::env::split_paths(&path).find_map(|d| exts.iter().map(|e| d.join(format!("{bin}{e}"))).find(|p| p.is_file()))
+    }
+
+    pub fn name() -> &'static str {
+        if which("claude").is_some() {
+            "Claude Code"
+        } else if which("codex").is_some() {
+            "Codex"
+        } else {
+            ""
+        }
     }
 
     const BRIEF: &str = "You are OpenHUD, a desktop assistant the person reached with Ctrl+Space. \
@@ -402,17 +440,41 @@ mod agent {
     }
 }
 
-/// "ctrl+alt+space" → "Ctrl+Alt+Space"
+/// "ctrl+alt+space" → "Ctrl+Alt+Space" (Windows, Linux) or "⌃⌥ Space" (macOS).
 fn pretty(key: &str) -> String {
-    key.split('+')
-        .map(|p| {
-            let mut c = p.chars();
-            c.next()
-                .map(|f| f.to_uppercase().collect::<String>() + c.as_str())
-                .unwrap_or_default()
-        })
-        .collect::<Vec<_>>()
-        .join("+")
+    let parts: Vec<&str> = key.split('+').collect();
+    if cfg!(target_os = "macos") {
+        let mut mods = String::new();
+        let mut rest = Vec::new();
+        for p in &parts {
+            match p.to_lowercase().as_str() {
+                "ctrl" | "control" => mods.push('⌃'),
+                "alt" | "option" => mods.push('⌥'),
+                "shift" => mods.push('⇧'),
+                "cmd" | "super" | "command" | "meta" => mods.push('⌘'),
+                other => rest.push(cap(other)),
+            }
+        }
+        return format!("{mods} {}", rest.join(" ")).trim().to_string();
+    }
+    parts.iter().map(|p| cap(p)).collect::<Vec<_>>().join("+")
+}
+
+fn cap(p: &str) -> String {
+    let mut c = p.chars();
+    c.next()
+        .map(|f| f.to_uppercase().collect::<String>() + c.as_str())
+        .unwrap_or_default()
+}
+
+/// The default shortcut. On a Mac Ctrl+Space switches the keyboard's input source, so
+/// OpenHUD takes ⌥ Space there.
+fn default_shortcut() -> &'static str {
+    if cfg!(target_os = "macos") {
+        "alt+space"
+    } else {
+        "ctrl+space"
+    }
 }
 
 fn main() {
@@ -441,6 +503,9 @@ fn main() {
             clock,
             ask,
             request,
+            platform,
+            agent_name,
+            fit_bar,
             cancel,
             hide_bar,
             toggle_bar,
@@ -472,8 +537,8 @@ fn main() {
                 }
             });
 
-            // Ctrl+Space, or OPENHUD_SHORTCUT; fall back if something else holds it.
-            let wanted = std::env::var("OPENHUD_SHORTCUT").unwrap_or_else(|_| "ctrl+space".into());
+            // Ctrl+Space (⌥ Space on a Mac), or OPENHUD_SHORTCUT; fall back if something else holds it.
+            let wanted = std::env::var("OPENHUD_SHORTCUT").unwrap_or_else(|_| default_shortcut().into());
             let mut bound = None;
             for key in [wanted.as_str(), "ctrl+alt+space"] {
                 if let Ok(s) = key.parse::<Shortcut>() {
@@ -499,10 +564,47 @@ fn main() {
                     "quit" => app.exit(0),
                     _ => {}
                 });
-            if let Some(icon) = app.default_window_icon() {
-                tray = tray.icon(icon.clone());
+            // macOS: a monochrome menu-bar icon that follows light and dark menu bars, and the
+            // menu on click. Windows and Linux: click the tray icon to ask, right-click for the menu.
+            #[cfg(target_os = "macos")]
+            {
+                let img = tauri::image::Image::from_bytes(include_bytes!("../icons/tray-template.png"))?;
+                tray = tray.icon(img).icon_as_template(true);
+            }
+            #[cfg(not(target_os = "macos"))]
+            {
+                if let Some(icon) = app.default_window_icon() {
+                    tray = tray.icon(icon.clone());
+                }
+                tray = tray.show_menu_on_left_click(false).on_tray_icon_event(|tray, ev| {
+                    if let tauri::tray::TrayIconEvent::Click {
+                        button: tauri::tray::MouseButton::Left,
+                        button_state: tauri::tray::MouseButtonState::Up,
+                        ..
+                    } = ev
+                    {
+                        toggle(tray.app_handle());
+                    }
+                });
             }
             tray.build(app)?;
+
+            // macOS: real frosted glass behind the bar and the island.
+            #[cfg(target_os = "macos")]
+            {
+                use tauri::window::{Effect, EffectState, EffectsBuilder};
+                for (label, radius) in [("bar", 16.0), ("island", 26.0)] {
+                    if let Some(w) = app.get_webview_window(label) {
+                        let _ = w.set_effects(
+                            EffectsBuilder::new()
+                                .effect(Effect::HudWindow)
+                                .state(EffectState::Active)
+                                .radius(radius)
+                                .build(),
+                        );
+                    }
+                }
+            }
             // macOS: no Dock icon; OpenHUD lives in the menu bar and the island.
             #[cfg(target_os = "macos")]
             {
@@ -514,6 +616,26 @@ fn main() {
             }
             if onboard::first_run() {
                 onboard::show(app.handle());
+            }
+            // For screenshots and tests: OPENHUD_ASK runs a request at start, and
+            // OPENHUD_SHOW=bar,welcome opens those windows.
+            if let Ok(text) = std::env::var("OPENHUD_ASK") {
+                let handle = app.handle().clone();
+                let st = app.state::<App>();
+                let _ = ask(text, st, handle);
+            }
+            if let Ok(show) = std::env::var("OPENHUD_SHOW") {
+                let handle = app.handle().clone();
+                std::thread::spawn(move || {
+                    std::thread::sleep(std::time::Duration::from_millis(1800));
+                    for w in show.split(',') {
+                        match w.trim() {
+                            "bar" => toggle(&handle),
+                            "welcome" => onboard::show(&handle),
+                            _ => {}
+                        }
+                    }
+                });
             }
             Ok(())
         })

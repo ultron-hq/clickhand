@@ -1,0 +1,67 @@
+name: app-shots
+# The desktop app on real macOS and Windows machines: builds it from this commit and
+# screenshots the island and the bar (a timer, then an agent at work) and the welcome
+# window. Screenshots are uploaded as artifacts.
+on:
+  workflow_dispatch:
+
+jobs:
+  shots:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - name: Build the app with Hands inside
+        shell: bash
+        run: |
+          cargo build -p openhud
+          ext=""; [ "$RUNNER_OS" = Windows ] && ext=".exe"
+          t=$(rustc -vV | sed -n 's/host: //p')
+          mkdir -p crates/desktop/binaries
+          cp "target/debug/openhud$ext" "crates/desktop/binaries/openhud-mcp-$t$ext"
+          cargo build -p openhud-app
+
+      - name: Screenshots (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p shots d1 d2 d3 fake && touch d1/desktop-welcome-done d2/desktop-welcome-done
+          printf '#!/bin/sh\nsleep 60\n' > fake/claude && chmod +x fake/claude
+          ULTRON_DATA=$PWD/d1 OPENHUD_ASK="start a 25 minute timer for deep work" OPENHUD_SHOW=bar target/debug/openhud-app &
+          sleep 14; screencapture -x shots/1-timer.png; kill $! || true; sleep 2
+          PATH=$PWD/fake:$PATH ULTRON_DATA=$PWD/d2 OPENHUD_ASK="book the 7pm table on OpenTable" OPENHUD_SHOW=bar target/debug/openhud-app &
+          sleep 14; screencapture -x shots/2-working.png; kill $! || true; pkill -f fake/claude || true; sleep 2
+          ULTRON_DATA=$PWD/d3 target/debug/openhud-app &
+          sleep 14; screencapture -x shots/3-welcome.png; kill $! || true
+
+      - name: Screenshots (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Add-Type -AssemblyName System.Windows.Forms, System.Drawing
+          function Shot($path) {
+            $b = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+            $bmp = New-Object System.Drawing.Bitmap $b.Width, $b.Height
+            [System.Drawing.Graphics]::FromImage($bmp).CopyFromScreen($b.Location, [System.Drawing.Point]::Empty, $b.Size)
+            $bmp.Save($path)
+          }
+          New-Item -ItemType Directory -Force shots, d1, d2, d3, fake | Out-Null
+          New-Item d1\desktop-welcome-done, d2\desktop-welcome-done | Out-Null
+          Set-Content fake\claude.cmd "@ping -n 61 127.0.0.1 >nul"
+          $app = "$PWD\target\debug\openhud-app.exe"
+          $env:ULTRON_DATA = "$PWD\d1"; $env:OPENHUD_ASK = "start a 25 minute timer for deep work"; $env:OPENHUD_SHOW = "bar"
+          $p = Start-Process $app -PassThru; Start-Sleep 14; Shot "$PWD\shots\1-timer.png"; Stop-Process $p -Force; Start-Sleep 2
+          $env:PATH = "$PWD\fake;$env:PATH"; $env:ULTRON_DATA = "$PWD\d2"; $env:OPENHUD_ASK = "book the 7pm table on OpenTable"
+          $p = Start-Process $app -PassThru; Start-Sleep 14; Shot "$PWD\shots\2-working.png"; Stop-Process $p -Force; Start-Sleep 2
+          Remove-Item Env:OPENHUD_ASK, Env:OPENHUD_SHOW; $env:ULTRON_DATA = "$PWD\d3"
+          $p = Start-Process $app -PassThru; Start-Sleep 14; Shot "$PWD\shots\3-welcome.png"; Stop-Process $p -Force
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: shots-${{ matrix.os }}
+          path: shots

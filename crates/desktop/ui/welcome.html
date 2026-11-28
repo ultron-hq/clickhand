@@ -1,5 +1,6 @@
 <!doctype html>
 <html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>Welcome to OpenHUD</title>
+<script src="os.js"></script>
 <style>
   html, body { background: var(--ink); overflow-y: auto; user-select: text; }
   main { padding: 34px 34px 28px; display: grid; gap: 22px; }
@@ -33,8 +34,17 @@
   .dot.on { background: #3ddc84; border-color: #3ddc84; box-shadow: 0 0 8px rgba(61,220,132,0.6); }
   .perm button.on { opacity: 0.5; pointer-events: none; }
   .tip { font-size: 12.5px !important; color: var(--muted) !important; }
+  /* macOS: the title bar is see-through, with the traffic lights over the content */
+  .drag { position: fixed; left: 0; right: 0; top: 0; height: 38px; z-index: 10; }
+  :root:not([data-os="macos"]) .drag { display: none; }
+  :root[data-os="macos"] main { padding-top: 50px; }
+  :root[data-os="windows"] li, :root[data-os="windows"] .perm { border-radius: 8px; }
+  :root[data-os="windows"] button { border-radius: 4px; }
+  li.warn { border-color: rgba(255, 176, 86, 0.45); background: rgba(255, 122, 47, 0.07); }
+  li.warn .n { color: #ffb056; }
+  .tray { display: inline-flex; align-items: center; gap: 6px; padding: 2px 7px; border-radius: 5px; background: var(--raised); border: 1px solid var(--line); font: 600 12px/1.4 var(--mono); }
 </style></head>
-<body><main>
+<body><div class="drag" data-tauri-drag-region></div><main>
   <header><img src="logo.png" alt=""><div><h1>Welcome to OpenHUD</h1><p>A few steps and your AI can use this computer, or teach you how.</p></div></header>
   <ol>
     <li id="s-move" hidden><span class="n">1</span><div>
@@ -61,12 +71,20 @@
       <p class="tip" id="perm-tip">Turn on <b>OpenHUD</b> in the window macOS opens. This list updates by itself.</p>
       <div class="acts" id="relaunch-row" hidden><button class="primary" id="relaunch">Relaunch OpenHUD to finish</button></div>
     </div></li>
+    <li id="s-tray" hidden><span class="n">·</span><div>
+      <h2>Keep OpenHUD in your taskbar</h2>
+      <p>OpenHUD lives in the tray. Click <span class="tray">^</span> by the clock, then drag its icon onto the taskbar so it's always one click away. Click the icon to ask, right-click it for the menu.</p>
+    </div></li>
+    <li id="s-wayland" class="warn" hidden><span class="n">!</span><div>
+      <h2>You're on a Wayland session</h2>
+      <p>The island, the bar and timers work. Agents can't see or click on Wayland yet, so to let them use this computer, log out and pick an <b>Xorg</b> (X11) session on the login screen.</p>
+    </div></li>
     <li id="s-login"><span class="n">·</span><div>
       <h2>Start with your computer</h2>
       <label><input type="checkbox" id="autostart"> Open OpenHUD when I log in</label>
     </div></li>
   </ol>
-  <footer><span>You can open this again from the OpenHUD menu in the tray.</span><button class="primary" id="done">Start using OpenHUD</button></footer>
+  <footer><span id="again">You can open this again from the OpenHUD menu in the tray.</span><button class="primary" id="done">Start using OpenHUD</button></footer>
 </main>
 <script>
 const { invoke } = window.__TAURI__.core;
@@ -79,6 +97,9 @@ async function load() {
   const s = await invoke("onboard_state");
   $("s-move").hidden = !s.needs_move;
   $("s-perm").hidden = s.os !== "macos";
+  $("s-tray").hidden = s.os !== "windows";
+  $("s-wayland").hidden = !(s.os === "linux" && s.session === "wayland");
+  if (s.os === "macos") $("again").textContent = "You can open this again from OpenHUD's menu-bar icon.";
   if (s.shortcut) $("key").textContent = s.shortcut;
   $("autostart").checked = s.autostart;
   if (!s.claude && !s.codex) {

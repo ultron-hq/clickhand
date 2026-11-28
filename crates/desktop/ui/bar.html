@@ -1,39 +1,92 @@
 <!doctype html>
-<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>Ask OpenHUD</title></head>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="app.css"><title>Ask OpenHUD</title>
+<script src="os.js"></script></head>
 <body>
-<div class="bar">
+<div class="bar" id="bar">
+  <div class="scan" aria-hidden="true"></div>
   <form class="row" id="form" autocomplete="off">
-    <img src="logo.png" alt="">
-    <input id="q" placeholder="Ask OpenHUD: start a 25 minute timer, open Spotify, teach me..." autofocus spellcheck="false">
-    <kbd title="Esc hides the bar; a running request keeps going">Esc</kbd>
+    <svg class="mark" viewBox="-32 -32 64 64" aria-hidden="true">
+      <g class="mk-arcs"><path d="M-17.6 -8.8A20 20 0 0 1 -8.8 -17.6"/><path d="M8.8 -17.6A20 20 0 0 1 17.6 -8.8"/><path d="M17.6 8.8A20 20 0 0 1 8.8 17.6"/><path d="M-8.8 17.6A20 20 0 0 1 -17.6 8.8"/></g>
+      <path class="mk-ticks" d="M0 -26v6M0 20v6M-26 0h6M20 0h6"/>
+      <circle class="mk-ring" r="11"/><circle class="mk-core" r="4"/>
+    </svg>
+    <input id="q" placeholder="Ask OpenHUD" autofocus spellcheck="false" aria-label="Ask OpenHUD">
   </form>
+  <div class="chips" id="chips" role="list" aria-label="Try"></div>
   <section class="req" id="req" hidden>
     <p class="you" id="you"></p>
     <div class="answer" id="answer" aria-live="polite"></div>
     <div class="req-foot" id="foot" hidden>
-      <span>Esc hides, it keeps working</span>
-      <button type="button" id="cancel">Cancel <kbd>Ctrl+.</kbd></button>
+      <button type="button" id="cancel">Cancel <kbd id="k-cancel">Ctrl+.</kbd></button>
     </div>
   </section>
+  <footer class="foot">
+    <span class="via" id="via"><i></i><span id="via-text">Timers only</span></span>
+    <span class="keys" id="keys"></span>
+  </footer>
 </div>
 <script>
 const { invoke } = window.__TAURI__.core;
 const { listen } = window.__TAURI__.event;
 const $ = (id) => document.getElementById(id);
-const q = $("q"), req = $("req"), you = $("you"), answer = $("answer"), foot = $("foot");
-let current = null;   // the request on screen (lives in the app, so hiding never loses it)
-let lastPrompt = "";
+const bar = $("bar"), q = $("q"), req = $("req"), you = $("you"), answer = $("answer"), foot = $("foot"), chips = $("chips");
+let current = null;   // the request on screen (it lives in the app, so hiding never loses it)
+let lastPrompt = "", agent = "", tick = null;
+
+// Suggestions for an empty bar: tap to run, or to start typing.
+const TIMERS = [["Start a 25 minute timer", "start a 25 minute timer"], ["Stopwatch", "start a stopwatch"]];
+const AGENT = [["Teach me how to…", "teach me how to "], ["What's on my screen?", "what's on my screen?"]];
+function drawChips() {
+  const list = [...TIMERS, ...(agent ? AGENT : [])];
+  chips.innerHTML = list.map(([label], i) =>
+    `<button type="button" class="chip" role="listitem" data-i="${i}">${i < TIMERS.length ? "<b>◷</b>" : "<b>◎</b>"}${label}</button>`).join("");
+  chips.querySelectorAll(".chip").forEach((c) => c.addEventListener("click", () => {
+    const text = list[+c.dataset.i][1];
+    q.value = text;
+    if (text.endsWith(" ")) { q.focus(); syncChips(); }
+    else $("form").requestSubmit();
+  }));
+}
+function syncChips() { chips.hidden = !!q.value || !!current; fit(); }
+
+// Footer: who answers, and this OS's keys.
+function drawKeys() {
+  $("keys").innerHTML = `<kbd>${KEYS.enter}</kbd><span>ask</span><kbd>${KEYS.esc}</kbd><span>hide</span><kbd>${KEYS.up}</kbd><span>last</span>`;
+  $("k-cancel").textContent = KEYS.cancel;
+}
+async function drawVia() {
+  try { agent = await invoke("agent_name"); } catch { agent = ""; }
+  $("via-text").textContent = agent ? `${agent} answers the rest` : "Timers only · connect an AI app in Set up";
+  $("via").classList.toggle("none", !agent);
+  drawChips();
+}
+
+// The window is exactly as tall as the bar.
+function fit() {
+  requestAnimationFrame(() => invoke("fit_bar", { height: bar.offsetHeight + (OS === "macos" ? 0 : 12) }));
+}
+new ResizeObserver(fit).observe(bar);
 
 function render(r) {
   current = r;
-  if (!r) { req.hidden = true; return; }
+  clearInterval(tick);
+  if (!r) { req.hidden = true; bar.classList.remove("busy"); syncChips(); return; }
   req.hidden = false;
   you.textContent = r.prompt;
   const running = r.status === "running";
-  answer.className = "answer" + (running ? " thinking" : "") + (r.status === "error" ? " err" : "") + (r.status === "cancelled" ? " muted" : "");
-  answer.textContent = running ? "Working on it" : r.output;
+  bar.classList.toggle("busy", running);
+  answer.className = "answer" + (running ? " thinking" : "") + (r.status === "error" ? " err" : "") +
+    (r.status === "cancelled" ? " muted" : "") + (r.status === "done" ? " ok" : "");
+  if (running) {
+    const t0 = Date.now();
+    const show = () => (answer.textContent = `Working on it · ${Math.round((Date.now() - t0) / 1000)}s`);
+    show(); tick = setInterval(show, 1000);
+  } else {
+    answer.textContent = r.output;
+    answer.scrollTop = answer.scrollHeight;
+  }
   foot.hidden = !running;
-  if (!running) answer.scrollTop = answer.scrollHeight;
+  syncChips();
 }
 
 async function cancel() {
@@ -43,6 +96,7 @@ async function cancel() {
 // Reopening shows the request as it stands now: still working, answered, or cancelled.
 listen("bar-open", async () => {
   render(await invoke("request"));
+  drawVia();
   setTimeout(() => q.focus(), 30);
 });
 // Answers arrive here, and only for the request on screen (a cancelled one never comes back).
@@ -52,9 +106,10 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") { e.preventDefault(); invoke("hide_bar"); }
   else if (e.key === "." && (e.ctrlKey || e.metaKey)) { e.preventDefault(); cancel(); }
   else if (e.key === "ArrowUp" && document.activeElement === q && !q.value && lastPrompt) {
-    e.preventDefault(); q.value = lastPrompt; q.setSelectionRange(q.value.length, q.value.length);
+    e.preventDefault(); q.value = lastPrompt; q.setSelectionRange(q.value.length, q.value.length); syncChips();
   }
 });
+q.addEventListener("input", syncChips);
 $("cancel").addEventListener("click", cancel);
 $("form").addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -64,5 +119,9 @@ $("form").addEventListener("submit", async (e) => {
   q.value = "";            // a clean composer for the next request; ↑ brings this one back
   render(await invoke("ask", { text }));
 });
+
+drawKeys();
+drawVia();
+invoke("request").then(render);
 </script>
 </body></html>
