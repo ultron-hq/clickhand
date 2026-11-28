@@ -43,6 +43,12 @@ invoke("request").then(onRequest).catch(() => {});
 async function tick() {
   let c;
   try { c = await invoke("clock"); } catch { return; }
+  // the request's state too, in case its event came before this window was ready
+  try {
+    const r = await invoke("request");
+    const st = r ? r.status : "";
+    if (st !== status) onRequest(r);
+  } catch {}
   const now = Date.now() / 1000;
   const answered = Date.now() < flash;
   island.classList.toggle("answered", answered && status !== "running");

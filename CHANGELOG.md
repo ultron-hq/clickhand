@@ -5,6 +5,16 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.3] - 2026-11-28
+
+### Changed
+- The app follows each OS. macOS: ⌥ Space by default (Ctrl+Space is the Mac's input-source switch), Mac key symbols, frosted glass behind the bar and island, SF fonts, a monochrome menu-bar icon, a see-through title bar on the welcome window. Windows: Windows 11 corners and Segoe UI Variable, click the tray icon to ask (right-click for the menu), and the welcome window shows how to pin it to the taskbar. Linux: the desktop's font, and a Wayland warning in the welcome window.
+- The bar: suggestions when empty, a footer with who answers and the keys, a scanning line and an elapsed counter while working, and a window exactly as tall as its content.
+- The island: a ring that drains with a timer; "working" while the agent works, then "✓ answered".
+
+### Fixed
+- Windows: asking the AI from the bar failed ("batch file arguments are invalid") when Claude Code or Codex was installed with npm. The prompt now goes in on stdin.
+
 ## [0.3.2] - 2026-11-28
 
 ### Fixed
