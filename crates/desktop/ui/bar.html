@@ -5,33 +5,64 @@
   <form class="row" id="form" autocomplete="off">
     <img src="logo.png" alt="">
     <input id="q" placeholder="Ask OpenHUD: start a 25 minute timer, open Spotify, teach me..." autofocus spellcheck="false">
-    <kbd>Esc</kbd>
+    <kbd title="Esc hides the bar; a running request keeps going">Esc</kbd>
   </form>
-  <div class="answer" id="answer" aria-live="polite"></div>
+  <section class="req" id="req" hidden>
+    <p class="you" id="you"></p>
+    <div class="answer" id="answer" aria-live="polite"></div>
+    <div class="req-foot" id="foot" hidden>
+      <span>Esc hides, it keeps working</span>
+      <button type="button" id="cancel">Cancel <kbd>Ctrl+.</kbd></button>
+    </div>
+  </section>
 </div>
 <script>
 const { invoke } = window.__TAURI__.core;
 const { listen } = window.__TAURI__.event;
-const q = document.getElementById("q"), answer = document.getElementById("answer");
-let busy = false;
-listen("bar-open", () => { if (!busy) { q.value = ""; answer.textContent = ""; answer.className = "answer"; } setTimeout(() => q.focus(), 30); });
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") invoke("hide_bar"); });
-document.getElementById("form").addEventListener("submit", async (e) => {
+const $ = (id) => document.getElementById(id);
+const q = $("q"), req = $("req"), you = $("you"), answer = $("answer"), foot = $("foot");
+let current = null;   // the request on screen (lives in the app, so hiding never loses it)
+let lastPrompt = "";
+
+function render(r) {
+  current = r;
+  if (!r) { req.hidden = true; return; }
+  req.hidden = false;
+  you.textContent = r.prompt;
+  const running = r.status === "running";
+  answer.className = "answer" + (running ? " thinking" : "") + (r.status === "error" ? " err" : "") + (r.status === "cancelled" ? " muted" : "");
+  answer.textContent = running ? "Working on it" : r.output;
+  foot.hidden = !running;
+  if (!running) answer.scrollTop = answer.scrollHeight;
+}
+
+async function cancel() {
+  if (current && current.status === "running") render(await invoke("cancel"));
+}
+
+// Reopening shows the request as it stands now: still working, answered, or cancelled.
+listen("bar-open", async () => {
+  render(await invoke("request"));
+  setTimeout(() => q.focus(), 30);
+});
+// Answers arrive here, and only for the request on screen (a cancelled one never comes back).
+listen("request", (e) => { if (!current || e.payload.id >= current.id) render(e.payload); });
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") { e.preventDefault(); invoke("hide_bar"); }
+  else if (e.key === "." && (e.ctrlKey || e.metaKey)) { e.preventDefault(); cancel(); }
+  else if (e.key === "ArrowUp" && document.activeElement === q && !q.value && lastPrompt) {
+    e.preventDefault(); q.value = lastPrompt; q.setSelectionRange(q.value.length, q.value.length);
+  }
+});
+$("cancel").addEventListener("click", cancel);
+$("form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const text = q.value.trim();
-  if (!text || busy) return;
-  busy = true;
-  answer.className = "answer thinking";
-  answer.textContent = "Working on it";
-  try {
-    const out = await invoke("ask", { text });
-    answer.className = "answer";
-    answer.textContent = out;
-  } catch (err) {
-    answer.className = "answer err";
-    answer.textContent = String(err);
-  }
-  busy = false;
+  if (!text) return;
+  lastPrompt = text;
+  q.value = "";            // a clean composer for the next request; ↑ brings this one back
+  render(await invoke("ask", { text }));
 });
 </script>
 </body></html>

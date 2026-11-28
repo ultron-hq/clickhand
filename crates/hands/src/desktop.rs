@@ -1,5 +1,5 @@
 //! Windows, apps and URLs. Linux uses xdotool for windows, as the original does;
-//! Windows and macOS list windows through xcap (focus there comes later). Apps come
+//! Windows and macOS list windows through xcap; focus works on Linux and Windows. Apps come
 //! from .desktop files, /Applications or the Start Menu.
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -142,10 +142,77 @@ pub fn focus(window_id: i64) -> Result<(), HandsError> {
     Ok(())
 }
 
-#[cfg(not(target_os = "linux"))]
+/// The window with keyboard focus, as a `list_windows` id. None where it can't be told
+/// (macOS for now), in which case typing isn't guarded against focus changes.
+#[cfg(target_os = "linux")]
+pub fn active_window() -> Option<i64> {
+    run(&["xdotool", "getactivewindow"], 2.0, false).ok()?.trim().parse().ok()
+}
+
+#[cfg(windows)]
+pub fn active_window() -> Option<i64> {
+    let h = unsafe { windows_sys::Win32::UI::WindowsAndMessaging::GetForegroundWindow() };
+    // list_windows (xcap) reports a window's id as its handle in 32 bits
+    (!h.is_null()).then(|| h as usize as u32 as i64)
+}
+
+#[cfg(target_os = "macos")]
+pub fn active_window() -> Option<i64> {
+    None
+}
+
+/// Windows only lets the app in front hand focus to another window. Restore the window
+/// if it's minimized, borrow the foreground thread's input state, and if that isn't
+/// enough, press and release Alt (the documented way to unlock it); then verify.
+#[cfg(windows)]
+pub fn focus(window_id: i64) -> Result<(), HandsError> {
+    use windows_sys::Win32::System::Threading::{AttachThreadInput, GetCurrentThreadId};
+    use windows_sys::Win32::UI::Input::KeyboardAndMouse::{keybd_event, KEYEVENTF_KEYUP, VK_MENU};
+    use windows_sys::Win32::UI::WindowsAndMessaging::{
+        BringWindowToTop, GetForegroundWindow, GetWindowThreadProcessId, IsIconic, IsWindow, SetForegroundWindow, ShowWindow, SW_RESTORE,
+    };
+    let hwnd = window_id as usize as windows_sys::Win32::Foundation::HWND;
+    let want = window_id as u32 as i64;
+    if unsafe { IsWindow(hwnd) } == 0 {
+        return Err(HandsError::new(format!(
+            "Window {window_id} no longer exists. Call list_windows for current ids."
+        )));
+    }
+    let try_focus = |alt: bool| unsafe {
+        if IsIconic(hwnd) != 0 {
+            ShowWindow(hwnd, SW_RESTORE);
+        }
+        let fg = GetForegroundWindow();
+        let fg_thread = GetWindowThreadProcessId(fg, std::ptr::null_mut());
+        let me = GetCurrentThreadId();
+        let attached = fg_thread != 0 && fg_thread != me && AttachThreadInput(me, fg_thread, 1) != 0;
+        if alt {
+            keybd_event(VK_MENU as u8, 0, 0, 0);
+            keybd_event(VK_MENU as u8, 0, KEYEVENTF_KEYUP, 0);
+        }
+        BringWindowToTop(hwnd);
+        SetForegroundWindow(hwnd);
+        if attached {
+            AttachThreadInput(me, fg_thread, 0);
+        }
+    };
+    for alt in [false, true] {
+        try_focus(alt);
+        std::thread::sleep(Duration::from_millis(150));
+        if active_window() == Some(want) {
+            return Ok(());
+        }
+    }
+    let now = active_window().map(|w| w.to_string()).unwrap_or_else(|| "none".into());
+    Err(HandsError::new(format!(
+        "Window {window_id} would not come to the front (active is {now}); Windows can block this while another app is busy or the screen is locked. Click the window's title bar instead, then check with a screenshot."
+    )))
+}
+
+#[cfg(target_os = "macos")]
 pub fn focus(_window_id: i64) -> Result<(), HandsError> {
     Err(HandsError::new(
-        "focus_window is not available on this OS yet; click the window or use alt+tab / cmd+tab.",
+        "focus_window isn't supported on macOS yet: click the window (its title bar is safest) or use cmd+tab, then take a screenshot to check.",
     ))
 }
 

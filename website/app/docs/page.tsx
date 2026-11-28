@@ -57,9 +57,9 @@ const TOOLS: [string, string, string][] = [
   ["Act", "move_mouse", "Move the pointer"],
   ["Act", "drag", "Press, glide and release"],
   ["Act", "scroll", "Up, down, left or right, optionally at a point"],
-  ["Act", "type_text", "Type into the focused field; delay_ms types slowly for sites that drop keys"],
+  ["Act", "type_text", "Type into the focused field; window_id makes sure it is the right window, and typing stops if focus moves"],
   ["Act", "key", "One shortcut: ctrl+l, alt+tab, enter, cmd+space"],
-  ["Act", "focus_window", "Bring a window to the front (Linux today)"],
+  ["Act", "focus_window", "Bring a window to the front (Linux and Windows)"],
   ["Act", "open_app", "Start an installed app by name"],
   ["Act", "open_url", "Open an http(s) link in the default browser"],
   ["Teach", "highlight", "A glowing box and caption on the person's screen. Clicks nothing; allowed in read-only mode"],
@@ -213,7 +213,8 @@ export default async function Docs() {
                   <tr><td>Screen frame and pointer tag</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                   <tr><td>Teach highlights</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                   <tr><td>List windows</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
-                  <tr><td>Focus a window</td><td>Yes</td><td>Coming</td><td>Coming</td></tr>
+                  <tr><td>Focus a window</td><td>Yes</td><td>Yes</td><td>Coming</td></tr>
+                  <tr><td>Typing stops if focus moves</td><td>Yes</td><td>Yes</td><td>Coming</td></tr>
                   <tr><td>The desktop app (island, Ctrl+Space)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                   <tr><td>Permissions asked once, for OpenHUD</td><td>n/a</td><td>n/a</td><td>Yes, with the app</td></tr>
                 </tbody>
@@ -233,8 +234,10 @@ export default async function Docs() {
               <dd>Allow Accessibility for the terminal or agent app in System Settings → Privacy &amp; Security</dd>
               <dt>“Kill switch is on”</dt>
               <dd>You (or someone) ran <code>openhud stop</code>. Run <code>openhud resume</code></dd>
-              <dt>Windows SmartScreen warns about the download</dt>
-              <dd>The binary isn’t code-signed yet. Check its SHA-256 against the release, then choose “Run anyway”</dd>
+              <dt>Windows says “unknown publisher” or that the download is uncommon</dt>
+              <dd>OpenHUD isn’t code-signed yet, so Edge and SmartScreen warn about every new build. The one-line installer (<code>irm … | iex</code>) avoids the browser warning and checks the SHA-256 for you. For the setup <code>.exe</code>, compare its checksum with the release, then choose “More info” → “Run anyway”. Once builds are signed, the publisher will show as OpenHUD; SmartScreen can still warn about a brand-new build until it builds reputation</dd>
+              <dt>Codex or Claude Code opened a terminal window</dt>
+              <dd>Fixed in 0.3.2: the app runs them in the background. Update with the install line</dd>
               <dt>Something else</dt>
               <dd>Ask your agent to run <code>hands_report</code>, and <a href={`${REPO}/issues/new`}>open an issue</a> with what it says</dd>
             </dl>

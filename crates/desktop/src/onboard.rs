@@ -109,7 +109,7 @@ pub fn move_to_applications(app: AppHandle) -> Result<(), String> {
 pub async fn connect_agents() -> Result<String, String> {
     tauri::async_runtime::spawn_blocking(|| {
         let bin = hands().ok_or("OpenHUD isn't bundled with this build.")?;
-        let out = Command::new(bin)
+        let out = crate::agent::hidden(bin)
             .args(["setup", "--yes"])
             .env("NO_COLOR", "1")
             .output()

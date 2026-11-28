@@ -101,6 +101,63 @@ def reader_window(out_file):
     return subprocess.Popen(["xterm", "-T", TITLE, "-geometry", "70x12+120+120", "-fa", "Monospace", "-fs", "14", "-e", "sh", "-c", sh])
 
 
+def find_window(s, title, tries=30):
+    for _ in range(tries):
+        time.sleep(1)
+        err, text, _ = s.call("list_windows")
+        try:
+            wins = json.loads(text)
+            if isinstance(wins, dict):
+                wins = wins.get("result", wins.get("windows", []))
+            w = next((w for w in wins if title in str(w.get("title", ""))), None)
+            if w:
+                return w
+        except ValueError:
+            pass
+    return None
+
+
+def focus_checks(s):
+    """Two windows, A and B. Type into A while a second server brings B to the front."""
+    global TITLE
+    keep = TITLE
+    TITLE = "openhud-focus-a"
+    reader_window(os.path.join(tempfile.mkdtemp(), "a.txt"))
+    a = find_window(s, TITLE)
+    TITLE = "openhud-focus-b"
+    reader_window(os.path.join(tempfile.mkdtemp(), "b.txt"))
+    b = find_window(s, TITLE)
+    TITLE = keep
+    if not (a and b):
+        check("focus test windows open", False, f"a={a} b={b}")
+        return
+    err, text, _ = s.call("focus_window", window_id=a["id"], look=False)
+    check("focus_window brings a window to the front", not err, text[:160])
+
+    # A second server (direct, like another agent) steals focus while the first types.
+    thief = None
+    def steal():
+        nonlocal thief
+        env = dict(os.environ, OPENHUD_DIRECT="1")
+        thief = subprocess.Popen([BIN, "serve"], stdin=subprocess.PIPE, stdout=subprocess.PIPE, text=True, bufsize=1, env=env)
+        for msg in ({"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {"protocolVersion": "2025-06-18", "capabilities": {}, "clientInfo": {"name": "thief", "version": "1"}}},
+                    {"jsonrpc": "2.0", "method": "notifications/initialized"},
+                    {"jsonrpc": "2.0", "id": 2, "method": "tools/call", "params": {"name": "focus_window", "arguments": {"window_id": b["id"], "look": False}}}):
+            thief.stdin.write(json.dumps(msg) + "\n")
+            thief.stdin.flush()
+    import threading
+    threading.Timer(0.8, steal).start()
+    err, text, _ = s.call("type_text", text="y" * 120, delay_ms=40, window_id=a["id"], look=False)
+    m = re.search(r"after typing (\d+) of 120", text or "")
+    check("typing stops when focus moves to another window",
+          err and "Focus moved" in text and m is not None and int(m.group(1)) < 120, text[:160])
+    err, text, _ = s.call("type_text", text="nothing", window_id=a["id"], look=False)
+    check("typing refuses a window that doesn't have focus", err and "doesn't have focus" in text, text[:160])
+    if thief:
+        thief.stdin.close()
+        thief.wait(timeout=10)
+
+
 def main():
     print(f"openhud e2e on {sys.platform}: {BIN}", flush=True)
     v = subprocess.run([BIN, "--version"], capture_output=True, text=True)
@@ -202,6 +259,10 @@ def main():
     check("kill switch interrupts typing", err and m is not None and int(m.group(1)) < 120 and took < 4,
           f"{text[:120]} ({took:.1f}s)")
     subprocess.run([BIN, "resume"], capture_output=True)
+
+    # Focus: typing must not carry on into whatever window takes focus mid-way.
+    if sys.platform in ("linux", "win32"):
+        focus_checks(s)
 
     s.close()
     log = subprocess.run([BIN, "log", "5"], capture_output=True, text=True)

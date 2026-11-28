@@ -5,6 +5,16 @@ and the project uses [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [0.3.2] - 2026-11-28
+
+### Fixed
+- Windows: asking the app something no longer opens a Codex or Claude Code console that steals focus and hides the bar; they run in the background (the whole launch chain, including `.cmd` wrappers), and so does "Connect my AI apps".
+- Typing can't silently land in the wrong window: `type_text` and `key` take a `window_id` and refuse unless it has focus, and typing stops (saying how much got through) if focus moves (Linux and Windows).
+- `focus_window` works on Windows (restores minimized windows, gets past the foreground lock, verifies). On macOS it says up front that it isn't supported yet.
+
+### Changed
+- The prompt bar: Esc only hides it and a running request keeps going; reopening shows it working, answered or cancelled. Cancel (button or Ctrl+.) stops it, process tree included, and a late answer can't replace newer output. After you submit, the composer is empty and your prompt sits above its answer; ↑ brings it back to edit or retry.
+
 ## [0.3.1] - 2026-11-27
 
 ### Fixed

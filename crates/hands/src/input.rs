@@ -257,11 +257,39 @@ pub fn chord(keys: &[Key]) -> Result<(), HandsError> {
 /// character at a time with that pause (some sites drop or reorder fast input).
 /// The kill switch is checked between pieces, so `openhud stop` halts it within a few
 /// characters.
-pub fn type_text(text: &str, delay_ms: u64) -> Result<(), HandsError> {
+/// Refuse when `want` (a list_windows id) isn't the window with focus.
+pub fn ensure_focus(want: Option<i64>) -> Result<(), HandsError> {
+    if let (Some(want), Some(now)) = (want, crate::desktop::active_window()) {
+        if now != want {
+            return Err(HandsError::new(format!(
+                "Window {want} doesn't have focus (window {now} does), so nothing was sent. Call focus_window (or click the window), then try again."
+            )));
+        }
+    }
+    Ok(())
+}
+
+/// `window` is the window the text is meant for: typing refuses to start anywhere else,
+/// and it stops (reporting how much got through) if focus moves to another window, so
+/// text can't silently land in the wrong place. Without it, the window focused at the
+/// start is guarded the same way.
+pub fn type_text(text: &str, delay_ms: u64, window: Option<i64>) -> Result<(), HandsError> {
+    ensure_focus(window)?;
+    let target = window.or_else(crate::desktop::active_window);
     let mut e = enigo()?;
     let total = text.chars().count();
     let mut typed = 0;
-    let stop_at = |typed: usize| halted(&format!("after typing {typed} of {total} characters"));
+    let stop_at = |typed: usize| -> Result<(), HandsError> {
+        halted(&format!("after typing {typed} of {total} characters"))?;
+        if let (Some(t), Some(now)) = (target, crate::desktop::active_window()) {
+            if now != t {
+                return Err(HandsError::new(format!(
+                    "Focus moved to another window (id {now}) after typing {typed} of {total} characters, so the rest wasn't typed. Take a screenshot, focus the right window, and type only the remaining text."
+                )));
+            }
+        }
+        Ok(())
+    };
     for (i, line) in text.split('\n').enumerate() {
         if i > 0 {
             stop_at(typed)?;

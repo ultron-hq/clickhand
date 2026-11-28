@@ -48,6 +48,7 @@ pub struct App {
     clock: Mutex<Clock>,
     tracker: Mutex<SessionTracker>,
     pub shortcut: Mutex<String>,
+    request: Mutex<Option<Request>>,
 }
 
 #[tauri::command]
@@ -66,9 +67,111 @@ fn clock(app: State<App>) -> Clock {
     c.clone()
 }
 
+/// The request the prompt bar shows: what was asked and where it stands. It lives here,
+/// not in the bar, so hiding and reopening the bar never loses it.
+#[derive(Clone, Serialize, Default)]
+struct Request {
+    id: u64,
+    prompt: String,
+    /// "running", "done", "error" or "cancelled"
+    status: String,
+    output: String,
+    #[serde(skip)]
+    pid: Option<u32>,
+}
+
+static NEXT_ID: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+
+fn publish(handle: &AppHandle, r: &Request) {
+    let _ = handle.emit("request", r.clone());
+}
+
 #[tauri::command]
-async fn ask(text: String, app: State<'_, App>) -> Result<String, String> {
-    match intent::parse(&text) {
+fn request(app: State<'_, App>) -> Option<Request> {
+    app.request.lock().unwrap().clone()
+}
+
+/// Stop the running request: its process (and everything it started) is killed, and a
+/// late answer can no longer replace what the bar shows.
+#[tauri::command]
+fn cancel(app: State<'_, App>, handle: AppHandle) -> Option<Request> {
+    let mut slot = app.request.lock().unwrap();
+    let r = slot.as_mut()?;
+    if r.status == "running" {
+        if let Some(pid) = r.pid.take() {
+            agent::kill_tree(pid);
+        }
+        r.status = "cancelled".into();
+        r.output = "Cancelled. It stopped before answering.".into();
+        publish(&handle, r);
+    }
+    Some(r.clone())
+}
+
+#[tauri::command]
+fn ask(text: String, app: State<'_, App>, handle: AppHandle) -> Request {
+    let id = NEXT_ID.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+    // A new request replaces the old one; stop it if it's still working.
+    if let Some(old) = app.request.lock().unwrap().as_mut() {
+        if old.status == "running" {
+            if let Some(pid) = old.pid.take() {
+                agent::kill_tree(pid);
+            }
+            old.status = "cancelled".into();
+        }
+    }
+    let mut r = Request {
+        id,
+        prompt: text.clone(),
+        status: "running".into(),
+        ..Request::default()
+    };
+    if matches!(intent::parse(&text), Intent::Agent) {
+        *app.request.lock().unwrap() = Some(r.clone());
+        std::thread::spawn(move || {
+            let state = handle.state::<App>();
+            let result = agent::run(&text, id, |pid| {
+                if let Some(cur) = state.request.lock().unwrap().as_mut().filter(|c| c.id == id) {
+                    cur.pid = Some(pid);
+                }
+            });
+            let mut slot = state.request.lock().unwrap();
+            // Only the current, still-running request may take the answer.
+            let Some(cur) = slot.as_mut().filter(|c| c.id == id && c.status == "running") else {
+                return;
+            };
+            cur.pid = None;
+            match result {
+                Ok(out) => {
+                    cur.status = "done".into();
+                    cur.output = out;
+                }
+                Err(e) => {
+                    cur.status = "error".into();
+                    cur.output = e;
+                }
+            }
+            publish(&handle, cur);
+        });
+        return r;
+    }
+    match local(&text, &app) {
+        Ok(out) => {
+            r.status = "done".into();
+            r.output = out;
+        }
+        Err(e) => {
+            r.status = "error".into();
+            r.output = e;
+        }
+    }
+    *app.request.lock().unwrap() = Some(r.clone());
+    r
+}
+
+/// Requests answered on the spot: timers, the stopwatch, pause, resume and stop.
+fn local(text: &str, app: &App) -> Result<String, String> {
+    match intent::parse(text) {
         Intent::Timer { seconds, label } => {
             let mut t = app.tracker.lock().unwrap();
             if t.running() {
@@ -130,9 +233,7 @@ async fn ask(text: String, app: State<'_, App>) -> Result<String, String> {
             *c = Clock::default();
             Ok(format!("Stopped after {took}"))
         }
-        Intent::Agent => tauri::async_runtime::spawn_blocking(move || agent::run(&text))
-            .await
-            .map_err(|e| e.to_string())?,
+        Intent::Agent => Err("That needs Claude Code or Codex.".into()),
     }
 }
 
@@ -195,8 +296,9 @@ fn place(app: &AppHandle, label: &str, top: f64) {
 }
 
 mod agent {
+    use std::io::Read;
     use std::path::PathBuf;
-    use std::process::Command;
+    use std::process::{Command, Stdio};
 
     fn which(bin: &str) -> Option<PathBuf> {
         let exts: Vec<&str> = if cfg!(windows) { vec![".exe", ".cmd", ""] } else { vec![""] };
@@ -207,40 +309,89 @@ mod agent {
     const BRIEF: &str = "You are OpenHUD, a desktop assistant the person reached with Ctrl+Space. \
         Answer in one or two short sentences. If the request needs the computer, use the openhud tools.";
 
-    /// Hand the request to Claude Code, or Codex, with OpenHUD available.
-    pub fn run(text: &str) -> Result<String, String> {
+    /// A background command: no console window on Windows (the whole chain, so a
+    /// `codex.cmd` wrapper and the node it starts stay hidden too), its own process
+    /// group elsewhere so cancelling stops everything it started.
+    pub fn hidden(bin: impl AsRef<std::ffi::OsStr>) -> Command {
+        let mut c = Command::new(bin);
+        c.stdin(Stdio::null()).stdout(Stdio::piped()).stderr(Stdio::piped());
+        #[cfg(windows)]
+        {
+            use std::os::windows::process::CommandExt;
+            const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+            c.creation_flags(CREATE_NO_WINDOW);
+        }
+        #[cfg(unix)]
+        {
+            use std::os::unix::process::CommandExt;
+            c.process_group(0);
+        }
+        c
+    }
+
+    /// Kill a request's process and everything it started.
+    pub fn kill_tree(pid: u32) {
+        #[cfg(windows)]
+        let _ = hidden("taskkill").args(["/PID", &pid.to_string(), "/T", "/F"]).output();
+        #[cfg(unix)]
+        let _ = Command::new("kill").args(["-TERM", "--", &format!("-{pid}")]).output();
+    }
+
+    /// Hand the request to Claude Code, or Codex, with OpenHUD available. `started`
+    /// gets the process id so the request can be cancelled.
+    pub fn run(text: &str, id: u64, started: impl FnOnce(u32)) -> Result<String, String> {
         let prompt = format!("{BRIEF}\n\n{text}");
-        let out = if let Some(claude) = which("claude") {
-            Command::new(claude)
-                .args(["-p", &prompt, "--allowedTools", "mcp__openhud"])
-                .output()
+        let mut answer_file = None;
+        let mut cmd = if let Some(claude) = which("claude") {
+            let mut c = hidden(claude);
+            c.args(["-p", &prompt, "--allowedTools", "mcp__openhud"]);
+            c
         } else if let Some(codex) = which("codex") {
-            let file = std::env::temp_dir().join(format!("openhud-answer-{}.txt", std::process::id()));
-            let r = Command::new(codex)
-                .args([
-                    "exec",
-                    "--skip-git-repo-check",
-                    "-c",
-                    "mcp_servers.openhud.default_tools_approval_mode=\"approve\"",
-                    "-o",
-                ])
-                .arg(&file)
-                .arg(&prompt)
-                .output();
-            if let Ok(answer) = std::fs::read_to_string(&file) {
-                let _ = std::fs::remove_file(&file);
-                return Ok(answer.trim().to_string());
-            }
-            r
+            let file = std::env::temp_dir().join(format!("openhud-answer-{}-{id}.txt", std::process::id()));
+            let mut c = hidden(codex);
+            c.args([
+                "exec",
+                "--skip-git-repo-check",
+                "-c",
+                "mcp_servers.openhud.default_tools_approval_mode=\"approve\"",
+                "-o",
+            ])
+            .arg(&file)
+            .arg(&prompt);
+            answer_file = Some(file);
+            c
         } else {
             return Err("Install Claude Code or Codex so OpenHUD can answer that (timers work without them).".into());
         };
-        let out = out.map_err(|e| e.to_string())?;
-        let text = String::from_utf8_lossy(&out.stdout).trim().to_string();
-        if out.status.success() && !text.is_empty() {
+        let mut child = cmd.spawn().map_err(|e| e.to_string())?;
+        started(child.id());
+        // Read both pipes while it runs, so a long answer can't fill one and stall it.
+        let mut out_pipe = child.stdout.take();
+        let reader = std::thread::spawn(move || {
+            let mut s = String::new();
+            if let Some(p) = out_pipe.as_mut() {
+                let _ = p.read_to_string(&mut s);
+            }
+            s
+        });
+        let mut err = String::new();
+        if let Some(mut p) = child.stderr.take() {
+            let _ = p.read_to_string(&mut err);
+        }
+        let status = child.wait().map_err(|e| e.to_string())?;
+        let stdout = reader.join().unwrap_or_default();
+        if let Some(file) = answer_file {
+            if let Ok(answer) = std::fs::read_to_string(&file) {
+                let _ = std::fs::remove_file(&file);
+                if !answer.trim().is_empty() {
+                    return Ok(answer.trim().to_string());
+                }
+            }
+        }
+        let text = stdout.trim().to_string();
+        if status.success() && !text.is_empty() {
             Ok(text)
         } else {
-            let err = String::from_utf8_lossy(&out.stderr);
             Err(err
                 .lines()
                 .rev()
@@ -284,10 +435,13 @@ fn main() {
             clock: Mutex::new(Clock::default()),
             tracker: Mutex::new(tracker),
             shortcut: Mutex::new(String::new()),
+            request: Mutex::new(None),
         })
         .invoke_handler(tauri::generate_handler![
             clock,
             ask,
+            request,
+            cancel,
             hide_bar,
             toggle_bar,
             shortcut,
