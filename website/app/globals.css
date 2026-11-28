@@ -566,18 +566,19 @@ main > section.hero .hero-inner { padding-bottom: 150px; }
 .hud-rings circle.hud-draw { fill: none; stroke: rgba(255, 205, 140, 0.22); stroke-width: 1; }
 .hud .tick { stroke: rgba(255, 205, 140, 0.26); stroke-width: 1; opacity: 0; animation: hud-fade 0.8s 1.9s forwards; }
 .hud .tick-long { stroke: rgba(255, 122, 47, 0.75); stroke-width: 1.6; }
-.hud-arc { fill: none; stroke: var(--ember); stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 6px rgba(255, 122, 47, 0.6)); }
+.hud-arc { fill: none; stroke: var(--ember); stroke-width: 3; stroke-linecap: round; }
+.hud-arc-glow { fill: none; stroke: rgba(255, 122, 47, 0.18); stroke-width: 11; stroke-linecap: round; }
 .hud-dots { fill: none; stroke: rgba(255, 205, 140, 0.4); stroke-width: 1.6; stroke-dasharray: 0.5 8; stroke-linecap: round;
   opacity: 0; animation: hud-fade 0.8s 2.1s forwards; }
 .hud-draw { stroke-dasharray: 1 1; stroke-dashoffset: 1; animation: hud-draw 1.4s 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
-.hud-spin { animation: hud-rot 90s linear infinite; }
+.hud-spin { animation: hud-rot 90s linear infinite; will-change: transform; transform-origin: 50% 50%; }
 .hud-rev { animation-duration: 26s; animation-direction: reverse; }
 .hud-mid { animation-duration: 48s; }
 .hud-sweep { position: absolute; inset: 3.5%; border-radius: 50%; opacity: 0;
   background: conic-gradient(from 0deg, transparent 0 285deg, rgba(255, 122, 47, 0.18) 350deg, rgba(255, 205, 140, 0.55) 360deg);
   -webkit-mask: radial-gradient(circle, transparent 66%, #000 67%, #000 99%, transparent 100%);
           mask: radial-gradient(circle, transparent 66%, #000 67%, #000 99%, transparent 100%);
-  animation: hud-rot 4.5s linear infinite, hud-fade 1s 2.2s forwards; transition: filter 0.3s; }
+  animation: hud-rot 4.5s linear infinite, hud-fade 1s 2.2s forwards; transition: filter 0.3s; will-change: transform; }
 .hud-look .hud-sweep { filter: brightness(1.9) saturate(1.2); }
 .hud-ripple { fill: none; stroke: var(--amber); stroke-width: 2; opacity: 0; }
 .hud-act .hud-ripple { animation: hud-ripple 0.9s ease-out; }
@@ -625,7 +626,7 @@ main > section.hero .hero-inner { padding-bottom: 150px; }
 @keyframes hud-blink { to { opacity: 0.25; } }
 @keyframes hud-tap { from { opacity: 1; transform: scale(0.5); } to { opacity: 0; transform: scale(3.4); } }
 
-html.stopped .hud, html.stopped .hud * { animation-play-state: paused !important; }
+html.stopped .hud, html.stopped .hud *, .hud-off, .hud-off * { animation-play-state: paused !important; }
 @media (max-width: 959px) {
   .hud-tl, .hud-bl, .hud-br { display: none; }
   .hud-chip { font-size: 11.5px; padding: 7px 10px; }
@@ -649,10 +650,10 @@ html.stopped .hud, html.stopped .hud * { animation-play-state: paused !important
 main section { position: relative; }
 .hud-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; pointer-events: none; z-index: 2;
   background: linear-gradient(90deg, transparent, rgba(255, 122, 47, 0.0) 10%, rgba(255, 205, 140, 0.9) 50%, rgba(255, 122, 47, 0.0) 90%, transparent);
-  box-shadow: 0 0 18px 4px rgba(255, 122, 47, 0.35); animation: hud-scan 1.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+  box-shadow: 0 0 18px 4px rgba(255, 122, 47, 0.35); will-change: transform; animation: hud-scan 1.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 .hud-scan::after { content: ""; position: absolute; left: 0; right: 0; bottom: 2px; height: 90px;
   background: linear-gradient(to top, rgba(255, 122, 47, 0.07), transparent); }
-@keyframes hud-scan { from { top: 0; opacity: 1; } 85% { opacity: 1; } to { top: 100%; opacity: 0; } }
+@keyframes hud-scan { from { transform: translateY(0); opacity: 1; } 85% { opacity: 1; } to { transform: translateY(var(--h, 600px)); opacity: 0; } }
 
 /* corner brackets: snap in on view, lock tighter on hover */
 .hud-frame::after { content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 3; border-radius: inherit;
@@ -728,3 +729,10 @@ html.stopped .hud-tracker *, html.stopped .hud-scan { animation-play-state: paus
 }
 /* nothing (a spinning ring, a long link row) may widen the page sideways */
 html, body { overflow-x: clip; }
+
+/* phones: the dot canvas only covers the reticle, not the whole tall hero */
+@media (max-width: 959px) {
+  .maskfield { height: calc(min(72vw, 340px) + 140px); bottom: auto; }
+}
+.hud-tracker { opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 0.35s, transform 0.35s cubic-bezier(0.2, 0.9, 0.2, 1), border-color 0.25s, box-shadow 0.25s; }
+html.hud-past-hero .hud-tracker { opacity: 1; transform: none; pointer-events: auto; }

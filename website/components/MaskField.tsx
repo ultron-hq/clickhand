@@ -41,6 +41,10 @@ function heat(t: number): string {
   return "rgb(255, 205, 140)";
 }
 
+// heat() precomputed: colours are picked from here instead of built per dot per frame.
+const LEVELS = 48;
+const PALETTE = Array.from({ length: LEVELS }, (_, i) => heat(i / (LEVELS - 1)));
+
 // Eye centres in the 64×64 logo.
 // The reticle's core: it lights up last and casts the beams.
 const EYES = [{ x: 31 / 64, y: 32 / 64 }, { x: 33 / 64, y: 32 / 64 }];
@@ -65,13 +69,25 @@ export function MaskField() {
     let w = 0, h = 0, dpr = 1, size = 0, ox = 0, oy = 0, wide = true;
     let start = 0, raf = 0, visible = true;
     const pointer = { x: -9999, y: -9999, active: false };
+    // Phones and tablets: no pointer to follow, a slower frame rate, fewer beams, and once
+    // the dots have settled they're drawn once into a cached layer.
+    const touch = matchMedia("(pointer: coarse)").matches;
+    const FRAME_MS = touch ? 1000 / 30 : 0;
+    let lastFrame = 0;
+    let clipPath: Path2D | null = null;
+    const layer = document.createElement("canvas");
+    const lctx = layer.getContext("2d")!;
+    let cached = false;
+    const buckets: number[][] = Array.from({ length: LEVELS }, () => []);
     const gaze = { x: 0, y: 0 };
 
     const layout = () => {
-      dpr = Math.min(devicePixelRatio || 1, 2);
+      dpr = Math.min(devicePixelRatio || 1, touch ? 1.5 : 2);
       const r = cv.getBoundingClientRect();
       w = r.width; h = r.height;
       cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+      layer.width = cv.width; layer.height = cv.height;
+      cached = false;
       wide = w >= 960;
       if (wide) {
         size = Math.min(h * 0.8, w * 0.4, 640);
@@ -87,7 +103,10 @@ export function MaskField() {
       host?.style.setProperty("--hud-cx", `${ox + size / 2}px`);
       host?.style.setProperty("--hud-cy", `${oy + size / 2}px`);
       host?.style.setProperty("--hud-size", `${size}px`);
-      beams = Array.from({ length: wide ? 34 : 18 }, (_, i) => {
+      clipPath = new Path2D();
+      clipPath.rect(0, 0, w, h);
+      clipPath.addPath(new Path2D(OUTLINE), new DOMMatrix().translate(ox, oy).scale(size / 64));
+      beams = Array.from({ length: wide ? 34 : touch ? 10 : 18 }, (_, i) => {
         // on small screens the text sits under the mask, so light only comes from the right, above it
         const fromRight = !wide || i % 3 !== 0;
         return {
@@ -142,10 +161,7 @@ export function MaskField() {
       const reveal = still ? 1 : Math.min(1, Math.max(0, (t - 0.35) / 0.65));
       if (reveal <= 0) return;
       ctx.save();
-      const clip = new Path2D();
-      clip.rect(0, 0, w, h);
-      clip.addPath(new Path2D(OUTLINE), new DOMMatrix().translate(ox, oy).scale(size / 64));
-      ctx.clip(clip, "evenodd");
+      if (clipPath) ctx.clip(clipPath, "evenodd");
       ctx.lineCap = "round";
       for (const b of beams) {
         const end = eyePoint(b.eye);
@@ -206,7 +222,16 @@ export function MaskField() {
 
       drawBeams(now, t, still);
 
-      for (const d of dots) {
+      if (cached) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.drawImage(layer, 0, 0);
+        return;
+      }
+      let moving = t < 1;
+      for (const b of buckets) b.length = 0;
+      const eyes: number[] = [];
+      for (let n = 0; n < dots.length; n++) {
+        const d = dots[n];
         let hx = ox + d.tx * size, hy = oy + d.ty * size;
         if (d.eye) { hx += gaze.x; hy += gaze.y; }
         if (still) { d.x = hx; d.y = hy; }
@@ -216,6 +241,7 @@ export function MaskField() {
             const e = ease(local);
             d.x += (hx - d.x) * (0.02 + e * 0.12);
             d.y += (hy - d.y) * (0.02 + e * 0.12);
+            moving = true;
           } else {
             let fx = (hx - d.x) * 0.09, fy = (hy - d.y) * 0.09;
             if (pointer.active) {
@@ -228,29 +254,62 @@ export function MaskField() {
             }
             d.vx = (d.vx + fx) * 0.78; d.vy = (d.vy + fy) * 0.78;
             d.x += d.vx; d.y += d.vy;
+            if (Math.abs(d.vx) + Math.abs(d.vy) > 0.02 || Math.abs(hx - d.x) + Math.abs(hy - d.y) > 0.3) moving = true;
           }
         }
-        const shimmer = still ? 0 : Math.sin(now * 0.0012 + d.seed * 40) * 0.05;
-        // light falls from the eyes: dots nearer the eye line burn a little hotter
-        const near = 1 - Math.min(1, Math.abs(d.ty - 0.44) * 2.2);
-        const l = Math.max(0, Math.min(1, d.light * 0.85 + near * 0.18 + shimmer));
-        const r = Math.max(0.5, cell * (0.22 + l * 0.28));
-        if (d.eye) {
-          const on = still ? 1 : Math.min(1, Math.max(0, (t - 0.7) / 0.3));
-          ctx.fillStyle = `rgba(255, 244, 226, ${0.3 + on * 0.7})`;
-        } else {
-          ctx.fillStyle = heat(l);
+        if (d.eye) eyes.push(n);
+        else {
+          const shimmer = still || touch ? 0 : Math.sin(now * 0.0012 + d.seed * 40) * 0.05;
+          // light falls from the eyes: dots nearer the eye line burn a little hotter
+          const near = 1 - Math.min(1, Math.abs(d.ty - 0.44) * 2.2);
+          const l = Math.max(0, Math.min(1, d.light * 0.85 + near * 0.18 + shimmer));
+          buckets[Math.round(l * (LEVELS - 1))].push(n);
         }
-        ctx.fillRect(d.x - r, d.y - r, r * 2, r * 2);
+      }
+      // one path and one fill per colour, instead of a fill per dot
+      const target = touch && !moving && !still ? lctx : ctx;
+      if (target === lctx) {
+        lctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        lctx.clearRect(0, 0, w, h);
+      }
+      for (let k = 0; k < LEVELS; k++) {
+        const list = buckets[k];
+        if (!list.length) continue;
+        const r = Math.max(0.5, cell * (0.22 + (k / (LEVELS - 1)) * 0.28));
+        target.fillStyle = PALETTE[k];
+        target.beginPath();
+        for (const n of list) target.rect(dots[n].x - r, dots[n].y - r, r * 2, r * 2);
+        target.fill();
+      }
+      if (eyes.length) {
+        const on = still ? 1 : Math.min(1, Math.max(0, (t - 0.7) / 0.3));
+        target.fillStyle = `rgba(255, 244, 226, ${0.3 + on * 0.7})`;
+        target.beginPath();
+        for (const n of eyes) {
+          const d = dots[n];
+          const r = Math.max(0.5, cell * (0.22 + d.light * 0.28));
+          target.rect(d.x - r, d.y - r, r * 2, r * 2);
+        }
+        target.fill();
+      }
+      if (target === lctx) {
+        cached = true;
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.drawImage(layer, 0, 0);
       }
     };
 
     const loop = (now: number) => {
-      if (visible && !stopped()) draw(now);
+      if (visible && !stopped() && now - lastFrame >= FRAME_MS - 1) {
+        lastFrame = now;
+        draw(now);
+      }
       raf = requestAnimationFrame(loop);
     };
 
     const onMove = (e: PointerEvent) => {
+      // a finger scrolling the page isn't a pointer to follow
+      if (touch || e.pointerType === "touch") return;
       const r = cv.getBoundingClientRect();
       pointer.x = e.clientX - r.left; pointer.y = e.clientY - r.top;
       pointer.active = true;

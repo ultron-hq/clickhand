@@ -95,6 +95,14 @@ export function HudOverlay() {
     };
   }, []);
 
+  // Nothing moves while the hero is off screen.
+  useEffect(() => {
+    const el = root.current!;
+    const io = new IntersectionObserver(([e]) => el.classList.toggle("hud-off", !e.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   // A little parallax with the pointer.
   useEffect(() => {
     const el = root.current!;
@@ -106,7 +114,7 @@ export function HudOverlay() {
       goal.y = (e.clientY / innerHeight - 0.5) * 14;
     };
     const loop = () => {
-      if (!stopped()) {
+      if (!stopped() && !el.classList.contains("hud-off")) {
         cur.x += (goal.x - cur.x) * 0.06;
         cur.y += (goal.y - cur.y) * 0.06;
         el.style.setProperty("--px", `${cur.x.toFixed(2)}px`);
@@ -134,24 +142,27 @@ export function HudOverlay() {
   return (
     <div ref={root} className={`hud hud-${phase}`} aria-hidden="true">
       <div className="hud-sweep" />
+      {/* each spinning ring is its own layer, rotated on the GPU */}
       <svg className="hud-rings" viewBox="-300 -300 600 600">
         {/* outer scale: 120 ticks, every tenth long */}
-        <g className="hud-spin hud-slow">
-          <circle className="hud-draw" r="286" pathLength={1} />
-          {Array.from({ length: 120 }, (_, k) => (
-            <line key={k} x1="0" y1={-286} x2="0" y2={k % 10 === 0 ? -272 : -280} transform={`rotate(${k * 3})`} className={k % 10 === 0 ? "tick tick-long" : "tick"} />
-          ))}
-        </g>
-        {/* three heavy arcs, counter-rotating */}
-        <g className="hud-spin hud-rev">
-          {[0, 120, 240].map((a) => (
-            <path key={a} className="hud-arc hud-draw" pathLength={1} transform={`rotate(${a})`} d="M 0 -258 A 258 258 0 0 1 199.6 -163.4" />
-          ))}
-        </g>
-        {/* dotted inner ring */}
-        <g className="hud-spin hud-mid">
-          <circle className="hud-dots" r="236" />
-        </g>
+        <circle className="hud-draw" r="286" pathLength={1} />
+        {Array.from({ length: 120 }, (_, k) => (
+          <line key={k} x1="0" y1={-286} x2="0" y2={k % 10 === 0 ? -272 : -280} transform={`rotate(${k * 3})`} className={k % 10 === 0 ? "tick tick-long" : "tick"} />
+        ))}
+      </svg>
+      <svg className="hud-rings hud-spin hud-rev" viewBox="-300 -300 600 600">
+        {/* three heavy arcs, counter-rotating; the glow is a wider faint stroke, not a filter */}
+        {[0, 120, 240].map((a) => (
+          <g key={a} transform={`rotate(${a})`}>
+            <path className="hud-arc-glow hud-draw" pathLength={1} d="M 0 -258 A 258 258 0 0 1 199.6 -163.4" />
+            <path className="hud-arc hud-draw" pathLength={1} d="M 0 -258 A 258 258 0 0 1 199.6 -163.4" />
+          </g>
+        ))}
+      </svg>
+      <svg className="hud-rings hud-spin hud-mid" viewBox="-300 -300 600 600">
+        <circle className="hud-dots" r="236" />
+      </svg>
+      <svg className="hud-rings" viewBox="-300 -300 600 600">
         {/* a line from the core to what it's aiming at */}
         <line key={`l${i}`} className="hud-link" x1="0" y1="0" x2={t.x * (600 / 1.12)} y2={t.y * (600 / 1.12)} data-on={shown || undefined} />
         {/* the click: a ripple from the core */}

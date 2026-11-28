@@ -91,6 +91,7 @@ export function HudFx() {
           if (el.tagName === "SECTION" && !reduced()) {
             const scan = document.createElement("div");
             scan.className = "hud-scan";
+            scan.style.setProperty("--h", `${el.offsetHeight}px`);
             scan.setAttribute("aria-hidden", "true");
             scan.addEventListener("animationend", () => scan.remove());
             el.appendChild(scan);
@@ -115,6 +116,8 @@ export function HudFx() {
       const p = max > 0 ? Math.min(1, scrollY / max) : 0;
       if (ring.current) ring.current.style.strokeDashoffset = String(C * (1 - p));
       if (yRead.current) yRead.current.textContent = String(Math.round(scrollY)).padStart(5, "0");
+      // the hero has its own HUD; the tracker comes in once you've scrolled past it
+      document.documentElement.classList.toggle("hud-past-hero", scrollY > innerHeight * 0.6);
       let active = secs[0];
       for (const s of secs) if (s.el.getBoundingClientRect().top < innerHeight * 0.4) active = s;
       if (active && active.tag !== current) {
