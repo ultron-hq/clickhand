@@ -15,7 +15,7 @@ import { stopped } from "./stop";
  */
 
 const FRAMES = [
-  ".skill", ".provider", ".app-visual", ".hero-clip", ".rig", ".steps > li",
+  ".skill", ".provider", ".app-visual", ".hero-clip",
   "main pre:not(.install pre)", ".docs-cards > *", ".docs-table", ".estop-plinth",
 ].join(",");
 

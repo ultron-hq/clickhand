@@ -375,20 +375,20 @@ main > section.build { max-width: none; padding: 0; border-top: 1px solid var(--
 /* footer with a dot-matrix wordmark */
 .foot { max-width: none; margin: 0; padding: 32px 32px 0; overflow: hidden; color: var(--muted); font-size: 14px; }
 .foot-row { max-width: var(--page); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
-.foot nav { display: flex; gap: 24px; }
+.foot nav { display: flex; flex-wrap: wrap; gap: 12px 24px; }
 .foot a { text-decoration: none; }
 .foot a:hover { color: var(--text); }
 .brand-sm { font-size: 15px; color: var(--text-2); }
 .wordmark {
   margin: 24px auto -0.18em; text-align: center; line-height: 0.8;
-  font: 900 min(26vw, 380px) var(--display); font-variation-settings: "ROND" 0;
+  font: 900 min(19vw, 300px) var(--display); font-variation-settings: "ROND" 0;
   color: #161a24; user-select: none;
 }
 
 /* ── smaller screens ── */
 @media (max-width: 960px) {
   main > section.hero { min-height: 0; }
-  .hero-inner { padding: calc(min(72vw, 340px) + 72px) 24px 64px; }
+  .hero-inner { padding: calc(min(72vw, 340px) + 96px) 24px 64px; }
   h1 { font-size: 52px; line-height: 1; }
   h2 { font-size: 38px; }
   .build-inner h2 { font-size: 56px; }
@@ -640,7 +640,7 @@ html.stopped .hud, html.stopped .hud * { animation-play-state: paused !important
 /* ── the site-wide HUD layer (components/HudFx.tsx) ── */
 /* section tags: "02 // SKILLS" with a line that draws in */
 .hud-h::before { content: attr(data-hud-tag); display: block; width: max-content; margin-bottom: 16px; padding-left: 0;
-  font: 500 11px/1 var(--mono); letter-spacing: 0.2em; color: var(--ember);
+  font: 500 11px/1 var(--mono); letter-spacing: 0.2em; word-spacing: 0.35em; color: var(--ember);
   background: linear-gradient(var(--ember), var(--ember)) left center / 0 1px no-repeat;
   transition: padding-left 0.6s cubic-bezier(0.2, 0.9, 0.2, 1), background-size 0.6s cubic-bezier(0.2, 0.9, 0.2, 1); }
 .hud-h.hud-in::before { padding-left: 34px; background-size: 24px 1px; }
@@ -705,3 +705,26 @@ html.stopped .hud-tracker *, html.stopped .hud-scan { animation-play-state: paus
   .hud-scan { display: none; }
   .ht-scale, .ht-core { animation: none; }
 }
+
+/* ── phones ── */
+@media (max-width: 720px) {
+  /* hero HUD: the rings and the click, no chips or readouts on top of the headline */
+  .hud-target, .hud-link, .hud-read { display: none; }
+  .hud { width: calc(var(--hud-size, 280px) * 1.08); }
+  /* the tracker would sit on the text; the header already shows where you are */
+  .hud-tracker { display: none; }
+  /* code wraps instead of running off the screen */
+  main pre code, .docs pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+  main pre { overflow-x: hidden; }
+  /* brackets a little smaller on small cards */
+  .hud-frame::after { --l: 12px; }
+  .hud-h::before { margin-bottom: 12px; font-size: 10.5px; }
+}
+@media (max-width: 720px) {
+  .hud .hud-tr { display: flex; gap: 10px; align-items: baseline; left: 50%; right: auto; top: auto; bottom: -34px;
+    transform: translateX(-50%); text-align: center; font-size: 10.5px; }
+  .hud .hud-tr::before { display: none; }
+  .hud-step { font-size: 12px; }
+}
+/* nothing (a spinning ring, a long link row) may widen the page sideways */
+html, body { overflow-x: clip; }

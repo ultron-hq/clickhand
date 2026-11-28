@@ -80,7 +80,7 @@ export function MaskField() {
       } else {
         size = Math.min(w * 0.72, 340);
         ox = (w - size) / 2;
-        oy = 24;
+        oy = 44;
       }
       // Tell the HUD layer where the reticle is, so it sits exactly around it.
       const host = cv.parentElement;
