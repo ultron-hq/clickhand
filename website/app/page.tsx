@@ -24,7 +24,7 @@ function Keys({ keys }: { keys: string[] }) {
 }
 
 const APP = [
-  { icon: Keyboard, title: "Prompt bar", body: <>Opens in the middle of the screen on <Keys keys={["Ctrl", "Space"]} />, or click the clock</> },
+  { icon: Keyboard, title: "Prompt bar", body: <>Opens in the middle of the screen on <Keys keys={["Ctrl", "Space"]} /> (<Keys keys={["⌥", "Space"]} /> on a Mac), or click the clock</> },
   { icon: Timer, title: "Timers and focus time", body: "Start a timer or stopwatch by asking. The clock counts it down and every session is logged" },
   { icon: Cpu, title: "Your AI does the rest", body: "Anything else goes to Claude Code or Codex, which can use the computer through OpenHUD" },
   { icon: BookMarked, title: "Memory", body: "Tell it a fact or a phrase once. It keeps the plans that worked and takes corrections like “no, I meant…”", soon: true },
@@ -83,7 +83,7 @@ export default async function Home() {
             <div className="hero-copy">
               <h1>Let any AI agent use your PC like a human</h1>
               <p className="lede">
-                OpenHUD is an open-source desktop agent. Press <Keys keys={["Ctrl", "Space"]} /> and ask, or give Claude Code, Codex and any MCP agent the mouse and keyboard
+                OpenHUD is an open-source desktop agent. Press <Keys keys={["Ctrl", "Space"]} /> (<Keys keys={["⌥", "Space"]} /> on a Mac) and ask, or give Claude Code, Codex and any MCP agent the mouse and keyboard
               </p>
               <InstallBox />
               <div className="actions">

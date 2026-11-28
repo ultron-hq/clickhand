@@ -215,7 +215,7 @@ export default async function Docs() {
                   <tr><td>List windows</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                   <tr><td>Focus a window</td><td>Yes</td><td>Yes</td><td>Coming</td></tr>
                   <tr><td>Typing stops if focus moves</td><td>Yes</td><td>Yes</td><td>Coming</td></tr>
-                  <tr><td>The desktop app (island, Ctrl+Space)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
+                  <tr><td>The desktop app (island, Ctrl+Space; ⌥ Space on a Mac)</td><td>Yes</td><td>Yes</td><td>Yes</td></tr>
                   <tr><td>Permissions asked once, for OpenHUD</td><td>n/a</td><td>n/a</td><td>Yes, with the app</td></tr>
                 </tbody>
               </table>
