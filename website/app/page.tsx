@@ -2,7 +2,7 @@ import { Keyboard, Timer, BookMarked, Cpu, Mic, Puzzle, Scale, Monitor, Plug } f
 import { MaskField } from "@/components/MaskField";
 import { HudOverlay } from "@/components/HudOverlay";
 import { Header } from "@/components/Header";
-import { Workstation } from "@/components/Workstation";
+import { DemoPlayer } from "@/components/DemoPlayer";
 import { LoopDiagram } from "@/components/LoopDiagram";
 import { LiveTimer } from "@/components/LiveTimer";
 import { KillSwitch } from "@/components/KillSwitch";
@@ -105,10 +105,10 @@ export default async function Home() {
         <section className="demo" id="demo">
           <div className="section-head">
             <h2>Your agent asks, OpenHUD clicks</h2>
-            <p>A Claude Code session on the left, the desktop it controls on the right. Every step is a screenshot, an action and a check</p>
+            <p>The agent on the left, the screen it drives on the right. Every step is a look, an action and a check, and you see each one. Pick a skill</p>
             <p className="note">Hands ships today for Windows, macOS and Linux. The full desktop app is being rewritten in Rust, <a href={`${REPO}/blob/main/ROADMAP.md`}>see the roadmap</a></p>
           </div>
-          <Workstation />
+          <DemoPlayer />
         </section>
 
         <section className="hands" id="hands">
