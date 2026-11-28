@@ -117,6 +117,11 @@ def find_window(s, title, tries=30):
     return None
 
 
+def has_window_manager():
+    r = subprocess.run(["xdotool", "getactivewindow"], capture_output=True, text=True)
+    return r.returncode == 0 and r.stdout.strip().isdigit()
+
+
 def focus_checks(s):
     """Two windows, A and B. Type into A while a second server brings B to the front."""
     global TITLE
@@ -261,8 +266,10 @@ def main():
     subprocess.run([BIN, "resume"], capture_output=True)
 
     # Focus: typing must not carry on into whatever window takes focus mid-way.
-    if sys.platform in ("linux", "win32"):
+    if sys.platform == "win32" or (sys.platform == "linux" and has_window_manager()):
         focus_checks(s)
+    elif sys.platform == "linux":
+        print("SKIP focus checks: no window manager, so there is no active window to guard", flush=True)
 
     s.close()
     log = subprocess.run([BIN, "log", "5"], capture_output=True, text=True)

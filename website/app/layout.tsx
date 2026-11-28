@@ -6,6 +6,7 @@ const display = Doto({ subsets: ["latin"], variable: "--font-display", axes: ["R
 const text = Funnel_Sans({ subsets: ["latin"], variable: "--font-text" });
 const mono = Martian_Mono({ subsets: ["latin"], variable: "--font-mono", axes: ["wdth"] });
 import "./globals.css";
+import { HudFx } from "@/components/HudFx";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://openhud.vercel.app"),
@@ -25,7 +26,10 @@ export const viewport: Viewport = { themeColor: "#0b0d14", colorScheme: "dark" }
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${display.variable} ${text.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <HudFx />
+      </body>
     </html>
   );
 }

@@ -1,5 +1,6 @@
 import { Keyboard, Timer, BookMarked, Cpu, Mic, Puzzle, Scale, Monitor, Plug } from "lucide-react";
 import { MaskField } from "@/components/MaskField";
+import { HudOverlay } from "@/components/HudOverlay";
 import { Header } from "@/components/Header";
 import { Workstation } from "@/components/Workstation";
 import { LoopDiagram } from "@/components/LoopDiagram";
@@ -77,6 +78,7 @@ export default async function Home() {
       <main>
         <section className="hero">
           <MaskField />
+          <HudOverlay />
           <div className="hero-inner">
             <div className="hero-copy">
               <h1>Let any AI agent use your PC like a human</h1>

@@ -35,9 +35,11 @@ jobs:
       - name: Linux desktop (Xvfb)
         if: runner.os == 'Linux'
         run: |
-          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb xterm xdotool >/dev/null
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb xterm xdotool openbox >/dev/null
           Xvfb :99 -screen 0 1600x900x24 -nolisten tcp >/dev/null 2>&1 &
           echo "DISPLAY=:99" >> "$GITHUB_ENV"
+          # a window manager, like any real desktop: it tracks the active window
+          sleep 1; DISPLAY=:99 openbox >/dev/null 2>&1 &
 
       - name: Build from source
         if: env.SOURCE == 'build'

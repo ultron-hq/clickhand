@@ -82,6 +82,11 @@ export function MaskField() {
         ox = (w - size) / 2;
         oy = 24;
       }
+      // Tell the HUD layer where the reticle is, so it sits exactly around it.
+      const host = cv.parentElement;
+      host?.style.setProperty("--hud-cx", `${ox + size / 2}px`);
+      host?.style.setProperty("--hud-cy", `${oy + size / 2}px`);
+      host?.style.setProperty("--hud-size", `${size}px`);
       beams = Array.from({ length: wide ? 34 : 18 }, (_, i) => {
         // on small screens the text sits under the mask, so light only comes from the right, above it
         const fromRight = !wide || i % 3 !== 0;
