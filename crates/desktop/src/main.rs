@@ -380,9 +380,11 @@ mod agent {
     pub fn run(text: &str, id: u64, started: impl FnOnce(u32)) -> Result<String, String> {
         let prompt = format!("{BRIEF}\n\n{text}");
         let mut answer_file = None;
+        // The prompt goes in on stdin, never as an argument: npm installs Claude Code and
+        // Codex as .cmd launchers on Windows, which refuse arguments with line breaks.
         let mut cmd = if let Some(claude) = which("claude") {
             let mut c = hidden(claude);
-            c.args(["-p", &prompt, "--allowedTools", "mcp__openhud"]);
+            c.args(["-p", "--allowedTools", "mcp__openhud"]);
             c
         } else if let Some(codex) = which("codex") {
             let file = std::env::temp_dir().join(format!("openhud-answer-{}-{id}.txt", std::process::id()));
@@ -395,14 +397,19 @@ mod agent {
                 "-o",
             ])
             .arg(&file)
-            .arg(&prompt);
+            .arg("-");
             answer_file = Some(file);
             c
         } else {
             return Err("Install Claude Code or Codex so OpenHUD can answer that (timers work without them).".into());
         };
+        cmd.stdin(Stdio::piped());
         let mut child = cmd.spawn().map_err(|e| e.to_string())?;
         started(child.id());
+        if let Some(mut stdin) = child.stdin.take() {
+            use std::io::Write;
+            let _ = stdin.write_all(prompt.as_bytes());
+        }
         // Read both pipes while it runs, so a long answer can't fill one and stall it.
         let mut out_pipe = child.stdout.take();
         let reader = std::thread::spawn(move || {

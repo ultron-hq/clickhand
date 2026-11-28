@@ -13,7 +13,8 @@
 :root[data-os="macos"] {
   --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
   --mono: "SF Mono", ui-monospace, Menlo, monospace;
-  --r: 16px; --r-sm: 9px; --surface: rgba(24, 17, 15, 0.55); --bar-margin: 0px;
+  --r: 16px; --r-sm: 9px; --surface: rgba(16, 11, 10, 0.8); --bar-margin: 0px;
+  --text-2: #cbc2bb; --muted: #a0968f;
 }
 :root[data-os="windows"] {
   --sans: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
